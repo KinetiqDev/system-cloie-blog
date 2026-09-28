@@ -207,7 +207,7 @@ there is nothing special to add when citing a new source.
 ## Assets
 
 - **`src/assets/`** — images imported from a component or an `.mdx` file
-  (`import logo from '../assets/cloie-logo.png'`). Astro emits a hashed filename
+  (`import logo from '../assets/cloie-logo.svg'`). Astro emits a hashed filename
   and rewrites the URL for the configured base path, which is what makes them
   work from a GitHub Pages project subpath. Use this for anything the page
   references.

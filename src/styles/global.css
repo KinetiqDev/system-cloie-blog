@@ -43,6 +43,16 @@
   --transition-fast: 0.15s ease;
   --transition-base: 0.3s ease;
   --transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  /* Backing surface for the CLOIE logo everywhere it appears (header, hero,
+     footer). The mark is a dark vector on a transparent canvas, so it needs a
+     light disc to stay legible in dark mode and over the blue footer. Fixed
+     rather than theme-aware, because the footer gradient is the same in both
+     themes.
+
+     Logo insets are absolute px, never percentages: a percentage on a padded
+     replaced element resolves against the *containing block*, not the element
+     box, which would resolve against the nav/footer column and crush the mark. */
+  --cloie-logo-surface: #f7faff;
   /* Matches the Framer Motion ease-out used by AnimatedSection. */
   --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
   color-scheme: light;

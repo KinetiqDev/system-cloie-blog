@@ -114,10 +114,11 @@
   width: 100px;
   height: 100px;
   border-radius: 50%;
-  object-fit: cover;
+  object-fit: contain;
+  padding: 8px;
   border: 3px solid transparent;
   background:
-    linear-gradient(var(--cloie-bg-card), var(--cloie-bg-card)) padding-box,
+    linear-gradient(var(--cloie-logo-surface), var(--cloie-logo-surface)) padding-box,
     var(--gradient-blue) border-box;
   box-shadow: 0 8px 32px rgba(15, 168, 251, 0.25);
 }

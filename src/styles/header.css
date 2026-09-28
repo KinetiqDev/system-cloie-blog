@@ -41,7 +41,12 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  object-fit: cover;
+  /* The logo is a dark vector on a transparent canvas: it needs a light disc
+     to read against the dark header, and `contain` so its circular artwork is
+     never cropped by the mask. */
+  background: var(--cloie-logo-surface);
+  object-fit: contain;
+  padding: 3px;
   box-shadow: 0 2px 8px rgba(15, 168, 251, 0.2);
 }
 
