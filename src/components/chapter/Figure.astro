@@ -1,0 +1,30 @@
+---
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  /** Imported asset from `src/assets/`, or an already-resolved URL string. */
+  src: ImageMetadata | string;
+  alt: string;
+  caption?: string;
+}
+
+const { src, alt, caption } = Astro.props;
+// Chapters import their figures from `src/assets/`, which resolves to a hashed,
+// base-aware URL plus intrinsic dimensions (avoids layout shift). A plain URL
+// string is also accepted.
+const resolved: Partial<ImageMetadata> & { src: string } =
+  typeof src === 'string' ? { src } : src;
+---
+
+<figure class="figure-container">
+  <img
+    src={resolved.src}
+    width={resolved.width}
+    height={resolved.height}
+    alt={alt}
+    class="figure-image"
+    loading="lazy"
+    decoding="async"
+  />
+  {caption && <figcaption class="figure-caption">{caption}</figcaption>}
+</figure>

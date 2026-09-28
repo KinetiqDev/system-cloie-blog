@@ -1,0 +1,74 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import { withBase } from '../lib/url';
+---
+
+<BaseLayout
+  title="Page not found"
+  description="The page you were looking for is not part of the PROJECT CLOIE showcase."
+>
+  <div class="page-wrapper not-found">
+    <section class="section">
+      <div class="container not-found__inner">
+        <p class="not-found__code" aria-hidden="true">404</p>
+        <h1 class="not-found__title">This page isn't part of the showcase</h1>
+        <p class="not-found__desc">
+          The address you followed doesn't match a chapter or the reference list. The chapter index is
+          a good place to pick the thread back up.
+        </p>
+        <div class="not-found__actions">
+          <a href={withBase('/')} class="btn btn-primary">
+            <Icon name="book-open" size={18} /> Chapter Overview
+          </a>
+          <a href={withBase('/references')} class="btn btn-outline">
+            References <Icon name="arrow-right" size={16} />
+          </a>
+        </div>
+      </div>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .not-found__inner {
+    text-align: center;
+    max-width: 620px;
+  }
+
+  .not-found__code {
+    font-size: clamp(72px, 14vw, 128px);
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    margin: 0;
+    background: var(--gradient-blue);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .not-found__title {
+    font-size: clamp(24px, 3.5vw, 34px);
+    margin: 12px 0 14px;
+  }
+
+  .not-found__desc {
+    color: var(--cloie-text-muted);
+    font-size: 16px;
+    margin: 0 0 28px;
+  }
+
+  .not-found__actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  @media (max-width: 768px) {
+    .not-found__actions .btn {
+      width: 100%;
+    }
+  }
+</style>

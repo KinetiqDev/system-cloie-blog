@@ -1,0 +1,201 @@
+---
+chapter: 3
+title: 'Methodology'
+navLabel: 'Chapter 3'
+description: >-
+  Summary of CLOIE's software development framework, requirements, software and
+  hardware needs, and feasibility issues.
+summary: >-
+  Development framework, requirements summary, planned software/hardware
+  stack, and feasibility analysis.
+order: 3
+slug: chapter3
+---
+
+import Section from '../../components/chapter/Section.astro'
+import Callout from '../../components/chapter/Callout.astro'
+import Card from '../../components/chapter/Card.astro'
+import CardGrid from '../../components/chapter/CardGrid.astro'
+import Chips from '../../components/chapter/Chips.astro'
+import Figure from '../../components/chapter/Figure.astro'
+import kanbanFigure from '../../assets/Kanban-workflow-figure.png'
+import ganttChart from '../../assets/gantt-chart.png'
+
+<Section>
+
+## 3.1 Software Development Framework
+
+Chapter 3 frames CLOIE development as a structured yet flexible process: tasks are visualized, prioritized continuously, and refined through feedback while staying aligned with capstone milestones. This aligns with Kanban's emphasis on workflow visibility and flow management (Anderson, 2010).
+
+<CardGrid variant="method">
+<Card title="Backlog">
+
+All planned features, requirements, and refinements are listed and prioritized.
+
+</Card>
+<Card title="To Do">
+
+Ready tasks are selected based on priority, dependencies, and milestone relevance.
+
+</Card>
+<Card title="In Progress">
+
+Active implementation focuses on core modules before layered enhancements.
+
+</Card>
+<Card title="Testing">
+
+Built tasks are validated for correctness, usability, and expected behavior.
+
+</Card>
+<Card title="Done">
+
+Verified tasks are marked complete and retained as stable increments.
+
+</Card>
+</CardGrid>
+
+<Figure
+  src={kanbanFigure}
+  alt="Kanban board workflow showing the five stages"
+  caption="Figure 4. Kanban Board Workflow Stages"
+/>
+
+<Callout variant="insight" title="Why Kanban Was Selected">
+
+The capstone documentation highlights Kanban's fit for a small team with evolving requirements. It supports visible progress, continuous reprioritization, and incremental delivery without sprint overhead while still preserving milestone discipline.
+
+</Callout>
+
+</Section>
+
+<Section>
+
+## 3.2 Requirements
+
+The requirements specification is organized into user expectations, required system behaviors, and quality constraints that keep CLOIE practical, secure, and maintainable.
+
+<CardGrid variant="requirement">
+<Card title="3.2.1 User Requirements">
+
+CLOIE supports role-specific workflows for all intended stakeholder groups:
+
+<Chips items={['Faculty', 'Students', 'Graduating Students', 'Alumni', 'Industry Partners', 'Program Heads & Deans', 'System Admins']} />
+
+- Stakeholders require secure, role-based access and context-specific outputs.
+- Users need clear forms, confidentiality protection, and efficient participation.
+- Program-level customization must remain controlled and isolated by design.
+</Card>
+<Card title="3.2.2 Functional Requirements">
+
+The system must deliver core end-to-end modules:
+
+- User and access management
+- Outcomes management (PLOs, GOs, course-level mappings)
+- Evaluation instrument management with version control
+- Evaluation cycle configuration and control
+- Response collection, validation, and processing
+- Analytics and consolidated reporting
+- Qualitative feedback handling
+- Administrative configuration and governance controls
+</Card>
+<Card title="3.2.3 Non-Functional Requirements">
+
+Quality standards ensure the platform remains dependable:
+
+<Chips items={['Usability', 'Performance', 'Security', 'Confidentiality', 'Reliability', 'Scalability', 'Availability', 'Responsiveness', 'Maintainability']} />
+
+These constraints align with CLOIE's role as a multi-user, report-oriented, college-level monitoring system.
+
+</Card>
+</CardGrid>
+
+</Section>
+
+<Section>
+
+## 3.2.4 Software and Hardware Requirements
+
+<CardGrid variant="stack">
+<Card title="Software Requirements">
+
+#### Development Software
+
+- Windows 10/11, Visual Studio Code, Git/GitHub
+- Figma and modeling tools (Visual Paradigm/Draw.io)
+- Browser testing via Chrome, Firefox, Edge, or Safari
+
+#### Application Development Stack
+
+- Next.js and TypeScript
+- Tailwind CSS and shadcn/ui
+- React Hook Form, Zod, TanStack Query
+- Chart.js, Recharts, wordcloud2.js, winkNLP, stopword
+- PostgreSQL and Supabase
+- Vitest and Playwright
+
+#### Deployment Services
+
+- Cloud hosting suitable for web/PWA deployment
+- Vercel-equivalent frontend deployment
+- Supabase-equivalent managed backend/database services
+
+</Card>
+<Card title="Hardware Requirements">
+
+#### For Development
+
+- Intel Core i5 / Ryzen 5 or higher
+- At least 8 GB RAM
+- At least 256 GB SSD
+- Stable broadband internet connection
+
+#### For End Users
+
+- Desktop, laptop, tablet, or smartphone
+- Modern web browser
+- Stable internet access
+
+This hardware profile supports cross-device access for all stakeholder groups.
+
+</Card>
+</CardGrid>
+
+</Section>
+
+<Section>
+
+## 3.3 Feasibility Issues
+
+Feasibility analysis evaluates whether CLOIE is practical to build and adopt within capstone constraints.
+
+<Figure
+  src={ganttChart}
+  alt="Project timeline showing development phases from March to September 2026"
+  caption="Figure 5. Project Timeline (March–September 2026)"
+/>
+
+<CardGrid variant="feasibility">
+<Card title="3.3.1 Economic Feasibility">
+
+The proposed web/PWA direction is financially realistic for a student-led project because it avoids separate native implementations and leverages widely available tools and cloud services.
+
+</Card>
+<Card title="3.3.2 Technical Feasibility">
+
+CLOIE's required modules fit modern web architecture and relational data structures, with incremental delivery possible from core modules to advanced reporting features.
+
+</Card>
+<Card title="3.3.3 Operational Feasibility">
+
+The system aligns with existing academic practices at Assumption College of Davao and complements current institutional systems rather than replacing LMS/SIS workflows.
+
+</Card>
+<Card title="3.3.4 Schedule Feasibility">
+
+The March to September 2026 timeline is workable through staged milestones, early core-module prioritization, and continuous Kanban-guided progress.
+
+</Card>
+</CardGrid>
+
+</Section>

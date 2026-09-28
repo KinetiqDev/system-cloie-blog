@@ -1,0 +1,25 @@
+---
+/**
+ * One manuscript section, rendered as a card.
+ *
+ * Section identity comes from the Markdown heading inside the component, so
+ * Astro's automatic heading anchors and the chapter jump navigation stay in
+ * sync without a hand-maintained list of ids.
+ *
+ * Use in a chapter like:
+ *
+ * ```mdx
+ * <Section>
+ *
+ * ## 1.1 Background of the Study
+ *
+ * Prose goes here.
+ *
+ * </Section>
+ * ```
+ */
+---
+
+<article class="chapter-article" data-reveal>
+  <slot />
+</article>

@@ -1,0 +1,27 @@
+---
+/**
+ * Scroll-triggered entrance animation, replacing the `AnimatedSection`
+ * Framer Motion wrapper. The element starts offset and fades in the first
+ * time it enters the viewport, then stays put (`once`).
+ *
+ * Behaviour is progressive enhancement: without JavaScript (or with
+ * `prefers-reduced-motion`) nothing stays hidden, because the offset state
+ * is only applied when the `js` class is present on <html>.
+ */
+interface Props {
+  /** Seconds to wait before animating in. */
+  delay?: number;
+  /** Vertical offset in pixels the element starts from. */
+  y?: number;
+  /** Horizontal offset in pixels the element starts from. */
+  x?: number;
+  class?: string;
+}
+
+const { delay = 0, y = 40, x = 0, class: className } = Astro.props;
+const style = [`--reveal-delay:${delay}s`, `--reveal-x:${x}px`, `--reveal-y:${y}px`].join(';');
+---
+
+<div class:list={['reveal', className]} style={style} data-reveal>
+  <slot />
+</div>

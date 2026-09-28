@@ -1,0 +1,33 @@
+---
+/**
+ * Responsive grid of `Card` children.
+ *
+ * The variant selects the layout only; individual cards inherit their
+ * appearance from the grid, so authors never repeat the same name twice:
+ *
+ * ```mdx
+ * <CardGrid variant="term">
+ *   <Card title="Accreditation">Definition…</Card>
+ * </CardGrid>
+ * ```
+ */
+interface Props {
+  variant:
+    | 'topic'
+    | 'method'
+    | 'requirement'
+    | 'stack'
+    | 'system'
+    | 'feasibility'
+    | 'scope'
+    | 'significance'
+    | 'term'
+    | 'ipo';
+}
+
+const { variant } = Astro.props;
+---
+
+<div class:list={['card-grid', `card-grid--${variant}`]}>
+  <slot />
+</div>

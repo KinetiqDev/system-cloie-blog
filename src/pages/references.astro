@@ -1,0 +1,79 @@
+---
+import { getEntry, render } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import Reveal from '../components/Reveal.astro';
+import { getChapters, chapterPath } from '../lib/chapters';
+import { withBase } from '../lib/url';
+import '../styles/references.css';
+
+const bibliography = await getEntry('references', 'bibliography');
+if (!bibliography) throw new Error('Missing src/content/references/bibliography.md');
+const { Content } = await render(bibliography);
+
+// The reference page is the tail of the reading order: the last chapter links
+// here, and the links back go to the final chapter.
+const chapters = await getChapters();
+const lastChapter = chapters.at(-1);
+---
+
+<BaseLayout title="References" description={bibliography.data.description}>
+  <div class="page-wrapper">
+    <section class="refs-banner">
+      <div class="refs-banner__orbs" aria-hidden="true">
+        <div class="refs-banner__orb refs-banner__orb--1"></div>
+        <div class="refs-banner__orb refs-banner__orb--2"></div>
+      </div>
+      <div class="container refs-banner__content">
+        <Reveal>
+          <span class="badge">References</span>
+          <h1 class="refs-banner__title">{bibliography.data.title}</h1>
+          <p class="refs-banner__desc">{bibliography.data.description}</p>
+          <div class="refs-banner__meta">
+            {bibliography.data.tags.map((tag) => <span class="chip">{tag}</span>)}
+          </div>
+          <p class="refs-banner__breadcrumb">
+            <a href={withBase('/')}>Home</a> / References
+          </p>
+        </Reveal>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <Reveal>
+          <article class="chapter-article reference-article">
+            <Content />
+          </article>
+        </Reveal>
+
+        <Reveal delay={0.1}>
+          <nav class="chapter-nav" style="margin-top: 32px">
+            <a href={withBase('/')} class="btn btn-outline">
+              <Icon name="arrow-left" size={16} /> Back to Home
+            </a>
+            <a href={withBase('/')} class="btn btn-ghost">
+              Chapter Overview
+            </a>
+            {
+              lastChapter && (
+                <a href={withBase(chapterPath(lastChapter))} class="btn btn-primary">
+                  Back to {lastChapter.data.navLabel} <Icon name="arrow-right" size={16} />
+                </a>
+              )
+            }
+          </nav>
+        </Reveal>
+      </div>
+    </section>
+
+    <p class="refs-tail" aria-hidden="true"></p>
+  </div>
+</BaseLayout>
+
+<style>
+  .refs-tail {
+    height: 40px;
+    margin: 0;
+  }
+</style>

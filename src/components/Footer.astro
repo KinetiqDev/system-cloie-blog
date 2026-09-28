@@ -1,0 +1,39 @@
+---
+import cloieLogo from '../assets/cloie-logo.png';
+import { getChapters, chapterPath } from '../lib/chapters';
+import { withBase } from '../lib/url';
+import '../styles/footer.css';
+
+// Derived from the chapter collection for the same reason as the header.
+const chapters = await getChapters();
+const links = [
+  { path: '/', label: 'Home' },
+  ...chapters.map((chapter) => ({ path: chapterPath(chapter), label: chapter.data.navLabel })),
+  { path: '/references', label: 'References' },
+];
+---
+
+<footer class="footer">
+  <div class="footer__glow" aria-hidden="true"></div>
+  <div class="container">
+    <div class="footer__brand">
+      <img src={cloieLogo.src} width="72" height="72" alt="CLOIE logo" class="footer__logo" />
+      <a href={withBase('/')} class="footer__title">Project CLOIE</a>
+      <p class="footer__course">ITE 1 – Web System Technologies 1</p>
+    </div>
+
+    <nav class="footer__links" aria-label="Footer navigation">
+      {
+        links.map((link) => (
+          <a href={withBase(link.path)} class="footer__link">
+            {link.label}
+          </a>
+        ))
+      }
+    </nav>
+
+    <div class="footer__bottom">
+      <p>&copy; 2026 Project CLOIE Team. Assumption College of Davao Capstone Showcase.</p>
+    </div>
+  </div>
+</footer>

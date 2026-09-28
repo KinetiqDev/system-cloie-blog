@@ -1,0 +1,282 @@
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  height: var(--header-height);
+  background: rgba(248, 250, 252, 0.8);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid transparent;
+  transition: all var(--transition-base);
+}
+
+[data-theme='dark'] .header {
+  background: rgba(15, 23, 42, 0.85);
+}
+
+.header--scrolled {
+  border-bottom-color: var(--cloie-border);
+  box-shadow: var(--cloie-shadow-sm);
+}
+
+.header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  gap: 32px;
+}
+
+.header__logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.header__logo-img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 2px 8px rgba(15, 168, 251, 0.2);
+}
+
+.header__logo-text {
+  font-size: 20px;
+  font-weight: 800;
+  background: var(--gradient-blue);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.02em;
+}
+
+.header__nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.header__link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--cloie-text-secondary);
+  text-decoration: none;
+  border-radius: var(--radius-full);
+  transition: color var(--transition-fast);
+  white-space: nowrap;
+}
+
+.header__link:hover {
+  color: var(--cloie-blue);
+}
+
+.header__link--active {
+  color: var(--cloie-blue);
+}
+
+/* Replaces the Framer Motion `layoutId="nav-indicator"` sliding bar. */
+.header__link-indicator {
+  position: absolute;
+  bottom: 0;
+  left: 8px;
+  right: 8px;
+  height: 2px;
+  background: var(--gradient-blue);
+  border-radius: 1px;
+  animation: nav-indicator-in 0.3s var(--ease-out-expo) both;
+}
+
+@keyframes nav-indicator-in {
+  from {
+    transform: scaleX(0.4);
+    opacity: 0;
+  }
+  to {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+}
+
+.header__actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.header__theme-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--cloie-border);
+  background: var(--cloie-bg-card);
+  color: var(--cloie-text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.header__theme-btn:hover {
+  border-color: var(--cloie-blue);
+  color: var(--cloie-blue);
+  box-shadow: 0 0 0 3px rgba(15, 168, 251, 0.1);
+}
+
+/* Both glyphs ship in the markup; CSS picks one so the swap needs no JS. */
+.header__theme-icon {
+  display: flex;
+  transition: transform 0.2s var(--transition-base), opacity 0.2s var(--transition-base);
+}
+
+.header__theme-icon--sun {
+  display: none;
+}
+
+[data-theme='dark'] .header__theme-icon--sun {
+  display: flex;
+  transform: rotate(0deg);
+}
+
+[data-theme='dark'] .header__theme-icon--moon {
+  display: none;
+}
+
+.header__mobile-btn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--cloie-border);
+  background: var(--cloie-bg-card);
+  color: var(--cloie-text);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.header__mobile-btn:hover {
+  border-color: var(--cloie-blue);
+  color: var(--cloie-blue);
+}
+
+.header__burger {
+  display: flex;
+}
+
+.header__burger--close {
+  display: none;
+}
+
+[data-nav-open='true'] .header__burger--open {
+  display: none;
+}
+
+[data-nav-open='true'] .header__burger--close {
+  display: flex;
+}
+
+/* Mobile overlay */
+.mobile-overlay {
+  position: fixed;
+  /* Anchored under the header so the header controls sit above the scrim. */
+  inset: var(--header-height) 0 0 0;
+  z-index: 1001;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.3s ease, visibility 0s linear 0.3s;
+}
+
+.mobile-nav {
+  position: absolute;
+  /* Sits below the site header so the menu button stays reachable — the
+     drawer used to cover it, making the panel impossible to close by tapping
+     the button that opened it. */
+  top: var(--header-height);
+  right: 0;
+  width: min(320px, 85vw);
+  height: calc(100% - var(--header-height));
+  background: var(--cloie-bg-card);
+  border-left: 1px solid var(--cloie-border);
+  box-shadow: var(--cloie-shadow-xl);
+  overflow-y: auto;
+  transform: translateX(100%);
+  transition: transform 0.3s var(--ease-out-expo);
+}
+
+[data-nav-open='true'] .mobile-overlay {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transition: opacity 0.3s ease, visibility 0s;
+}
+
+[data-nav-open='true'] .mobile-nav {
+  transform: translateX(0);
+}
+
+.mobile-nav__header {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--cloie-border);
+}
+
+.mobile-nav__title {
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--cloie-text-muted);
+}
+
+.mobile-nav__links {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.mobile-nav__link {
+  display: block;
+  padding: 14px 16px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--cloie-text-secondary);
+  text-decoration: none;
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+}
+
+.mobile-nav__link:hover {
+  background: rgba(15, 168, 251, 0.06);
+  color: var(--cloie-blue);
+}
+
+.mobile-nav__link--active {
+  background: rgba(15, 168, 251, 0.1);
+  color: var(--cloie-blue);
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .header__nav {
+    display: none;
+  }
+
+  .header__mobile-btn {
+    display: flex;
+  }
+}

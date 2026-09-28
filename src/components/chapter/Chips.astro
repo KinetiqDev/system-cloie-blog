@@ -1,0 +1,20 @@
+---
+/**
+ * Inline pill row, used for stakeholder groups, quality attributes and
+ * study metadata. Passing an array keeps short enumerations readable in the
+ * Markdown source:
+ *
+ * ```mdx
+ * <Chips items={['Faculty', 'Students', 'Industry Partners']} />
+ * ```
+ */
+interface Props {
+  items: string[];
+}
+
+const { items } = Astro.props;
+---
+
+<div class="chip-group">
+  {items.map((item) => <span class="chip">{item}</span>)}
+</div>

@@ -1,0 +1,22 @@
+---
+/**
+ * A single cell inside a `CardGrid`. Styling comes from the parent grid; only
+ * an optional tone is set here, for grids whose cells differ (scope included
+ * vs. excluded).
+ */
+interface Props {
+  title: string;
+  /** Small label above the title, used for numbered literature/study cards. */
+  tag?: string;
+  /** `accent` for the "in scope" side, `warn` for the "out of scope" side. */
+  tone?: 'accent' | 'warn';
+}
+
+const { title, tag, tone } = Astro.props;
+---
+
+<div class:list={['card-item', { 'card-item--accent': tone === 'accent', 'card-item--warn': tone === 'warn' }]}>
+  {tag && <span class="card-item__tag">{tag}</span>}
+  <h3>{title}</h3>
+  <slot />
+</div>

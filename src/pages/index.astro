@@ -1,0 +1,504 @@
+---
+import type { ImageMetadata } from 'astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import Reveal from '../components/Reveal.astro';
+import type { IconName } from '../lib/icons';
+import { getChapters, chapterPath } from '../lib/chapters';
+import { withBase } from '../lib/url';
+import cloieLogo from '../assets/cloie-logo.png';
+import acdLogo from '../assets/acd-logo.jpg';
+import clientPhoto from '../assets/client.png';
+import member1 from '../assets/member1.png';
+import member2 from '../assets/member2.png';
+import consultantPhoto from '../assets/consultant.png';
+import '../styles/home.css';
+
+const problems = [
+  {
+    icon: '🧩',
+    title: 'Fragmented Monitoring',
+    desc: 'Manual and scattered workflows make it hard to track outcomes consistently across courses and programs.',
+  },
+  {
+    icon: '📑',
+    title: 'Accreditation Evidence Pressure',
+    desc: 'Institutions need organized and auditable evidence to support accreditation and quality assurance cycles.',
+  },
+  {
+    icon: '💬',
+    title: 'Stakeholder Feedback Consolidation',
+    desc: 'Feedback from students, alumni, and industry is difficult to combine meaningfully without centralized tools.',
+  },
+  {
+    icon: '🔍',
+    title: 'Continuous Improvement Readiness',
+    desc: 'Academic leaders need clear summaries to identify outcome gaps, interpret trends, and guide program-level actions.',
+  },
+];
+
+const features: { icon: IconName; title: string; desc: string }[] = [
+  {
+    icon: 'target',
+    title: 'PLO and GO Management',
+    desc: 'Encode and organize outcomes by program to support clear mapping and long-term monitoring.',
+  },
+  {
+    icon: 'file-text',
+    title: 'Standardized Instruments',
+    desc: 'Use structured evaluation tools for students, graduating students, alumni, and industry partners.',
+  },
+  {
+    icon: 'users',
+    title: 'Stakeholder-Based Evaluation',
+    desc: 'Capture multi-source evidence to strengthen judgments on program relevance and readiness.',
+  },
+  {
+    icon: 'lock',
+    title: 'Confidential Data Handling',
+    desc: 'Support anonymized and aggregated reporting to protect respondents and encourage honest feedback.',
+  },
+  {
+    icon: 'barChart',
+    title: 'Outcome Reporting',
+    desc: 'Generate consolidated summaries that can assist program review and accreditation preparation.',
+  },
+  {
+    icon: 'trending-up',
+    title: 'Continuous Improvement',
+    desc: 'Use evaluation outputs to inform evidence-based actions in recurring quality cycles.',
+  },
+];
+
+const benefits: { variant: 'blue' | 'gold'; icon: IconName; title: string; items: string[] }[] = [
+  {
+    variant: 'blue',
+    icon: 'school',
+    title: 'Higher Education Institutions',
+    items: [
+      'Stronger quality assurance support',
+      'More organized evidence for program review',
+      'Centralized and systematic outcomes monitoring',
+    ],
+  },
+  {
+    variant: 'gold',
+    icon: 'graduation-cap',
+    title: 'Students',
+    items: [
+      'Better-aligned academic programs',
+      'Improved relevance of learning outcomes',
+      'Stronger support for graduate readiness',
+    ],
+  },
+  {
+    variant: 'blue',
+    icon: 'user-check',
+    title: 'Educators',
+    items: [
+      'Easier review of outcomes and feedback',
+      'Structured evidence for instructional alignment',
+      'Better support for reflection and enhancement',
+    ],
+  },
+  {
+    variant: 'gold',
+    icon: 'clipboard-list',
+    title: 'Administrators',
+    items: [
+      'Clearer summaries for decision-making',
+      'Faster identification of gaps and strengths',
+      'Improved readiness for accreditation tasks',
+    ],
+  },
+];
+
+const stakeholders = [
+  { icon: '👩‍🏫', title: 'Faculty Members', desc: 'Encode outcomes and review program-level evaluation summaries.' },
+  { icon: '🎓', title: 'Students', desc: 'Provide feedback on learning outcomes and course alignment.' },
+  { icon: '📜', title: 'Graduating Students', desc: 'Contribute exit-survey evidence on program effectiveness.' },
+  { icon: '🧑‍💼', title: 'Alumni', desc: 'Share post-graduation insights on relevance and employability.' },
+  { icon: '🏢', title: 'Industry Partners', desc: 'Assess workplace readiness and competency alignment.' },
+  { icon: '👩‍💼', title: 'Program Heads & Deans', desc: 'Use consolidated reports for quality assurance and planning.' },
+];
+
+interface Member {
+  name: string;
+  role: string;
+  bio: string;
+  img: ImageMetadata;
+}
+
+const team: Member[] = [
+  {
+    name: 'Andy Zane B. Egut',
+    role: 'Full-Stack Developer',
+    bio: 'Leads technical implementation, interface behavior, and system feature execution.',
+    img: member1,
+  },
+  {
+    name: 'Abbegail D. Abebon',
+    role: 'Technical Writer & System Analyst',
+    bio: 'Handles documentation, analysis, and requirement structuring.',
+    img: member2,
+  },
+  {
+    name: 'Ms. Christine Marie D. Ordaneza, LPT',
+    role: 'Capstone Consultant',
+    bio: 'Guides methodology, scope quality, and academic compliance.',
+    img: consultantPhoto,
+  },
+];
+
+// Chapter cards come from the content collection, so the index always matches
+// the manuscript rather than a hardcoded list of three.
+const chapters = await getChapters();
+const firstChapter = chapters[0];
+const lastChapter = chapters.at(-1);
+const chapterRange =
+  chapters.length > 1
+    ? `Chapters ${firstChapter!.data.chapter}–${lastChapter!.data.chapter}`
+    : `Chapter ${firstChapter?.data.chapter ?? 1}`;
+---
+
+<BaseLayout
+  description="PROJECT CLOIE — documentation of a client-driven project management system developed with Activity-Based Costing and Agile methods."
+>
+  <div class="page-wrapper">
+    {/* ===== HERO ===== */}
+    <section class="hero">
+      <div class="hero__bg-orbs" aria-hidden="true">
+        <div class="hero__orb hero__orb--1"></div>
+        <div class="hero__orb hero__orb--2"></div>
+        <div class="hero__orb hero__orb--3"></div>
+      </div>
+      <div class="hero__watermark" aria-hidden="true" style={`background-image: url(${acdLogo.src})`}></div>
+      <div class="container hero__content">
+        <Reveal>
+          <div class="hero__logo-wrap">
+            <img src={cloieLogo.src} width="100" height="100" alt="CLOIE logo" class="hero__logo" />
+          </div>
+        </Reveal>
+
+        <Reveal delay={0.1}>
+          <h1 class="hero__title">PROJECT CLOIE</h1>
+          <p class="hero__tagline">
+            The Development of a System for Comprehensive Learning Outcomes and Instructional Evaluation
+          </p>
+        </Reveal>
+
+        <Reveal delay={0.2}>
+          <p class="hero__desc">
+            A blog-style academic showcase presenting the Project CLOIE capstone for structured outcomes
+            monitoring, stakeholder-based evaluation, and continuous quality improvement.
+          </p>
+        </Reveal>
+
+        <Reveal delay={0.25}>
+          <p class="hero__subline">
+            ITE 1 – Web System Technologies 1 · Capstone Documentation Summaries
+          </p>
+        </Reveal>
+
+        <Reveal delay={0.3}>
+          <div class="hero__chips">
+            <span class="chip">{chapters.length} chapter summaries</span>
+            <span class="chip">{stakeholders.length} stakeholder groups</span>
+            <span class="chip">March – September 2026</span>
+          </div>
+        </Reveal>
+
+        <Reveal delay={0.35}>
+          <div class="hero__actions">
+            {firstChapter && (
+              <a href={withBase(chapterPath(firstChapter))} class="btn btn-primary">
+                <Icon name="book-open" size={18} />
+                Read {chapterRange}
+              </a>
+            )}
+            <a href="#about" class="btn btn-outline">
+              Explore the Project
+              <Icon name="arrow-right" size={16} />
+            </a>
+          </div>
+        </Reveal>
+      </div>
+    </section>
+
+    {/* ===== ABOUT ===== */}
+    <section id="about" class="section">
+      <div class="container">
+        <Reveal>
+          <h2 class="section-title">About Project CLOIE</h2>
+          <p class="section-subtitle">
+            A centralized, college-level proposal for evaluating outcomes and consolidating stakeholder
+            evidence.
+          </p>
+        </Reveal>
+
+        <div class="grid-2 about__grid">
+          <Reveal delay={0.1}>
+            <div class="about__text">
+              <p>
+                <strong>Project CLOIE</strong> is proposed as a digital evaluation platform for
+                monitoring Program Learning Outcomes (PLOs) and Graduate Outcomes (GOs) across academic
+                programs.
+              </p>
+              <p>
+                The project positions outcomes monitoring as a structured academic process by
+                integrating stakeholder feedback, report generation, and support for Plan-Do-Check-Act
+                cycles.
+              </p>
+              <ul class="about__highlights">
+                <li>Supports program-level outcomes monitoring and review</li>
+                <li>Collects evidence from students, graduates, alumni, and industry</li>
+                <li>Generates structured summaries for QA and accreditation support</li>
+                <li>Focuses on evaluation and reporting, not LMS/SIS or grading</li>
+              </ul>
+            </div>
+          </Reveal>
+
+          <Reveal delay={0.2} x={-40}>
+            <div class="about__panel">
+              <span class="about__panel-icon" aria-hidden="true">🎓</span>
+              <h3 class="about__panel-title">Academic-Focused by Design</h3>
+              <p>
+                CLOIE is presented as a capstone proposal website emphasizing clarity, institutional
+                credibility, and chapter-based academic storytelling.
+              </p>
+            </div>
+          </Reveal>
+        </div>
+      </div>
+    </section>
+
+    {/* ===== PROBLEM ===== */}
+    <section id="problem" class="section section-alt">
+      <div class="container">
+        <Reveal>
+          <h2 class="section-title">Why the Project Matters</h2>
+          <p class="section-subtitle">
+            CLOIE addresses documented gaps in manual outcomes monitoring, evidence consolidation, and
+            decision-ready reporting.
+          </p>
+        </Reveal>
+
+        <Reveal delay={0.1}>
+          <p class="problem__lead">
+            Assumption College of Davao needs a more systematic mechanism to centralize evaluation
+            data, support accreditation preparation, and strengthen curriculum relevance.
+          </p>
+        </Reveal>
+
+        <div class="grid-2">
+          {
+            problems.map((item, i) => (
+              <Reveal delay={i * 0.08}>
+                <div class="card card--problem">
+                  <span class="card-icon" aria-hidden="true">{item.icon}</span>
+                  <h3>{item.title}</h3>
+                  <p>{item.desc}</p>
+                </div>
+              </Reveal>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    {/* ===== FEATURES ===== */}
+    <section id="features" class="section">
+      <div class="container">
+        <Reveal>
+          <h2 class="section-title">Key Features of CLOIE</h2>
+          <p class="section-subtitle">
+            Structured outcomes monitoring, stakeholder evidence, and data-supported decision workflows.
+          </p>
+        </Reveal>
+
+        <div class="grid-3">
+          {
+            features.map((item, i) => (
+              <Reveal delay={i * 0.08}>
+                <div class="card card--feature">
+                  <div class="card__icon-wrap">
+                    <Icon name={item.icon} size={28} />
+                  </div>
+                  <h3>{item.title}</h3>
+                  <p>{item.desc}</p>
+                </div>
+              </Reveal>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    {/* ===== BENEFITS ===== */}
+    <section id="benefits" class="section section-alt">
+      <div class="container">
+        <Reveal>
+          <h2 class="section-title">Who Benefits from CLOIE</h2>
+          <p class="section-subtitle">
+            Supporting institutional quality goals while improving evidence access for key academic
+            groups.
+          </p>
+        </Reveal>
+
+        <div class="grid-2 benefits__grid">
+          {
+            benefits.map((item, i) => (
+              <Reveal delay={i * 0.08}>
+                <div class:list={['card', 'card--benefit', `card--benefit-${item.variant}`]}>
+                  <div class="card__icon-wrap card__icon-wrap--sm">
+                    <Icon name={item.icon} size={24} />
+                  </div>
+                  <h3>{item.title}</h3>
+                  <ul class="benefits__list">
+                    {item.items.map((text) => (
+                      <li>{text}</li>
+                    ))}
+                  </ul>
+                </div>
+              </Reveal>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    {/* ===== STAKEHOLDERS ===== */}
+    <section id="stakeholders" class="section">
+      <div class="container">
+        <Reveal>
+          <h2 class="section-title">Intended Users &amp; Stakeholders</h2>
+          <p class="section-subtitle">
+            Designed for the academic groups directly involved in outcomes evaluation and program
+            review.
+          </p>
+        </Reveal>
+
+        <div class="grid-3 stakeholders__grid">
+          {
+            stakeholders.map((item, i) => (
+              <Reveal delay={i * 0.08}>
+                <div class="card card--stakeholder">
+                  <span class="card-icon" aria-hidden="true">{item.icon}</span>
+                  <h3>{item.title}</h3>
+                  <p>{item.desc}</p>
+                </div>
+              </Reveal>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    {/* ===== CHAPTERS ===== */}
+    <section id="chapters" class="section section-alt">
+      <div class="container">
+        <Reveal>
+          <h2 class="section-title">Capstone Chapter Summaries</h2>
+          <p class="section-subtitle">
+            Move from project overview to structured chapter summaries designed for web readability.
+          </p>
+        </Reveal>
+
+        <div class="grid-3 chapters__grid">
+          {
+            chapters.map((chapter, i) => (
+              <Reveal delay={i * 0.08}>
+                <div class="card card--chapter">
+                  <span class="badge">{chapter.data.navLabel}</span>
+                  <h3>{chapter.data.cardTitle ?? chapter.data.title}</h3>
+                  <p>{chapter.data.summary}</p>
+                  <a href={withBase(chapterPath(chapter))} class="btn btn-primary btn--sm">
+                    Read Summary <Icon name="arrow-right" size={14} />
+                  </a>
+                </div>
+              </Reveal>
+            ))
+          }
+
+          <Reveal delay={chapters.length * 0.08}>
+            <div class="card card--chapter card--refs">
+              <span class="badge badge-gold">Resources</span>
+              <h3>References</h3>
+              <p>Browse the APA-style source list behind the chapter summaries.</p>
+              <a href={withBase('/references')} class="btn btn-primary btn--sm">
+                Open References <Icon name="arrow-right" size={14} />
+              </a>
+            </div>
+          </Reveal>
+        </div>
+      </div>
+    </section>
+
+    {/* ===== SPONSOR ===== */}
+    <section id="sponsor" class="section">
+      <div class="container">
+        <Reveal>
+          <h2 class="section-title">Project Client / Academic Lead</h2>
+          <p class="section-subtitle">
+            The academic leadership and institutional direction behind PROJECT CLOIE.
+          </p>
+        </Reveal>
+
+        <Reveal delay={0.15}>
+          <div class="sponsor__wrap">
+            <div class="card card--sponsor">
+              <img
+                src={clientPhoto.src}
+                width="140"
+                height="140"
+                alt="Ms. Roselyn M. Biala, MIT"
+                class="team__photo"
+                loading="lazy"
+                decoding="async"
+              />
+              <h3 class="team__name">Ms. Roselyn M. Biala, MIT</h3>
+              <span class="team__role team__role--gold">Project Client / Academic Lead</span>
+              <p class="team__bio">
+                Provides academic direction and ensures PROJECT CLOIE aligns with institutional
+                requirements, outcomes-based education principles, and accreditation standards.
+              </p>
+            </div>
+          </div>
+        </Reveal>
+      </div>
+    </section>
+
+    {/* ===== TEAM ===== */}
+    <section id="team" class="section section-alt">
+      <div class="container">
+        <Reveal>
+          <h2 class="section-title">A² Team</h2>
+          <p class="section-subtitle">The proponents and academic guidance behind PROJECT CLOIE.</p>
+        </Reveal>
+
+        <div class="grid-3 team__grid">
+          {
+            team.map((member, i) => (
+              <Reveal delay={i * 0.08}>
+                <div class="card card--team">
+                  <img
+                    src={member.img.src}
+                    width="140"
+                    height="140"
+                    alt={member.name}
+                    class="team__photo"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <h3 class="team__name">{member.name}</h3>
+                  <span class="team__role">{member.role}</span>
+                  <p class="team__bio">{member.bio}</p>
+                </div>
+              </Reveal>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+  </div>
+</BaseLayout>

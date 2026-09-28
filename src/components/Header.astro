@@ -1,0 +1,111 @@
+---
+import Icon from './Icon.astro';
+import cloieLogo from '../assets/cloie-logo.png';
+import { getChapters, chapterPath } from '../lib/chapters';
+import { withBase } from '../lib/url';
+import '../styles/header.css';
+
+interface Props {
+  currentPath: string;
+}
+
+const { currentPath } = Astro.props;
+
+// Navigation is derived from the chapter collection so the menus grow with
+// the manuscript instead of being hand-maintained.
+const chapters = await getChapters();
+const navItems = [
+  { path: '/', label: 'Home' },
+  ...chapters.map((chapter) => ({
+    path: chapterPath(chapter),
+    label: chapter.data.navLabel,
+  })),
+  { path: '/references', label: 'References' },
+];
+
+const isActive = (path: string) => currentPath === path;
+---
+
+<header class="header" data-header>
+  <div class="header__inner container">
+    <a class="header__logo" href={withBase('/')} aria-label={`${navItems[0]!.label} — PROJECT CLOIE home`}>
+      <img
+        src={cloieLogo.src}
+        width="40"
+        height="40"
+        alt=""
+        class="header__logo-img"
+        decoding="async"
+      />
+      <span class="header__logo-text">PROJECT CLOIE</span>
+    </a>
+
+    <nav class="header__nav" aria-label="Main navigation">
+      {
+        navItems.map((item) => (
+          <a
+            href={withBase(item.path)}
+            class:list={['header__link', { 'header__link--active': isActive(item.path) }]}
+            aria-current={isActive(item.path) ? 'page' : undefined}
+          >
+            {item.label}
+            {isActive(item.path) && <span class="header__link-indicator" aria-hidden="true" />}
+          </a>
+        ))
+      }
+    </nav>
+
+    <div class="header__actions">
+      <button
+        type="button"
+        class="header__theme-btn"
+        data-theme-toggle
+        aria-label="Switch to dark mode"
+      >
+        <span class="header__theme-icon header__theme-icon--sun"><Icon name="sun" size={18} /></span>
+        <span class="header__theme-icon header__theme-icon--moon"><Icon name="moon" size={18} /></span>
+      </button>
+
+      <button
+        type="button"
+        class="header__mobile-btn"
+        data-nav-toggle
+        aria-label="Open menu"
+        aria-expanded="false"
+        aria-controls="mobile-nav"
+      >
+        <span class="header__burger header__burger--open"><Icon name="menu" size={22} /></span>
+        <span class="header__burger header__burger--close"><Icon name="x" size={22} /></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+{/* The panel ships closed and `inert`, so its links are never tabbable or
+    announced before the toggle script runs. */}
+<div class="mobile-overlay" data-nav-overlay>
+  <nav
+    id="mobile-nav"
+    class="mobile-nav"
+    data-nav-panel
+    aria-label="Mobile navigation"
+    inert
+  >
+    <div class="mobile-nav__header">
+      <span class="mobile-nav__title">Navigation</span>
+    </div>
+    <div class="mobile-nav__links">
+      {
+        navItems.map((item) => (
+          <a
+            href={withBase(item.path)}
+            class:list={['mobile-nav__link', { 'mobile-nav__link--active': isActive(item.path) }]}
+            aria-current={isActive(item.path) ? 'page' : undefined}
+          >
+            {item.label}
+          </a>
+        ))
+      }
+    </div>
+  </nav>
+</div>

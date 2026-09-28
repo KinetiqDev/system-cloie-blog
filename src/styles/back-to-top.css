@@ -1,0 +1,48 @@
+.back-to-top {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--gradient-blue);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(15, 168, 251, 0.35);
+  z-index: 900;
+  transition: box-shadow var(--transition-base), transform var(--transition-fast);
+  /* Replaces the Framer Motion entry animation: runs when the button is
+     unhidden, which is driven by the top-of-page sentinel. */
+  animation: back-to-top-in 0.25s var(--ease-out-expo) both;
+}
+
+.back-to-top:hover {
+  box-shadow: 0 12px 32px rgba(15, 168, 251, 0.5);
+  transform: translateY(-2px);
+}
+
+.back-to-top:active {
+  transform: scale(0.95);
+}
+
+@keyframes back-to-top-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (max-width: 768px) {
+  .back-to-top {
+    right: 16px;
+    bottom: 16px;
+  }
+}

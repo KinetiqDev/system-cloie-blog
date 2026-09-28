@@ -1,0 +1,22 @@
+---
+/**
+ * Highlighted panel used for insights, the general objective and chapter
+ * synthesis. Purely presentational — no client JavaScript.
+ */
+interface Props {
+  title: string;
+  /**
+   * - `insight`   → left blue rule (Key Insight, "Why Kanban Was Selected")
+   * - `objective` → left blue rule, tinted fill
+   * - `synthesis` → full outline, tinted fill
+   */
+  variant?: 'insight' | 'objective' | 'synthesis';
+}
+
+const { title, variant = 'insight' } = Astro.props;
+---
+
+<div class:list={['callout', `callout--${variant}`]}>
+  <h3>{title}</h3>
+  <slot />
+</div>

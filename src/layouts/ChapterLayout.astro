@@ -1,0 +1,125 @@
+---
+import type { MarkdownHeading } from 'astro';
+import BaseLayout from './BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import Reveal from '../components/Reveal.astro';
+import { sectionLabel, type ChapterNeighbours } from '../lib/chapters';
+import { withBase } from '../lib/url';
+import '../styles/chapter.css';
+
+interface Props extends ChapterNeighbours {
+  /** Section headings for the jump navigation, from `render(entry).headings`. */
+  headings: MarkdownHeading[];
+}
+
+const { current, previous, next, headings } = Astro.props;
+const { title, description, toc } = current.data;
+
+// The jump row is derived from the chapter's own level-2 headings, so a new
+// chapter gets a working table of contents without a hand-written list.
+const jumpLinks = toc
+  ? headings.filter((heading) => heading.depth === 2).map((heading) => ({
+      href: heading.slug,
+      label: sectionLabel(heading.text),
+    }))
+  : [];
+---
+
+<BaseLayout title={`${current.data.navLabel}: ${title}`} description={description}>
+  <div class="page-wrapper">
+    <section class="chapter-banner">
+      <div class="chapter-banner__orbs" aria-hidden="true">
+        <div class="chapter-banner__orb chapter-banner__orb--1"></div>
+        <div class="chapter-banner__orb chapter-banner__orb--2"></div>
+      </div>
+      <div class="container chapter-banner__content">
+        <Reveal>
+          <span class="badge">{current.data.navLabel}</span>
+          <h1 class="chapter-banner__title">{title}</h1>
+          <p class="chapter-banner__desc">{description}</p>
+          <p class="chapter-banner__breadcrumb">
+            <a href={withBase('/')}>Home</a> / {current.data.navLabel}
+          </p>
+        </Reveal>
+
+        {
+          jumpLinks.length > 0 && (
+            <Reveal delay={0.15}>
+              <nav class="chapter-banner__jumps" aria-label={`Jump to a section of ${current.data.navLabel}`}>
+                {jumpLinks.map((link) => (
+                  <a href={`#${link.href}`} class="chapter-banner__jump">
+                    {link.label}
+                  </a>
+                ))}
+              </nav>
+            </Reveal>
+          )
+        }
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container chapter-content">
+        <slot />
+      </div>
+    </section>
+
+    <div class="container">
+      <Reveal>
+        <div class="chapter-cta">
+          <div class="chapter-cta__text">
+            <h3>Need the full source list?</h3>
+            <p>View the complete references page for all sources cited across the CLOIE showcase.</p>
+          </div>
+          <a href={withBase('/references')} class="btn btn-primary">
+            <Icon name="book-open" size={16} /> View References
+          </a>
+        </div>
+      </Reveal>
+    </div>
+
+    <div class="container">
+      <Reveal>
+        <nav class="chapter-nav" aria-label="Chapter navigation">
+          {
+            previous ? (
+              <a href={withBase(`/${previous.id}`)} class="btn btn-outline">
+                <Icon name="arrow-left" size={16} /> Previous: {previous.data.navLabel}
+              </a>
+            ) : (
+              <a href={withBase('/')} class="btn btn-outline">
+                <Icon name="arrow-left" size={16} /> Back to Home
+              </a>
+            )
+          }
+
+          <a href={withBase('/')} class="btn btn-ghost">
+            Chapter Overview
+          </a>
+
+          {
+            next ? (
+              <a href={withBase(`/${next.id}`)} class="btn btn-primary">
+                Next: {next.data.navLabel} <Icon name="arrow-right" size={16} />
+              </a>
+            ) : (
+              <a href={withBase('/references')} class="btn btn-primary">
+                References <Icon name="arrow-right" size={16} />
+              </a>
+            )
+          }
+        </nav>
+      </Reveal>
+    </div>
+
+    <p class="chapter-tail" aria-hidden="true"></p>
+  </div>
+</BaseLayout>
+
+<style>
+  /* Trailing breathing room, matching the spacer the React chapter page used. */
+  .chapter-tail {
+    height: 60px;
+    margin: 0;
+  }
+</style>
