@@ -46,11 +46,10 @@
   letter-spacing: -0.01em;
 }
 
-/* Hover must not darken the text: gold on this gradient is a lower contrast
-   ratio than the white it replaces, so the hover state made links harder to
-   read. White plus an underline keeps the affordance without the regression. */
+/* Gold on this gradient is a lower contrast ratio than the white it replaces,
+   so the old hover made links harder to read. */
 .footer__title:hover {
-  color: var(--cloie-white);
+  color: var(--cloie-text-on-blue);
   text-decoration: underline;
 }
 
@@ -98,7 +97,7 @@
 }
 
 .footer__link:hover {
-  color: var(--cloie-white);
+  color: var(--cloie-text-on-blue);
   text-decoration: underline;
 }
 
