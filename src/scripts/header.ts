@@ -1,12 +1,17 @@
 /**
- * Header behaviour: the scrolled shadow state and the mobile navigation panel.
+ * Header behaviour: the scrolled shadow state, the desktop top-level
+ * disclosures and the mobile navigation panel.
  *
- * Replaces the React state effects in `Header.jsx`. The panel is rendered
- * closed and `inert`; this module opens it and manages the accessible bits a
+ * Replaces the React state effects in `Header.jsx`. Everything renders closed
+ * and `inert`; this module opens it and manages the accessible bits a
  * router-driven SPA used to get for free: `aria-expanded`, background scroll
  * lock, Escape to dismiss, focus moved into the panel on open and returned to
  * the toggle on close.
  */
+
+// One query, shared by the drawer and the disclosures: below this width the
+// inline bar is hidden, so anything it owns must be dismissed.
+const isDesktop = window.matchMedia('(min-width: 901px)');
 
 const header = document.querySelector<HTMLElement>('[data-header]');
 const toggle = document.querySelector<HTMLButtonElement>('[data-nav-toggle]');
@@ -83,12 +88,99 @@ if (toggle && overlay && panel) {
     }
   });
 
-  // A resize past the desktop breakpoint reveals the inline menu, so the panel
-  // must not keep the page locked if it is open when that happens.
-  window.matchMedia('(min-width: 901px)').addEventListener('change', (event) => {
+  isDesktop.addEventListener('change', (event) => {
     if (event.matches && open) {
       open = false;
       render();
     }
   });
 }
+
+// --- Desktop top-level disclosures -------------------------------------------
+// A dropdown, not a modal: the page keeps scrolling, so there is no scroll
+// lock and no focus trap. Opening one closes the other. It opens on hover when
+// the pointer really is a mouse, and on click for everything else — a tablet in
+// landscape is wider than 900px, so the bar is on screen without a cursor.
+const menus = Array.from(document.querySelectorAll<HTMLElement>('[data-nav-menu]'));
+const hoveredAt = new WeakMap<HTMLElement, number>();
+let closeTimer: number | undefined;
+
+const setMenuOpen = (menu: HTMLElement, open: boolean) => {
+  const trigger = menu.querySelector<HTMLButtonElement>('[data-menu-trigger]');
+  const disclosure = menu.querySelector<HTMLElement>('[data-menu-panel]');
+  if (!trigger || !disclosure) return;
+  menu.dataset.menuOpen = String(open);
+  trigger.setAttribute('aria-expanded', String(open));
+  disclosure.inert = !open;
+};
+
+const cancelPendingClose = () => {
+  if (closeTimer !== undefined) window.clearTimeout(closeTimer);
+  closeTimer = undefined;
+};
+
+const closeMenus = (except?: HTMLElement) => {
+  cancelPendingClose();
+  for (const menu of menus) {
+    if (menu !== except) setMenuOpen(menu, false);
+  }
+};
+
+for (const menu of menus) {
+  setMenuOpen(menu, false);
+
+  menu.querySelector<HTMLButtonElement>('[data-menu-trigger]')?.addEventListener('click', () => {
+    // A tap on a hover-capable touchscreen fires pointerenter before click;
+    // without this the tap would open the panel and immediately toggle it shut.
+    if (Date.now() - (hoveredAt.get(menu) ?? 0) < 400) return;
+    const open = menu.dataset.menuOpen !== 'true';
+    closeMenus(open ? menu : undefined);
+    setMenuOpen(menu, open);
+    // A click is a deliberate act, so it takes focus; a hover must not, or the
+    // panel would steal the caret just from passing the cursor over the bar.
+    // Either way the panel fades in rather than sliding from off-screen, so
+    // focus does not have to wait for a transition — unlike the drawer.
+    if (open) requestAnimationFrame(() => menu.querySelector<HTMLElement>('a')?.focus());
+  });
+
+  menu.addEventListener('pointerenter', (event) => {
+    if (event.pointerType !== 'mouse') return;
+    // Unconditional: crossing the gap to the panel re-enters while still open,
+    // so an early return would leave the close timer armed under the pointer.
+    cancelPendingClose();
+    if (menu.dataset.menuOpen === 'true') return;
+    closeMenus(menu);
+    setMenuOpen(menu, true);
+    hoveredAt.set(menu, Date.now());
+  });
+
+  // Delayed so the cursor can cross the ten-pixel gap between the trigger and
+  // the panel without the panel closing under it.
+  menu.addEventListener('pointerleave', (event) => {
+    if (event.pointerType !== 'mouse') return;
+    cancelPendingClose();
+    closeTimer = window.setTimeout(() => closeMenus(), 180);
+  });
+
+  // Tabbing past an open panel must not leave it hanging over the page.
+  menu.addEventListener('focusout', (event) => {
+    if (!menu.contains((event as FocusEvent).relatedTarget as Node | null)) setMenuOpen(menu, false);
+  });
+}
+
+document.addEventListener('keydown', (event) => {
+  if (event.key !== 'Escape') return;
+  const open = menus.find((menu) => menu.dataset.menuOpen === 'true');
+  if (!open) return;
+  closeMenus();
+  open.querySelector<HTMLButtonElement>('[data-menu-trigger]')?.focus();
+});
+
+document.addEventListener('pointerdown', (event) => {
+  if (menus.some((menu) => menu.contains(event.target as Node))) return;
+  closeMenus();
+});
+
+isDesktop.addEventListener('change', (event) => {
+  if (event.matches) closeMenus();
+});

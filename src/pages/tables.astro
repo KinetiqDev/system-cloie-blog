@@ -1,0 +1,147 @@
+---
+import FrontMatterLayout from '../layouts/FrontMatterLayout.astro';
+import { TABLES } from '../lib/tables';
+import { chapterPath, getChapters } from '../lib/chapters';
+import { FRONT_MATTER } from '../lib/front-matter';
+import { withBase } from '../lib/url';
+
+/**
+ * List of Tables, derived from the table registry.
+ *
+ * Mirrors `figures.astro`. Each row links to the section that interprets the
+ * table, which is where the guide requires a table to be discussed.
+ */
+const chapters = await getChapters();
+const byNumber = new Map(chapters.map((chapter) => [chapter.data.chapter, chapter]));
+
+const rows = TABLES.map((table) => ({
+  table,
+  chapter: byNumber.get(table.chapter),
+})).filter((row) => row.chapter);
+---
+
+<FrontMatterLayout
+  title="List of Tables"
+  label="List of Tables"
+  description={FRONT_MATTER.find((item) => item.path === '/tables')!.description}
+  current="/tables"
+  siblings={FRONT_MATTER.map(({ path, label }) => ({ path: path, label }))}
+>
+  <p class="list-intro">
+    Tables are numbered per chapter, and each title appears above its table. Each
+    entry links to the section that discusses it.
+  </p>
+
+  <ul class="tablelist">
+    {
+      rows.map(({ table, chapter }) => (
+        <li class="tablelist__row">
+          <span class="tablelist__num">Table {table.number}</span>
+          <div class="tablelist__body">
+            <a
+              class="tablelist__caption"
+              href={withBase(`${chapterPath(chapter!)}#${table.anchor}`)}
+            >
+              {table.caption}
+            </a>
+            {table.note && <p class="tablelist__note">{table.note}</p>}
+          </div>
+          <span class="tablelist__chapter">{chapter!.data.navLabel}</span>
+        </li>
+      ))
+    }
+  </ul>
+</FrontMatterLayout>
+
+<style>
+  .list-intro {
+    font-size: 15.5px;
+    color: var(--cloie-text-secondary);
+    max-width: 680px;
+    margin-bottom: 26px;
+  }
+
+  .tablelist {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 2px;
+  }
+
+  .tablelist__row {
+    display: flex;
+    gap: 18px;
+    align-items: baseline;
+    padding: 14px 16px;
+    border-radius: var(--radius-sm);
+    transition: background var(--transition-fast);
+  }
+
+  .tablelist__row:hover {
+    background: rgba(15, 168, 251, 0.04);
+  }
+
+  .tablelist__num {
+    flex: none;
+    width: 88px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--cloie-blue-dark);
+    font-variant-numeric: tabular-nums;
+  }
+
+  [data-theme='dark'] .tablelist__num {
+    color: var(--cloie-blue);
+  }
+
+  .tablelist__body {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .tablelist__caption {
+    font-size: 15.5px;
+    font-weight: 600;
+    color: var(--cloie-text);
+    text-decoration: none;
+    line-height: 1.5;
+  }
+
+  .tablelist__caption:hover {
+    color: var(--cloie-blue-dark);
+    text-decoration: underline;
+  }
+
+  [data-theme='dark'] .tablelist__caption:hover {
+    color: var(--cloie-blue);
+  }
+
+  .tablelist__note {
+    font-size: 13.5px;
+    color: var(--cloie-text-muted);
+    margin: 6px 0 0;
+    line-height: 1.5;
+    max-width: 62ch;
+  }
+
+  .tablelist__chapter {
+    flex: none;
+    font-size: 12.5px;
+    font-weight: 650;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--cloie-text-muted);
+  }
+
+  @media (max-width: 640px) {
+    .tablelist__row {
+      flex-wrap: wrap;
+      gap: 4px 12px;
+    }
+
+    .tablelist__num {
+      width: auto;
+    }
+  }
+</style>

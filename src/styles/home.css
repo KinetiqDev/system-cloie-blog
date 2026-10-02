@@ -221,9 +221,19 @@
 }
 
 .about__panel-icon {
-  font-size: 56px;
-  display: block;
-  margin-bottom: 16px;
+  width: 68px;
+  height: 68px;
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(15, 168, 251, 0.08);
+  color: var(--cloie-blue);
+  margin: 0 auto 18px;
+}
+
+[data-theme='dark'] .about__panel-icon {
+  background: rgba(15, 168, 251, 0.12);
 }
 
 .about__panel-title {
@@ -255,23 +265,6 @@
   display: none;
 }
 
-/* ===== FEATURES ===== */
-.card--feature .card__icon-wrap {
-  width: 52px;
-  height: 52px;
-  border-radius: var(--radius-md);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(15, 168, 251, 0.08);
-  color: var(--cloie-blue);
-  margin-bottom: 18px;
-}
-
-[data-theme='dark'] .card--feature .card__icon-wrap {
-  background: rgba(15, 168, 251, 0.12);
-}
-
 /* ===== BENEFITS ===== */
 .benefits__grid {
   align-items: start;
@@ -279,31 +272,6 @@
 
 .card--benefit {
   border-left: 4px solid var(--cloie-blue);
-}
-
-.card--benefit-gold {
-  border-left-color: var(--cloie-gold);
-}
-
-.card--benefit .card__icon-wrap--sm {
-  width: 42px;
-  height: 42px;
-  border-radius: var(--radius-sm);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(15, 168, 251, 0.08);
-  color: var(--cloie-blue);
-  margin-bottom: 14px;
-}
-
-.card--benefit-gold .card__icon-wrap--sm {
-  background: rgba(255, 215, 0, 0.1);
-  color: #b8860b;
-}
-
-[data-theme='dark'] .card--benefit-gold .card__icon-wrap--sm {
-  color: var(--cloie-gold);
 }
 
 .benefits__list {
@@ -331,10 +299,6 @@
   background: var(--cloie-blue);
 }
 
-.card--benefit-gold .benefits__list li::before {
-  background: var(--cloie-gold);
-}
-
 /* ===== STAKEHOLDERS ===== */
 .card--stakeholder {
   text-align: center;
@@ -342,9 +306,8 @@
   background: linear-gradient(135deg, rgba(15, 168, 251, 0.02) 0%, transparent 100%);
 }
 
-.card--stakeholder .card-icon {
-  font-size: 36px;
-  margin-bottom: 14px;
+.card--stakeholder .card__icon-wrap {
+  margin: 0 auto 16px;
 }
 
 .card--stakeholder h3 {
@@ -366,6 +329,175 @@
 
 .card--chapter h3 {
   margin-top: 12px;
+}
+
+/* Chapter number and argument phase sit on one line, so a reader scanning the
+   row sees a sequence rather than five unrelated cards. */
+.card--chapter__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.card--chapter__phase {
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--cloie-text-muted);
+  text-align: right;
+}
+
+/* ===== FRONT MATTER =====
+   A compact strip above the chapter cards. The abstract in particular should not
+   be two clicks away from the landing page. */
+.frontmatter {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  margin: 28px 0 34px;
+}
+
+.frontmatter__item {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 14px 16px;
+  border: 1px solid var(--cloie-border);
+  border-radius: var(--radius-md);
+  background: var(--cloie-bg-card);
+  text-decoration: none;
+  transition: border-color var(--transition-fast), transform var(--transition-fast);
+}
+
+.frontmatter__item:hover {
+  border-color: rgba(15, 168, 251, 0.35);
+  transform: translateY(-2px);
+}
+
+.frontmatter__label {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--cloie-blue-dark);
+}
+
+[data-theme='dark'] .frontmatter__label {
+  color: var(--cloie-blue);
+}
+
+.frontmatter__desc {
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--cloie-text-muted);
+}
+
+/* ===== VALIDATION STATUS =====
+   The capstone guide's "evidence over volume" principle applied to the landing
+   page: say what is verified and what is not, up front, rather than letting a
+   reader infer a finished project from the design. */
+.status {
+  margin-top: 40px;
+  padding: 24px 26px;
+  border: 1px solid var(--cloie-border);
+  border-left: 4px solid var(--cloie-blue);
+  border-radius: var(--radius-md);
+  background: var(--cloie-bg-card);
+}
+
+.status__title {
+  font-size: 17px;
+  font-weight: 750;
+  margin: 0 0 6px;
+  color: var(--cloie-text);
+}
+
+.status__intro {
+  font-size: 14.5px;
+  color: var(--cloie-text-muted);
+  margin: 0 0 16px;
+  max-width: 70ch;
+}
+
+.status__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 1px;
+  background: var(--cloie-border-light);
+  border: 1px solid var(--cloie-border-light);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.status__row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 11px 14px;
+  background: var(--cloie-bg-card);
+}
+
+.status__chapter {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--cloie-text-secondary);
+  flex: none;
+  min-width: 76px;
+}
+
+.status__note {
+  font-size: 13.5px;
+  color: var(--cloie-text-muted);
+  flex: 1;
+  min-width: 220px;
+  line-height: 1.45;
+}
+
+.status__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  font-weight: 650;
+  color: var(--cloie-blue-dark);
+  text-decoration: none;
+  flex: none;
+}
+
+.status__link:hover {
+  text-decoration: underline;
+}
+
+[data-theme='dark'] .status {
+  background: var(--cloie-bg-elevated);
+}
+
+[data-theme='dark'] .status__list {
+  background: var(--cloie-border);
+  border-color: var(--cloie-border);
+}
+
+[data-theme='dark'] .status__row {
+  background: var(--cloie-bg-elevated);
+}
+
+[data-theme='dark'] .status__link {
+  color: var(--cloie-blue);
+}
+
+@media (max-width: 980px) {
+  .frontmatter {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 520px) {
+  .frontmatter {
+    grid-template-columns: 1fr;
+  }
 }
 
 .card--chapter .btn {

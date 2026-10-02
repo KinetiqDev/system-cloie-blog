@@ -1,266 +1,201 @@
 ---
 chapter: 1
-title: 'Introduction'
+phase: context
+title: 'Project Context and Definition'
 navLabel: 'Chapter 1'
+cardTitle: 'Context & Definition'
 description: >-
-  Overview of the project context, objectives, significance, scope and
-  delimitation, timeline, operational terms, and conceptual framework of CLOIE.
+  The institutional problem that led to Project CLOIE, the objectives derived
+  from it, what is in and out of scope, who benefits, and the criteria that will
+  determine whether the project succeeded.
 summary: >-
-  Background, objectives, significance, scope and delimitation, timeline
-  context, operational terms, and conceptual framework.
+  The ACD evaluation problem, its six concrete manifestations, the objectives
+  derived from them, scope and boundaries, and the success criteria.
 order: 1
 slug: chapter1
 ---
 
-import Section from '../../components/chapter/Section.astro'
-import Callout from '../../components/chapter/Callout.astro'
-import Card from '../../components/chapter/Card.astro'
-import CardGrid from '../../components/chapter/CardGrid.astro'
-import Chips from '../../components/chapter/Chips.astro'
-import Figure from '../../components/chapter/Figure.astro'
-import conceptualFramework from '../../assets/conceptual-framework.png'
 
-<Section>
+## 1.1 Background and Problem Context
 
-## 1.1 Background of the Study
+At Assumption College of Davao (ACD), learning-outcome evaluation forms part of academic review and quality-assurance activities. The process involves assessing Course Intended Learning Outcomes (CILOs) and relating course-level evidence to broader program outcomes. This is consistent with Outcome-Based Education (OBE), which places intended learning outcomes at the center of curriculum and assessment. In the Philippine higher-education context, outcomes-based quality assurance is also reflected in Commission on Higher Education (CHED) Memorandum Order No. 46, Series of 2012, which establishes an outcomes-based and typology-based approach to quality assurance in Philippine higher education.
 
-Computerization has become central to higher-education quality work because digital systems improve how institutions gather, organize, and interpret assessment evidence for decision-making and program improvement (Marinoni et al., 2020; UNESCO, 2026).
+Outcome assessment requires more than collecting evaluation responses. Evidence must remain associated with the appropriate course, program, learning outcome, academic period, evaluation instrument, and stakeholder group so that it can be interpreted and reviewed over time. Goss (2022) describes student learning outcomes assessment in higher education as a complex process associated with competence and continuous improvement. Bennett et al. (2023) similarly found that assessment work requires sustained time and resources and has a long-term orientation that responds to external stakeholders.
 
-The pressure to monitor outcomes more systematically is also tied to accreditation and standards-based review, where institutions are expected to present clear evidence of attainment and continuous improvement (ABET, 2024; UNESCO, 2026). This centralized approach is already reflected in implementation examples such as Penn State's Nuventive environment for outcomes documentation and reporting (Penn State Office of Planning, Assessment, and Institutional Research, 2024).
+The relationship between course-level and program-level outcomes is also important in this process. CILOs describe what students are expected to achieve within individual courses, while Program / Graduate Outcomes (GOs) represent broader outcomes associated with an academic program. Connecting these levels allows course-level evidence to be considered in relation to broader program expectations. Recent work on course-to-program outcome alignment likewise emphasizes systematic mappings and feedback loops as a means of supporting coherent outcome-based assessment and quality improvement (Derouich, 2025).
 
-Within the local project context, Assumption College of Davao still needs a dedicated, centralized mechanism for structured outcomes monitoring, even as quality documentation demands continue to grow. This need is reinforced by the Region XI higher-education landscape, where many institutions operate under increasingly data-driven monitoring expectations (Commission on Higher Education Regional Office XI, 2024).
+At ACD, the need that led to Project CLOIE emerged from consultations concerning learning-outcome monitoring and accreditation preparation. The project client described the intended system as a feedback and tracking system in which students evaluate the attainment of course outcomes and the resulting information is stored, analyzed, and reported at the course-outcome level and in relation to broader program outcomes. The project also established that the system should provide organized evidence for academic review rather than determine instructional or curricular changes automatically.
 
-Beyond compliance, curriculum decisions must stay responsive to industry shifts. Labor-market signals indicate that required workforce skills are changing rapidly, making recurring outcomes review and stakeholder feedback more important for academic relevance (World Economic Forum, 2023).
+The evaluation context involves several stakeholder groups. The project includes students, graduating students, alumni, and industry partners as respondents, while faculty members and academic or administrative personnel manage or review evaluation activities according to their institutional responsibilities. Four institution-specific evaluation instruments form part of this context: the Post-Term CILO Evaluation Tool, Graduating Student Exit Survey, Alumni Evaluation Tool, and Industry Partner Internship Evaluation Tool. These instruments provide different sources of evidence at different points in the academic and post-graduation cycle.
 
-In response, CLOIE is positioned as a centralized evaluation platform that consolidates stakeholder evidence, supports outcome tracking, and generates reporting inputs for quality assurance and continuous improvement.
+Using multiple stakeholder perspectives can provide information that is not available from course-level assessment alone. Employer and industry participation, for example, can contribute to external quality-assurance processes by providing perspectives on graduate competencies and workplace expectations (Hou et al., 2022). Such information still requires interpretation within the institution's own academic and quality-assurance processes.
 
-<Callout variant="insight" title="Key Insight">
+The resulting information therefore needs to retain its context. A response should remain associated with the evaluation activity, academic period, course or program, outcomes being evaluated, and stakeholder group from which it originated. Quantitative ratings also need to remain distinguishable from qualitative feedback. As assessment records accumulate across evaluation cycles, consistent organization becomes important for analysis, reporting, and subsequent academic review.
 
-CLOIE is justified not only by accreditation requirements, but by the broader need for a practical, data-supported mechanism to identify outcome gaps before they become program-level quality issues.
+Digital analytics can help institutions organize and interpret educational data. Hernández-de-Menéndez et al. (2022) describe learning analytics as the measurement, analysis, and reporting of data about learners and their contexts. However, analytics remain dependent on the quality and structure of the underlying data and on appropriate human interpretation.
 
-</Callout>
+System CLOIE, or the **System for Comprehensive Learning Outcomes and Instructional Evaluation**, was developed as the technological response to this institutional need. Its purpose is to organize learning outcomes and evaluation activities, collect stakeholder responses, process quantitative and qualitative evidence, and present relevant analytics and reports to authorized users. Within continuous quality improvement, the system supports the collection and review of evidence while academic personnel remain responsible for interpreting findings and determining what action should follow. This distinction is consistent with the use of systematic data collection and analysis within academic quality-improvement cycles (Samuel & Farrer, 2025).
 
-</Section>
+## 1.2 Problem Statement
 
-<Section>
+Assumption College of Davao needs a more systematic way to manage learning-outcome and stakeholder evaluation evidence across courses, programs, academic periods, evaluation instruments, and respondent groups so that authorized academic personnel can review the evidence efficiently and use it for quality-assurance and continuous-improvement activities.
 
-## 1.2 Objectives of the Study
+The project addresses the following manifestations of the institutional problem:
 
-This section defines the study's general objective and the specific implementation goals of the proposed CLOIE platform.
+1. Learning outcomes and their relationships to academic programs need to be maintained in a consistent structure so that evaluation evidence can be associated with the appropriate course and program context.
+2. Evaluation activities involve different instruments, academic contexts, and stakeholder groups, creating a need for controlled workflows for deploying evaluations and collecting responses.
+3. Evaluation evidence needs to be consolidated into quantitative results, qualitative feedback, analytics, and reports that authorized academic personnel can review within their assigned institutional scope.
+4. Historical evaluation information needs to retain its academic context so that evidence from different evaluation cycles can be reviewed and compared when appropriate.
+5. Access to academic and evaluation information needs to be controlled according to user roles and institutional scope because evaluation responses and related academic information may require confidentiality.
+6. The resulting evidence needs to be organized in a form that can support academic review, quality assurance, continuous improvement, and accreditation preparation without replacing the judgment and authority of academic personnel.
 
-<Callout variant="objective" title="General Objective">
+These problems establish the basis for the project objectives and are intended to be traceable to the corresponding system requirements and validation evidence.
 
-Develop the System for Comprehensive Learning Outcomes and Instructional Evaluation (CLOIE) to support systematic monitoring and evaluation of Program Learning Outcomes (PLOs) and Graduate Outcomes (GOs) through stakeholder-based feedback, structured data management, and automated reporting for quality assurance and continuous improvement.
+## 1.3 Project Objectives
 
-</Callout>
+### General Objective
+
+Project CLOIE aims to provide a centralized system for managing learning-outcome and stakeholder evaluation evidence to support academic review, quality assurance, continuous improvement, and accreditation preparation at Assumption College of Davao.
 
 ### Specific Objectives
 
-{/*
-  Rendered as explicit list markup rather than a Markdown ordered list so it
-  can carry `.objective-list`, which adds breathing room between the four
-  goals.
-*/}
-<ol class="objective-list">
-  <li>Enable encoding and management of PLOs and GOs per program.</li>
-  <li>Integrate required evaluation tools for students, graduates/alumni, and industry partners.</li>
-  <li>Generate consolidated outcome-attainment reports for evaluation and accreditation support.</li>
-  <li>Ensure confidential and anonymized data handling aligned with continuous improvement.</li>
-</ol>
+* **OBJ-01.** Provide functionality for encoding, organizing, and managing Program / Graduate Outcomes (GOs), Course Intended Learning Outcomes (CILOs), and their relationships within academic programs.
 
-</Section>
+* **OBJ-02.** Provide digital workflows for conducting stakeholder-based evaluations through the required evaluation tools for students, graduating students, alumni, and industry partners.
 
-<Section>
+* **OBJ-03.** Provide authorized academic personnel with dashboards and reports that consolidate relevant learning-outcome and stakeholder evaluation evidence for academic review, quality-assurance activities, continuous improvement, and accreditation preparation.
 
-## 1.3 Significance of the Study
+* **OBJ-04.** Protect evaluation and academic information through authenticated access, role and scope restrictions, controlled response handling, and confidentiality measures appropriate to the user's institutional responsibility.
 
-CLOIE is expected to support different academic stakeholders by centralizing evidence and improving the quality of program-level evaluation workflows.
+The objective identifiers are intended to remain stable throughout the project documentation. Each objective will be linked in the Requirements Traceability Matrix to approved requirements, design components, implementation evidence, test or validation references, and the latest verified status. This avoids treating the objectives as statements that are automatically achieved simply because the software was developed.
 
-<CardGrid variant="significance">
-<Card title="Assumption College of Davao">
 
-Supports a more centralized and organized approach to outcomes monitoring and accreditation-related preparation.
+## 1.4 Scope, Boundaries and Constraints
 
-</Card>
-<Card title="College Dean and Program Heads">
+### 1.4.1 Project Scope
 
-Provides consolidated summaries that help identify gaps, review attainment, and guide academic planning.
+System CLOIE is a web-based academic evaluation and learning-outcome evidence system for Assumption College of Davao. Its scope covers the management of academic structures, learning outcomes, evaluation instruments and deployments, stakeholder responses, quantitative and qualitative evaluation evidence, analytics, and reports for authorized users.
 
-</Card>
-<Card title="Faculty Members">
+The system manages Institutional Learning Outcomes (ILOs), Program / Graduate Outcomes (GOs), and Course Intended Learning Outcomes (CILOs), including relationships between course and program outcomes. It also maintains academic context relevant to evaluation, such as academic periods, programs, courses, course assignments, faculty-course relationships, and course rosters where applicable.
 
-Improves visibility of outcome results for reflection, course alignment, and instructional improvement.
+The project includes the four institutional evaluation instruments represented in the CLOIE requirements: the Post-Term CILO Evaluation Tool, Graduating Student Exit Survey, Alumni Evaluation Tool, and Industry Partner Internship Evaluation Tool. The system supports evaluation deployment, response collection and handling, quantitative result processing, qualitative feedback, analytics, and reporting within the approved system scope.
 
-</Card>
-<Card title="Students and Graduating Students">
+CLOIE's analytics and reports are intended to provide organized evidence for academic review, quality assurance, Continuous Quality Improvement, program evaluation, and accreditation preparation. The system presents evidence for review; it does not independently determine curriculum changes, academic actions, or accreditation findings.
 
-Benefits from programs that are evaluated more systematically for relevance and readiness.
+### 1.4.2 Users and Organizational Scope
 
-</Card>
-<Card title="Alumni and Industry Partners">
+System CLOIE supports different users according to their institutional responsibilities and authorized scope. The identified user groups are:
 
-Creates a structured channel to contribute evidence on employability, competencies, and workplace fit.
+* **Secretary**, for administrative and evaluation-management responsibilities assigned to the role;
+* **Dean**, for college-level oversight and access to information within the authorized college scope;
+* **General Education Coordinator**, for General Education-related responsibilities and applicable outcome and course management;
+* **Program Head**, for program-level outcome, course, evaluation, and evidence-management responsibilities;
+* **Faculty**, for responsibilities associated with assigned courses and related learning-outcome and evaluation activities;
+* **Student**, primarily as a respondent to assigned evaluations;
+* **Alumni**, as respondents to applicable post-graduation evaluations; and
+* **Industry Partner**, as respondents to applicable workplace or internship evaluations.
 
-</Card>
-<Card title="Future Researchers">
+The system distinguishes between **role** and **scope**. A user's role determines the functions available to that user, while the user's scope determines the academic or organizational information that the user is authorized to access or manage. Depending on the role, this scope may be associated with a particular course, program, General Education responsibility, college-level responsibility, or respondent-specific evaluation activity.
 
-Serves as a reference model for developing educational evaluation and outcomes-assessment systems.
+The final responsibilities and access scope of each role are subject to the approved requirements and implementation evidence documented in Chapter 4 and the Requirements Traceability Matrix.
 
-</Card>
-</CardGrid>
+### 1.4.3 System Boundaries
 
-</Section>
+System CLOIE is focused on academic evaluation and learning-outcome evidence management. It does not replace:
 
-<Section>
+* the institution's Learning Management System;
+* the Student Information System;
+* an individual student grading system;
+* instructional delivery platforms;
+* the formal authority of academic decision-makers; or
+* the institution's accreditation process itself.
 
-## 1.4 Scope and Delimitation
+CLOIE collects, manages, analyzes, and presents evaluation evidence. Academic and curricular decisions remain the responsibility of authorized institutional personnel.
 
-The chapter separates what CLOIE is designed to cover from what it deliberately excludes.
+The system does not treat evaluation analytics as automatic judgments about program quality. Quantitative results and qualitative feedback are evidence for review, while interpretation and subsequent institutional action remain outside the system's decision-making authority.
 
-<CardGrid variant="scope">
-<Card title="Scope (Included)" tone="accent">
+Peer-to-Peer Evaluation, Self-Evaluation, and Class Observation are proposed or pending features. They are not treated as completed baseline System CLOIE modules unless subsequent approved requirements, implementation evidence, testing, and validation establish otherwise.
 
-- PLO and GO management by authorized academic users
-- Stakeholder-based evaluation across students, graduating students, alumni, and industry
-- Outcome evaluation and digital response collection
-- Outcome attainment analysis and report generation
-- Support for continuous quality improvement workflows
-- Confidential and anonymized data handling in aggregated form
+### 1.4.4 Technical and Operational Constraints
 
-</Card>
-<Card title="Delimitation (Excluded)" tone="warn">
+The operation and evaluation of System CLOIE are subject to project and institutional constraints. These include dependence on internet connectivity and approved external services, availability of appropriate stakeholder and academic data, institutional requirements for user accounts and access, privacy and security restrictions, participant availability for validation, and any approval or operational requirements associated with institutional use.
 
-- No student grading computation or storage
-- Not a Learning Management System (LMS)
-- Not a Student Information System (SIS)
-- No individual student performance tracking
-- Not a replacement for full institutional accreditation systems
-- Limited to evaluation, monitoring, and reporting functions
+These constraints may affect development, testing, validation, deployment, and eventual turnover. Their final status and impact should be documented through the project records and deployment evidence rather than assumed to be resolved.
 
-</Card>
-</CardGrid>
+## 1.5 Significance and Intended Beneficiaries
 
-</Section>
+### 1.5.1 Assumption College of Davao
 
-<Section>
+ACD may use organized evaluation evidence to support academic review, quality assurance, continuous improvement, and accreditation preparation. Centralizing relevant evidence can also reduce the need to consolidate information from disconnected evaluation records.
 
-## 1.5 Time and Place of the Study
+### 1.5.2 College Dean
 
-The study is situated at Assumption College of Davao and follows the capstone development window from March 2026 to September 2026, covering analysis, design, development, testing, and documentation in coordination with relevant academic personnel.
+The Dean may use authorized college-level views and reports to review learning-outcome and stakeholder evaluation evidence within the scope assigned to the role.
 
-<Chips items={['Place: Assumption College of Davao', 'Duration: March 2026 to September 2026', 'Context: Capstone development period']} />
+### 1.5.3 General Education Coordinator
 
-</Section>
+The General Education Coordinator may use applicable functions for managing General Education-related course and outcome information and reviewing relevant evaluation evidence within the coordinator's authorized scope.
 
-<Section>
+### 1.5.4 Program Heads
 
-## 1.6 Operational Definition of Terms
+Program Heads may use learning-outcome information, evaluation evidence, analytics, and reports relevant to their assigned programs to support program-level review.
 
-The chapter defines core concepts used throughout CLOIE's proposed evaluation workflow.
+### 1.5.5 Faculty Members
 
-<CardGrid variant="term">
-<Card title="Accreditation">
+Faculty members may use course-related learning-outcome and evaluation information to review evidence associated with their assigned courses and contribute to academic improvement activities.
 
-Formal quality evaluation requiring evidence of outcome attainment and continuous improvement.
+### 1.5.6 Students
 
-</Card>
-<Card title="Alumni Evaluation">
+Students participate in applicable evaluation activities and provide feedback that becomes part of the evidence available for academic review and quality improvement.
 
-Graduate feedback on how academic preparation aligns with professional experience.
+### 1.5.7 Alumni
 
-</Card>
-<Card title="CILO Evaluation Tool">
+ Alumni provide post-graduation perspectives through the applicable evaluation process. Their responses contribute another source of evidence for program review.
 
-Instrument for collecting student feedback on course outcomes and instructional effectiveness.
+### 1.5.8 Industry Partners
 
-</Card>
-<Card title="CLOIE">
+Industry partners provide external feedback through the applicable evaluation process. Their responses can provide information relevant to workplace and professional expectations.
 
-Proposed system for outcomes monitoring, stakeholder evaluation, and automated reporting.
+### 1.5.9 ICTC and Future System Maintainers
 
-</Card>
-<Card title="Continuous Quality Improvement (CQI)">
+ICTC personnel and future maintainers may benefit from having documented system requirements, architecture, configuration, security controls, and operational dependencies. These materials can support maintenance and institutional turnover when supported by the final project documentation.
 
-Ongoing review-and-improve process supported by evaluation evidence.
+### 1.5.10 Future Capstone Researchers or Institutions
 
-</Card>
-<Card title="Graduate Outcomes (GOs)">
+The project may provide a reference for future work involving academic evaluation and learning-outcome evidence management. Any reuse or adaptation would depend on the requirements, policies, academic structures, and technical conditions of the adopting institution.
 
-Program-level competencies expected from graduates.
+## 1.6 Success Criteria / Expected Project Outcomes
 
-</Card>
-<Card title="Graduating Student Exit Survey">
+The project success criteria define what must be demonstrated later through requirements verification, testing, validation, and other project evidence. They do not represent results already achieved.
 
-Instrument gathering pre-graduation feedback on outcomes and program experience.
+<div className="manuscript-table" role="region" tabIndex="0" aria-label="Table 1.1 Project Success Criteria">
 
-</Card>
-<Card title="Industry Internship Evaluation">
+**Table 1.1 Project Success Criteria**
 
-Employer-side evaluation of student readiness, competencies, and professional skills.
+| Objective ID | Success Criterion | Measurement / Evidence | Acceptance Threshold |
+| ----- | ----- | ----- | ----- |
+| OBJ-01 | The approved outcome-management capabilities are implemented and traceable. | Requirements Traceability Matrix, implementation evidence, functional tests | All approved OBJ-01 requirements have a documented implementation reference and corresponding verification status. |
+| OBJ-02 | The approved stakeholder evaluation workflows and required evaluation tools are available according to the approved scope. | Requirements Traceability Matrix, workflow tests, user-validation evidence | All approved OBJ-02 requirements have documented verification or an explicitly recorded deferred/partial status. |
+| OBJ-03 | Authorized users can access the approved analytics and reporting capabilities within their assigned scope. | Requirements Traceability Matrix, functional tests, authorization tests, validation evidence | All critical OBJ-03 workflows have documented verification evidence. |
+| OBJ-04 | Authentication, role/scope restrictions, response controls, and applicable confidentiality controls operate according to approved security requirements. | SEC requirements, security tests, implementation evidence, validation evidence | All approved critical security requirements have documented verification evidence; unresolved requirements are explicitly reported. |
 
-</Card>
-<Card title="Outcome Attainment">
+</div>
 
-Measured level at which program outcomes are achieved based on aggregated evidence.
+The criteria intentionally avoid assigning an arbitrary percentage merely to create a numerical target. The project's final results should be reported against the approved requirements and evidence available at the time of evaluation.
 
-</Card>
-<Card title="Outcome-Based Education (OBE)">
+## 1.7 Definition of Terms
 
-Framework centered on clearly defined and measurable learning outcomes.
+* **Course Intended Learning Outcome (CILO).** A learning outcome associated with a particular course that describes what students are expected to achieve through the course.
+* **Institutional Learning Outcome (ILO).** An institution-level learning outcome representing broader learning expectations applicable within the institution's academic framework.
+* **Program / Graduate Outcome (GO).** A broader outcome associated with an academic program and used in the project to represent expected competencies or achievements at the program or graduate level.
+* **CILO Mapping Manifestation.** The relationship recorded in System CLOIE to describe how a CILO contributes to a broader program outcome through the approved manifestation categories of **Learning, Practice, or Opportunity**.
+* **Course-Bound Evaluation.** An evaluation deployed within the context of a particular course, such as a Post-Term CILO Evaluation.
+* **Central Evaluation.** An evaluation deployed at a broader institutional or program context rather than being tied to a single faculty-course evaluation workflow.
+* **Controlled Deployment.** A configured evaluation activity that determines the intended respondents, evaluation context, availability, and response conditions for a particular evaluation instance.
+* **Outcome Attainment.** Evidence representing the degree to which an intended learning outcome is demonstrated through the approved evaluation or assessment information available in System CLOIE.
+* **Stakeholder Evaluation.** An evaluation in which an identified stakeholder group, such as a student, graduating student, alumnus, or industry partner, provides responses concerning an approved evaluation instrument.
+* **Continuous Quality Improvement (CQI).** An ongoing institutional process in which evidence is reviewed and used to identify and implement appropriate improvements. In Project CLOIE, the system supports the evidence-collection and review aspects of this process but does not make academic decisions independently.
+* **Project CLOIE.** The capstone project involving the analysis, design, development, testing, documentation, and validation of the proposed solution.
+* **System CLOIE.** The software system developed by Project CLOIE to manage learning-outcome and academic evaluation evidence.
 
-</Card>
-<Card title="Plan-Do-Check-Act (PDCA)">
-
-Iterative quality cycle used to guide evidence-based improvement actions.
-
-</Card>
-<Card title="Program Learning Outcomes (PLOs)">
-
-Expected knowledge, skills, and competencies upon program completion.
-
-</Card>
-<Card title="Stakeholder-Based Evaluation">
-
-Evaluation approach integrating inputs from multiple respondent groups.
-
-</Card>
-<Card title="System User">
-
-Authorized participant who encodes, submits, reviews, or interprets CLOIE data.
-
-</Card>
-</CardGrid>
-
-</Section>
-
-<Section>
-
-## 1.7 Conceptual Framework
-
-The conceptual framework follows an Input-Process-Output (IPO) model integrated with a PDCA feedback loop, showing how stakeholder evidence is transformed into decision-ready reports and improvement actions.
-
-<CardGrid variant="ipo">
-<Card title="Input">
-
-Evaluation data from students, graduating students, alumni, and industry, plus encoded PLOs and GOs from faculty and academic units.
-
-</Card>
-<Card title="Process">
-
-CLOIE manages outcomes, collects responses, secures anonymized data, and computes attainment through basic statistical processing.
-
-</Card>
-<Card title="Output">
-
-Outcome-attainment reports, stakeholder summaries, and program insights used by deans, heads, and faculty for review and action planning.
-
-</Card>
-</CardGrid>
-
-<Figure
-  src={conceptualFramework}
-  alt="Conceptual framework figure for CLOIE"
-  caption="Figure 1. Conceptual Framework (IPO model with PDCA-informed continuous quality improvement loop)."
-/>
-
-</Section>
+Supporting appendix records are outside the scope of this website edition. References to those records identify source evidence, not published appendix pages.

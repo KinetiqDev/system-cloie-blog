@@ -1,0 +1,259 @@
+/* ===== PRINT =====
+   The capstone guide mandates Letter, 1 in margins, 1.5 body spacing, and
+   Roman page numbers for preliminary pages with Arabic numbering from Chapter 1.
+   A documentation site that prints correctly is worth having: the manuscript
+   will be submitted as a PDF from somewhere, and a page of this site should
+   survive the trip.
+
+   Two things this stylesheet must not do: hide content that exists only on
+   screen, or leave a scroll container that clips a wide table in half. Both are
+   the usual failure modes of printing a web page. */
+
+@media print {
+  @page {
+    size: letter;
+    margin: 1in;
+  }
+
+  /* Chrome, navigation, and anything that exists to navigate. */
+  .header,
+  .mobile-overlay,
+  .footer,
+  .back-to-top,
+  .chapter-cta,
+  .chapter-nav,
+  .chapter-tail,
+  .header__mobile-btn,
+  .theme-toggle,
+  .card--chapter .btn,
+  .status__link,
+  .figlist__thumb,
+  .toc__chapter-title a::after {
+    display: none !important;
+  }
+
+  html,
+  body {
+    background: #fff !important;
+    color: #000 !important;
+    font-size: 11pt;
+    line-height: 1.5;
+    /* Diagrams and status pills carry meaning in their fill; print the fills
+       so the distinction survives on paper. */
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  /* The site ships a dark theme, and component styles such as
+     `[data-theme='dark'] .card-item h3` set near-white text. Print output is
+     always on white paper, so every colour is forced to ink. Targeting the
+     theme attribute rather than each component selector is what makes this
+     survive a component gaining a new dark-mode rule. */
+  [data-theme='dark'] * {
+    color: #000 !important;
+  }
+
+  .page-wrapper {
+    display: block;
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  /* Break the gradient banner down to a ruled heading, and keep the chapter
+     number, title and description — they are the heading of the chapter. */
+  .chapter-banner {
+    background: none !important;
+    border-bottom: 2px solid #000;
+    padding: 0 0 10pt;
+    break-after: avoid;
+  }
+
+  .chapter-banner__orbs,
+  .chapter-banner__jumps {
+    display: none !important;
+  }
+
+  .chapter-banner__title {
+    color: #000 !important;
+    font-size: 18pt;
+  }
+
+  .chapter-banner__desc {
+    color: #333 !important;
+    font-size: 10.5pt;
+  }
+
+  .chapter-banner__breadcrumb {
+    display: none;
+  }
+
+  .container,
+  .section {
+    max-width: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Reveal is a viewport animation; on paper everything is already in view. */
+  .reveal,
+  .js .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    color: #000 !important;
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+
+  h2 {
+    font-size: 14pt;
+    margin-top: 18pt;
+  }
+
+  h3 {
+    font-size: 12pt;
+  }
+
+  p,
+  li {
+    color: #000 !important;
+    orphans: 3;
+    widows: 3;
+  }
+
+  a {
+    color: #000 !important;
+    text-decoration: none;
+  }
+
+  /* A link whose target is outside the printed page needs to show its address. */
+  .chapter-content a[href^='http']::after {
+    content: ' (' attr(href) ')';
+    font-size: 8.5pt;
+    color: #555;
+    word-break: break-all;
+  }
+
+  /* Tables must not be clipped. Unclip the scroll region and let the table use
+     the full text width, with repeating headers across page breaks. */
+  .ms-table__scroll,
+  .card-grid,
+  .figure-container {
+    overflow: visible !important;
+    max-height: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    break-inside: auto;
+  }
+
+  .ms-table {
+    width: 100% !important;
+    margin: 12pt 0 !important;
+    transform: none !important;
+  }
+
+  .ms-table table {
+    font-size: 9pt;
+    width: 100% !important;
+    table-layout: auto;
+  }
+
+  .ms-table th,
+  .ms-table td {
+    padding: 5pt 7pt;
+    border-bottom: 1px solid #bbb;
+    white-space: normal;
+  }
+
+  /* Keep a short status or count cell from being squeezed into a two-word
+     column when the surrounding prose is long. */
+  .ms-table th[scope='row'],
+  .ms-table td:nth-child(2) {
+    white-space: nowrap;
+  }
+
+  .ms-table thead {
+    display: table-header-group;
+  }
+
+  .ms-table tr {
+    break-inside: avoid;
+  }
+
+  .ms-table__caption,
+  .ms-table__note,
+  .figure-caption {
+    color: #333 !important;
+    font-size: 9.5pt;
+  }
+
+  .figure-image {
+    /* Diagrams are 1000–1600px wide; cap them so they fit the text block
+       without the print dialog scaling the page. */
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  .card-grid {
+    display: block;
+  }
+
+  .card-grid > .card-item {
+    border: 1px solid #ccc !important;
+    background: none !important;
+    break-inside: avoid;
+    margin-bottom: 8pt;
+  }
+
+  .callout {
+    border-left: 3pt solid #000 !important;
+    background: none !important;
+    break-inside: avoid;
+  }
+
+  .disclosure {
+    border: 1px solid #ccc !important;
+  }
+
+  /* A collapsed <details> is invisible in print, which would silently drop
+     evidence. Chrome hides the hidden slot via `::details-content`, which a
+     `display` override on the child does not reach; both have to be set. */
+  details > .disclosure__body,
+  .disclosure > .disclosure__body {
+    display: block !important;
+  }
+
+  .disclosure::details-content {
+    content-visibility: visible !important;
+    display: block !important;
+    block-size: auto !important;
+  }
+
+  .disclosure__summary::before {
+    content: none;
+  }
+
+  .evidence {
+    border: 1pt solid #666 !important;
+    background: none !important;
+    color: #000 !important;
+  }
+
+  .chip,
+  .keywords__item {
+    border: 1px solid #999 !important;
+    background: none !important;
+    color: #000 !important;
+  }
+}

@@ -1,0 +1,161 @@
+---
+import FrontMatterLayout from '../layouts/FrontMatterLayout.astro';
+import { FIGURES } from '../lib/figures';
+import { chapterPath, getChapters } from '../lib/chapters';
+import { FRONT_MATTER } from '../lib/front-matter';
+import { withBase } from '../lib/url';
+
+/**
+ * List of Figures, derived from the figure registry.
+ *
+ * Every figure in the manuscript is declared once in `src/lib/figures.ts` and
+ * rendered once by `<Figure id="…" />`. This page reads the same registry, so a
+ * figure cannot appear in the manuscript without appearing here.
+ *
+ * Each row also shows a small thumbnail: these diagrams are the hardest thing in
+ * the manuscript to navigate by title alone, and a reader deciding whether a
+ * figure is relevant can judge that far faster from the image.
+ */
+const chapters = await getChapters();
+const byNumber = new Map(chapters.map((chapter) => [chapter.data.chapter, chapter]));
+
+const rows = FIGURES.map((figure) => ({
+  figure,
+  chapter: byNumber.get(figure.chapter),
+})).filter((row) => row.chapter);
+---
+
+<FrontMatterLayout
+  title="List of Figures"
+  label="List of Figures"
+  description={FRONT_MATTER.find((item) => item.path === '/figures')!.description}
+  current="/figures"
+  siblings={FRONT_MATTER.map(({ path, label }) => ({ path: path, label }))}
+>
+  <p class="list-intro">
+    Figures are numbered per chapter. Each entry links to the section that
+    explains the diagram — the guide's rule is that every figure must be
+    discussed in the text.
+  </p>
+
+  <ol class="figlist">
+    {
+      rows.map(({ figure, chapter }) => (
+        <li class="figlist__row">
+          <a class="figlist__thumb" href={withBase(`${chapterPath(chapter!)}#${figure.anchor}`)}>
+            <img
+              src={figure.src.src}
+              alt=""
+              width={figure.src.width}
+              height={figure.src.height}
+              loading="lazy"
+              decoding="async"
+            />
+          </a>
+          <div class="figlist__body">
+            <p class="figlist__caption">
+              <strong>Figure {figure.number}.</strong> {figure.caption}
+            </p>
+            <a
+              class="figlist__link"
+              href={withBase(`${chapterPath(chapter!)}#${figure.anchor}`)}
+            >
+              View in {chapter!.data.navLabel} &rarr;
+            </a>
+          </div>
+        </li>
+      ))
+    }
+  </ol>
+</FrontMatterLayout>
+
+<style>
+  .list-intro {
+    font-size: 15.5px;
+    color: var(--cloie-text-secondary);
+    max-width: 680px;
+    margin-bottom: 26px;
+  }
+
+  .figlist {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 12px;
+  }
+
+  .figlist__row {
+    display: flex;
+    gap: 18px;
+    align-items: center;
+    padding: 12px 14px;
+    border: 1px solid var(--cloie-border);
+    border-radius: var(--radius-md);
+    background: var(--cloie-bg-card);
+    transition: border-color var(--transition-fast);
+  }
+
+  .figlist__row:hover {
+    border-color: rgba(15, 168, 251, 0.3);
+  }
+
+  .figlist__thumb {
+    flex: none;
+    width: 76px;
+    height: 98px;
+    border: 1px solid var(--cloie-border);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    background: #fff;
+    display: block;
+  }
+
+  .figlist__thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: top center;
+  }
+
+  .figlist__body {
+    min-width: 0;
+  }
+
+  .figlist__caption {
+    font-size: 15.5px;
+    line-height: 1.5;
+    color: var(--cloie-text);
+    margin: 0 0 6px;
+  }
+
+  .figlist__link {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--cloie-blue-dark);
+    text-decoration: none;
+  }
+
+  .figlist__link:hover {
+    text-decoration: underline;
+  }
+
+  [data-theme='dark'] .figlist__row {
+    background: var(--cloie-bg-elevated);
+  }
+
+  [data-theme='dark'] .figlist__link {
+    color: var(--cloie-blue);
+  }
+
+  @media (max-width: 560px) {
+    .figlist__row {
+      flex-direction: column;
+    }
+
+    .figlist__thumb {
+      width: 100%;
+      height: 150px;
+    }
+  }
+</style>

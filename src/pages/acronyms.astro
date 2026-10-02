@@ -1,0 +1,22 @@
+---
+import { getEntry, render } from 'astro:content';
+import FrontMatterLayout from '../layouts/FrontMatterLayout.astro';
+import { FRONT_MATTER } from '../lib/front-matter';
+
+const entry = await getEntry('frontMatter', 'acronyms');
+if (!entry) throw new Error('Missing front-matter entry: acronyms');
+const { Content } = await render(entry);
+---
+
+<FrontMatterLayout
+  title={entry.data.title}
+  label={entry.data.navLabel}
+  description={entry.data.description}
+  current="/acronyms"
+  siblings={FRONT_MATTER.map(({ path, label }) => ({
+    path: path,
+    label,
+  }))}
+>
+  <Content />
+</FrontMatterLayout>

@@ -5,33 +5,36 @@ import Icon from '../components/Icon.astro';
 import Reveal from '../components/Reveal.astro';
 import type { IconName } from '../lib/icons';
 import { getChapters, chapterPath } from '../lib/chapters';
+import { FRONT_MATTER } from '../lib/front-matter';
+import EvidenceStatus from '../components/chapter/EvidenceStatus.astro';
 import { withBase } from '../lib/url';
 import cloieLogo from '../assets/cloie-logo.svg';
 import acdLogo from '../assets/acd-logo.jpg';
+import { PRODUCTION } from '../lib/system';
 import clientPhoto from '../assets/client.png';
 import member1 from '../assets/member1.png';
 import member2 from '../assets/member2.png';
 import consultantPhoto from '../assets/consultant.png';
 import '../styles/home.css';
 
-const problems = [
+const problems: { icon: IconName; title: string; desc: string }[] = [
   {
-    icon: '🧩',
+    icon: 'shuffle',
     title: 'Fragmented Monitoring',
     desc: 'Manual and scattered workflows make it hard to track outcomes consistently across courses and programs.',
   },
   {
-    icon: '📑',
+    icon: 'file-check',
     title: 'Accreditation Evidence Pressure',
     desc: 'Institutions need organized and auditable evidence to support accreditation and quality assurance cycles.',
   },
   {
-    icon: '💬',
+    icon: 'message-square',
     title: 'Stakeholder Feedback Consolidation',
     desc: 'Feedback from students, alumni, and industry is difficult to combine meaningfully without centralized tools.',
   },
   {
-    icon: '🔍',
+    icon: 'compass',
     title: 'Continuous Improvement Readiness',
     desc: 'Academic leaders need clear summaries to identify outcome gaps, interpret trends, and guide program-level actions.',
   },
@@ -70,9 +73,11 @@ const features: { icon: IconName; title: string; desc: string }[] = [
   },
 ];
 
-const benefits: { variant: 'blue' | 'gold'; icon: IconName; title: string; items: string[] }[] = [
+// One accent for all four. The groups are peers — the section subtitle calls
+// them "key academic groups" as a single set — so alternating a second colour
+// by index implied a ranking that does not exist.
+const benefits: { icon: IconName; title: string; items: string[] }[] = [
   {
-    variant: 'blue',
     icon: 'school',
     title: 'Higher Education Institutions',
     items: [
@@ -82,7 +87,6 @@ const benefits: { variant: 'blue' | 'gold'; icon: IconName; title: string; items
     ],
   },
   {
-    variant: 'gold',
     icon: 'graduation-cap',
     title: 'Students',
     items: [
@@ -92,7 +96,6 @@ const benefits: { variant: 'blue' | 'gold'; icon: IconName; title: string; items
     ],
   },
   {
-    variant: 'blue',
     icon: 'user-check',
     title: 'Educators',
     items: [
@@ -102,7 +105,6 @@ const benefits: { variant: 'blue' | 'gold'; icon: IconName; title: string; items
     ],
   },
   {
-    variant: 'gold',
     icon: 'clipboard-list',
     title: 'Administrators',
     items: [
@@ -113,13 +115,13 @@ const benefits: { variant: 'blue' | 'gold'; icon: IconName; title: string; items
   },
 ];
 
-const stakeholders = [
-  { icon: '👩‍🏫', title: 'Faculty Members', desc: 'Encode outcomes and review program-level evaluation summaries.' },
-  { icon: '🎓', title: 'Students', desc: 'Provide feedback on learning outcomes and course alignment.' },
-  { icon: '📜', title: 'Graduating Students', desc: 'Contribute exit-survey evidence on program effectiveness.' },
-  { icon: '🧑‍💼', title: 'Alumni', desc: 'Share post-graduation insights on relevance and employability.' },
-  { icon: '🏢', title: 'Industry Partners', desc: 'Assess workplace readiness and competency alignment.' },
-  { icon: '👩‍💼', title: 'Program Heads & Deans', desc: 'Use consolidated reports for quality assurance and planning.' },
+const stakeholders: { icon: IconName; title: string; desc: string }[] = [
+  { icon: 'presentation', title: 'Faculty Members', desc: 'Encode outcomes and review program-level evaluation summaries.' },
+  { icon: 'graduation-cap', title: 'Students', desc: 'Provide feedback on learning outcomes and course alignment.' },
+  { icon: 'award', title: 'Graduating Students', desc: 'Contribute exit-survey evidence on program effectiveness.' },
+  { icon: 'briefcase', title: 'Alumni', desc: 'Share post-graduation insights on relevance and employability.' },
+  { icon: 'building-2', title: 'Industry Partners', desc: 'Assess workplace readiness and competency alignment.' },
+  { icon: 'landmark', title: 'Program Heads & Deans', desc: 'Use consolidated reports for quality assurance and planning.' },
 ];
 
 interface Member {
@@ -159,10 +161,26 @@ const chapterRange =
   chapters.length > 1
     ? `Chapters ${firstChapter!.data.chapter}–${lastChapter!.data.chapter}`
     : `Chapter ${firstChapter?.data.chapter ?? 1}`;
+
+// The five chapters are an argument, not a menu: context, then the evidence
+// base, then the process, then the design, then the results. Labelling each
+// card with its phase is what makes the sequence legible on the way down.
+const PHASE_LABELS: Record<string, string> = {
+  context: 'Context',
+  evidence: 'Evidence base',
+  process: 'Process',
+  design: 'Design',
+  outcomes: 'Outcomes',
+};
+
+// The manuscript reports unfinished validation rather than estimating a
+// completion rate. The landing page says so too, rather than implying a
+// finished system — a reader who finds that out on Chapter 5 has been misled.
+const statusChapters = chapters.filter((chapter) => chapter.data.evidenceState);
 ---
 
 <BaseLayout
-  description="PROJECT CLOIE — documentation of a client-driven project management system developed with Activity-Based Costing and Agile methods."
+  description="PROJECT CLOIE — the documentation site for a capstone that built System CLOIE, a web-based learning-outcome and academic evaluation evidence system for Assumption College of Davao."
 >
   <div class="page-wrapper">
     {/* ===== HERO ===== */}
@@ -220,6 +238,16 @@ const chapterRange =
               Explore the Project
               <Icon name="arrow-right" size={16} />
             </a>
+            <a
+              href={PRODUCTION.url}
+              class="btn btn-ghost"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Open the system
+              <Icon name="external-link" size={16} />
+              <span class="sr-only">(opens in a new tab)</span>
+            </a>
           </div>
         </Reveal>
       </div>
@@ -260,7 +288,9 @@ const chapterRange =
 
           <Reveal delay={0.2} x={-40}>
             <div class="about__panel">
-              <span class="about__panel-icon" aria-hidden="true">🎓</span>
+              <span class="about__panel-icon">
+                <Icon name="school" size={34} />
+              </span>
               <h3 class="about__panel-title">Academic-Focused by Design</h3>
               <p>
                 CLOIE is presented as a capstone proposal website emphasizing clarity, institutional
@@ -295,7 +325,9 @@ const chapterRange =
             problems.map((item, i) => (
               <Reveal delay={i * 0.08}>
                 <div class="card card--problem">
-                  <span class="card-icon" aria-hidden="true">{item.icon}</span>
+                  <div class="card__icon-wrap">
+                    <Icon name={item.icon} size={28} />
+                  </div>
                   <h3>{item.title}</h3>
                   <p>{item.desc}</p>
                 </div>
@@ -349,7 +381,7 @@ const chapterRange =
           {
             benefits.map((item, i) => (
               <Reveal delay={i * 0.08}>
-                <div class:list={['card', 'card--benefit', `card--benefit-${item.variant}`]}>
+                <div class="card card--benefit">
                   <div class="card__icon-wrap card__icon-wrap--sm">
                     <Icon name={item.icon} size={24} />
                   </div>
@@ -383,7 +415,9 @@ const chapterRange =
             stakeholders.map((item, i) => (
               <Reveal delay={i * 0.08}>
                 <div class="card card--stakeholder">
-                  <span class="card-icon" aria-hidden="true">{item.icon}</span>
+                  <div class="card__icon-wrap card__icon-wrap--sm">
+                    <Icon name={item.icon} size={24} />
+                  </div>
                   <h3>{item.title}</h3>
                   <p>{item.desc}</p>
                 </div>
@@ -400,20 +434,38 @@ const chapterRange =
         <Reveal>
           <h2 class="section-title">Capstone Chapter Summaries</h2>
           <p class="section-subtitle">
-            Move from project overview to structured chapter summaries designed for web readability.
+            Five chapters following the 2026 capstone documentation format: the problem and its
+            boundaries, the evidence base, the engineering process, the system design, and the
+            measured results.
           </p>
         </Reveal>
+
+        <div class="frontmatter" aria-label="Overview">
+          {
+            FRONT_MATTER.map((item, i) => (
+              <Reveal delay={i * 0.06}>
+                <a href={withBase(item.path)} class="frontmatter__item">
+                  <span class="frontmatter__label">{item.label}</span>
+                  <span class="frontmatter__desc">{item.description}</span>
+                </a>
+              </Reveal>
+            ))
+          }
+        </div>
 
         <div class="grid-3 chapters__grid">
           {
             chapters.map((chapter, i) => (
               <Reveal delay={i * 0.08}>
                 <div class="card card--chapter">
-                  <span class="badge">{chapter.data.navLabel}</span>
+                  <div class="card--chapter__top">
+                    <span class="badge">{chapter.data.navLabel}</span>
+                    <span class="card--chapter__phase">{PHASE_LABELS[chapter.data.phase]}</span>
+                  </div>
                   <h3>{chapter.data.cardTitle ?? chapter.data.title}</h3>
                   <p>{chapter.data.summary}</p>
                   <a href={withBase(chapterPath(chapter))} class="btn btn-primary btn--sm">
-                    Read Summary <Icon name="arrow-right" size={14} />
+                    Read Chapter <Icon name="arrow-right" size={14} />
                   </a>
                 </div>
               </Reveal>
@@ -431,6 +483,32 @@ const chapterRange =
             </div>
           </Reveal>
         </div>
+
+        {
+          statusChapters.length > 0 && (
+            <Reveal>
+              <aside class="status" aria-label="Project validation status">
+                <h3 class="status__title">Where the evidence actually stands</h3>
+                <p class="status__intro">
+                  This project reports what it has verified rather than what it hopes to have
+                  verified. Stating the gaps is part of the result.
+                </p>
+                <ul class="status__list">
+                  {statusChapters.map((chapter) => (
+                    <li class="status__row">
+                      <span class="status__chapter">{chapter.data.navLabel}</span>
+                      <EvidenceStatus status={chapter.data.evidenceState!} />
+                      <span class="status__note">{chapter.data.evidenceNote}</span>
+                      <a href={withBase(chapterPath(chapter))} class="status__link">
+                        Read <Icon name="arrow-right" size={12} />
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </aside>
+            </Reveal>
+          )
+        }
       </div>
     </section>
 

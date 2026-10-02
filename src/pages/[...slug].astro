@@ -6,14 +6,16 @@ import { getChapterNeighbours } from '../lib/chapters';
 /**
  * Every manuscript chapter is published from its frontmatter `slug`, which is
  * what keeps the existing public URLs (`/chapter1`, `/chapter2`, …) working
- * and lets chapters 4 and 5 be added without touching routing.
+ * and lets chapters 4 and 5 be added without touching routing. Routing is
+ * keyed on `slug` rather than the loader-generated entry `id`, so renaming a
+ * source file can never republish a public URL.
  *
  * This catch-all sits below `index.astro`, `references.astro` and
  * `404.astro` in Astro's route priority, so it only ever serves chapters.
  */
 export async function getStaticPaths() {
   const chapters = await getCollection('chapters');
-  return chapters.map((chapter) => ({ params: { slug: chapter.id } }));
+  return chapters.map((chapter) => ({ params: { slug: chapter.data.slug } }));
 }
 
 const { slug } = Astro.params;

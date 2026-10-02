@@ -1,0 +1,405 @@
+---
+chapter: 5
+phase: outcomes
+title: 'Implementation, Evaluation and Project Outcomes'
+navLabel: 'Chapter 5'
+cardTitle: 'Implementation & Results'
+description: >-
+  Evidence that the solution was implemented, tested, evaluated with
+  representative users, and prepared for operational use — including the parts
+  of the evidence set that are still outstanding.
+summary: >-
+  The implemented capabilities, requirements fulfillment, automated and
+  user-validation results, honest limitations, and operational readiness.
+order: 5
+slug: chapter5
+---
+
+
+## 5.1 Implemented Solution and Key Technical Features
+
+### 5.1.1 Final System Overview
+
+System CLOIE is an implemented web-based information system for managing learning-outcome evaluation context, deploying evaluation instruments, collecting stakeholder responses, and presenting authorized analytics. The current application uses a modular monolith built with the Next.js App Router. Prisma provides the data-access layer over PostgreSQL, while self-hosted Supabase provides authentication and related backend services. The application supports installable Progressive Web App behavior and responsive desktop and mobile layouts.
+
+The completed baseline covers administrative, academic, faculty, and respondent workflows. The system does not replace the institution's Learning Management System or Student Information System. It stores only the academic context needed to control evaluations, preserve the meaning of responses, and support later review.
+
+### 5.1.2 Identity, Authentication and Role Management
+
+System CLOIE uses Google authentication through Supabase Auth. After authentication, the server resolves the institutional user record, assigned roles, active role, and authorized scope. The application enforces role and resource boundaries on the server. Differences in menus or screens do not act as the security boundary.
+
+A user may hold more than one assigned role, but the application uses one active authorization context at a time. Role switching changes the server-resolved context and prevents permissions from unrelated roles from being combined. Onboarding and verification flows collect the role-specific information needed to place respondents and academic users within the correct institutional scope.
+
+### 5.1.3 Academic Structure, Curriculum and Course Management
+
+The implemented academic structure includes programs, majors, courses, school years, semesters, and terms. Authorized Secretary and General Education workflows maintain the records needed by evaluations and course assignments. Current course pages include filters for year level, semester, and term where these dimensions apply.
+
+The project removed the earlier curriculum-versioning runtime after design review. The current model uses direct academic structures and immutable evaluation snapshots to preserve the context of published activities. This change reduced an unnecessary lifecycle while keeping historical response evidence tied to the published evaluation context.
+
+### 5.1.4 Learning Outcomes Management
+
+System CLOIE manages Institutional Learning Outcomes, Program Learning Outcomes, and Course Intended Learning Outcomes. General Education responsibilities use the institutional outcome scope, while Program Heads manage program outcomes and Faculty members manage course outcomes within assigned courses. The system records typed mappings and the Learning, Practice, or Opportunity manifestation associated with an approved CILO relationship.
+
+Publication checks use these mappings as readiness conditions for course-bound evaluations. The mapping records provide traceable context for later analytics. They do not calculate official grades or make curriculum decisions.
+
+### 5.1.5 Course Assignment and Roster Management
+
+Course assignments connect a faculty member, course, academic period, section, and authorized program context. Rosters establish who may receive a course-bound evaluation. The system supports assignment and roster changes, including controlled post-publication additions, exclusions, and reversals while the evaluation window remains open.
+
+The workflow records the acting user and the reason for exclusion or reversal. Published evaluation assignments preserve their context so later administrative edits do not silently change the meaning of previously collected responses. Beta sessions showed that roster preparation, stable respondent identifiers, and accurate account placement remain operational preconditions for successful faculty and student workflows.
+
+### 5.1.6 Evaluation Instrument Management
+
+Authorized users can create and manage reusable evaluation instruments. The builder supports structured question types, rating scales, open-ended prompts, outcome bindings, and baseline-template duplication. Program-owned templates keep their outcome bindings within the selected program scope. A CILO may also bind to more than one applicable Likert question.
+
+System CLOIE separates an instrument from a deployment. An instrument defines the reusable questions and configuration, while a deployment defines the academic scope, respondents, availability period, and publication state for a specific evaluation activity.
+
+### 5.1.7 Evaluation Deployment and Response Collection
+
+The application supports course-bound and central deployments. Course-bound deployments use a locked course and roster context. Central deployments target eligible stakeholder populations within the authorized program or institutional scope. Publication checks verify required academic and outcome relationships before assigning respondents.
+
+Respondents may save a draft where the workflow permits it, review their answers, and submit once. Final submission writes the complete answer set and changes the response state atomically. A submitted response cannot return to draft status or accept a second final submission. These controls protect response integrity and prevent duplicate final responses.
+
+### 5.1.8 Stakeholder Evaluation Workflows
+
+Students, graduating students, alumni, and industry partners use role-specific respondent portals. Each portal shows evaluations available to the signed-in user, the response form, completion or validation feedback, the final review step, and submission history where applicable. Verification and eligibility rules limit access to the intended respondent population.
+
+Faculty members, Program Heads, the General Education Coordinator, the Secretary, and the Dean use role-specific management or oversight screens. The current beta cycle directly represented students, alumni, faculty members, a Secretary, and Program Heads. It did not provide direct beta evidence for the Dean, General Education Coordinator, or industry-partner workflows.
+
+### 5.1.9 Analytics and Reporting
+
+System CLOIE provides role-scoped dashboards and analytical views for participation, rating distributions, course and program evidence, outcome relationships, stakeholder sources, and available period comparisons. Filters preserve the selected course, program, academic period, instrument, and response source so unrelated populations are not combined.
+
+The current system presents analytical evidence for human review. It does not declare curriculum effectiveness or prescribe changes. Program Head beta sessions showed that several measures, labels, and dense dashboard views still require clearer explanation. Formal PDF or spreadsheet report-output validation has not yet been consolidated for this chapter.
+
+### 5.1.10 Qualitative Feedback Processing
+
+The qualitative workflow derives deterministic text evidence such as word frequency, recurring terms, and source-scoped summaries from open-ended responses. A bounded server-side artificial-intelligence service may interpret this evidence and return a structured narrative. The request excludes direct identifiers and limits the evidence sent to the configured service.
+
+The generated interpretation remains supplementary. Authorized users must review the underlying counts and comments before using it in academic decisions. A failed or unavailable artificial-intelligence service does not change the stored responses or the deterministic evidence.
+
+### 5.1.11 General Education Management
+
+The General Education Coordinator has a separate scope that follows General Education courses across programs. The implemented workflows cover applicable course assignments, Institutional Learning Outcomes, course and outcome relationships, and analytical review. This separation prevents one Program Head from owning college-wide General Education records and avoids duplicating the same responsibility across programs.
+
+### 5.1.12 Selected User Interface Evidence
+
+Appendix E contains the selected desktop and mobile interface evidence for the implemented roles and major workflows. The figures show authentication and onboarding, role-specific dashboards, academic records, learning outcomes, instruments, deployments, response completion, analytics, reports, and administrative functions. The appendix is implementation evidence, not a substitute for the User Manual or for task-based acceptance results.
+
+## 5.2 Requirements Fulfillment
+
+Appendix F is the authoritative Requirements Traceability Matrix. The current matrix contains three functional requirements with stable identifiers and several implemented candidate areas whose links to approved objective and requirement statements still need reconciliation. The matrix does not yet contain a defensible total of approved requirements or final verified-status counts. This chapter therefore does not calculate a completion percentage.
+
+
+<div className="manuscript-table" role="region" tabIndex="0" aria-label="Table 5.1 Requirements Fulfillment Summary">
+
+**Table 5.1 Requirements Fulfillment Summary**
+
+| Status | Count | Percentage | Current basis |
+| :---- | :---- | :---- | :---- |
+| Verified / Passed | Not reported | Not reported | Final Appendix F test links are incomplete. |
+| Partially Met | Not reported | Not reported | Objective and requirement reconciliation is incomplete. |
+| Deferred | Not reported | Not reported | Final scope disposition is incomplete. |
+| Changed / Superseded | Not reported | Not reported | A change is recorded, but no approved final count exists. |
+| Failed / Unresolved | Not reported | Not reported | Open findings remain; final counts await Appendices F and G. |
+
+</div>
+
+Three implemented invariants are referenced here without their Appendix C identifiers, because the requirements numbering has not been reconciled across the appendices: the one-response and atomic-finalization invariant, the outcome-alignment gate for course-bound publication, and recorded roster exclusions with controlled reversals. Chapter 4 states the approved numbering, in which FR-01 through FR-06 cover production authentication, identity resolution, and role-scoped access. These three invariants sit in the response-handling requirements (FR-34 through FR-40) and the academic-structure requirements (FR-07 through FR-17) as Chapter 4 numbers them; the local FR-01 to FR-03 labels previously used in this section are withdrawn to avoid two meanings for one identifier. Design and implementation references for all three exist, but Appendix F must still link each final test result before the project marks them as Verified or Passed.
+
+Curriculum versioning was removed through a recorded architecture decision and replaced by direct structures plus immutable evaluation snapshots. Other implemented areas, including cross-role response privacy, the one-active-academic-period rule, and multi-role account handling, remain under provenance review in Appendix F. The team must finish the objective-to-requirement mapping before final defense rather than estimating a completion rate from the visible interface.
+
+## 5.3 Testing and Quality Evaluation Results
+
+### 5.3.1 Automated Test Results
+
+A current local Vitest run completed successfully for this documentation update. The runner discovered 429 test files. Of these, 428 passed and one was skipped. It executed 3,879 tests, of which 3,878 passed and one was skipped. No test failed.
+
+<div className="manuscript-table" role="region" tabIndex="0" aria-label="Table 5.2 Automated Verification Summary">
+
+**Table 5.2 Automated Verification Summary**
+
+| Test category | Executed scope | Passed | Failed | Evidence status |
+| :---- | :---- | :---- | :---- | :---- |
+| Default Vitest | 429 files / 3,879 tests | 3,878 tests | 0 | Current run; one file and one test were skipped. |
+| Database / invariant | Gated suites | Not reported | Not reported | Current accepted run not consolidated. |
+| Browser E2E | Desktop and Pixel 7 | Not reported | Not reported | Run reference pending. |
+| Accessibility | Browser axe scenarios | Not reported | Not reported | Final audit not claimed. |
+
+</div>
+
+The default Vitest command does not execute the gated database-invariant suites. Those suites require an explicit opt-in flag and a disposable PostgreSQL target. The repository also defines production-mode Playwright projects for desktop and Pixel 7 mobile journeys, cross-role privacy, accessibility checks, and selected visual baselines. This chapter does not report counts for those layers because a current accepted run reference has not yet been entered in Appendix G-1.
+
+### 5.3.2 Functional and Workflow Verification
+
+The automated suites cover services, actions, components, route behavior, analytics, response handling, instruments, academic structures, course assignments, user management, and role-specific views. The passing default suite provides current regression evidence for the non-database test layer.
+
+The repository defines additional database and browser checks for the critical workflows. These include publication readiness, roster locks and reversals, one-response finalization, role and scope boundaries, responsive journeys, and visual behavior. Until the project records the corresponding database and browser executions in Appendix G-1, this chapter treats them as existing test coverage rather than completed final evidence.
+
+### 5.3.3 Security and Authorization Verification
+
+The implementation uses server-side authentication and authorization for protected actions and data reads. Test material covers active-role resolution, program and course scope, respondent eligibility, cross-role response review, confidential qualitative evidence, and refusal of changes after final submission. Production and demo authentication modes are separated so test sessions cannot be enabled by ordinary production configuration.
+
+The current local Vitest result supports these code-level controls. Final security acceptance still requires the gated database checks and a recorded browser-level negative-access run. The project must not infer privacy assurance only from hidden navigation items.
+
+### 5.3.4 Usability and Accessibility Evaluation
+
+Usability evidence comes from the beta task ratings, questionnaires, observations, and meeting notes summarized in Section 5.4. Students and most faculty and alumni participants completed most tasks without assistance. The Secretary and several Program Head sessions required facilitator guidance, especially for feature discovery, terminology, dashboard interpretation, and workflow prerequisites.
+
+The repository contains automated accessibility and responsive browser scenarios, but this chapter does not claim a completed final accessibility audit. The current evidence supports continued interface refinement and a role-specific user guide before final acceptance.
+
+### 5.3.5 Performance Evaluation
+
+No consolidated formal load test, response-time target result, or production performance trace is available in the Chapter 5 evidence set. The repository defines a production-browser evidence procedure for authenticated traces and route-boundary checks, but no accepted run record is cited here. Performance therefore remains unverified as a final success criterion.
+
+### 5.3.6 Reliability and Compatibility Evaluation
+
+The application uses production-mode deployment health checks and supports responsive desktop and mobile interfaces. The automated browser configuration includes desktop Chrome and a Pixel 7 mobile profile, with scheduled Firefox and WebKit coverage. Appendix E also contains desktop and mobile screenshots for the principal role interfaces.
+
+A current browser compatibility run was not consolidated during this update. Compatibility statements are limited to implemented support and available test infrastructure. A final report should add the executed browser matrix, device or viewport details, failures, and retest references.
+
+### 5.3.7 Defects, Corrections and Regression Testing
+
+The current repository history records corrections related to navigation, mobile layouts, instrument-builder overflow, evaluation state changes, analytics filters, role switching, roster handling, and course filtering. The passing Vitest run provides regression evidence for the default automated layer after those changes.
+
+Appendix G-3 still needs a formal issue, revision, and retest row for each significant beta finding. A source-code change or passing unit test does not prove that the original participant can now complete the task. User-reported issues remain open for acceptance purposes until the team records a targeted retest.
+
+
+## 5.4 Alpha/Beta/Pilot/User Acceptance Evaluation
+
+### 5.4.1 Validation Purpose
+
+Internal alpha testing preceded the beta sessions and was used to identify technical and workflow defects before representative users handled the system. The current supporting records do not yet contain a consolidated alpha total, so this chapter does not invent one.
+
+The beta evaluation examined whether representative users could perform role-specific tasks, understand the interface, and identify barriers in the deployed workflow. It also collected structured ratings and open comments for revisions before pre-final and final review.
+
+### 5.4.2 Participants and Stakeholder Groups
+
+The consolidated beta evidence represents 12 participants. Nine participants submitted Google Forms questionnaires: two Faculty members, two Students, one Secretary, and four Alumni. Three Program Heads were documented through separate facilitated session records. Meeting notes for the other roles were used to interpret their questionnaires and were not counted again.
+
+The available evidence does not represent the Dean, General Education Coordinator, or industry-partner roles. Results from participating roles must not be generalized to those unrepresented groups.
+
+### 5.4.3 Validation Environment and Procedure
+
+Participants used role-specific accounts in the deployed System CLOIE environment. Facilitators provided a task packet or task sequence, observed completion, answered procedural questions when needed, and collected a post-task questionnaire through Google Forms where available. Program Head sessions used the documented task discussion and observation records because no Program Head response sheet was located in the supplied evidence.
+
+The procedure generated three evidence types: task-level completion ratings, five-point questionnaire ratings, and qualitative comments or facilitator notes. The current analysis uses each source only for the purpose it can support.
+
+### 5.4.4 Tasks and Scenarios
+
+Faculty tasks covered course and roster access, learning-outcome relationships, evaluation tools, deployments, and analytics. Student tasks covered locating an available evaluation, answering questions, saving or navigating the form, reviewing answers, submitting, and viewing history. Secretary tasks covered administrative records such as users, academic periods, programs, and courses. Alumni tasks covered verification or approval, evaluation access, completion, submission, and history.
+
+Program Head sessions covered program selection, program and course records, PLO and CILO relationships, instruments, deployments, participation, analytics, and report-oriented review. The sessions also examined the clarity of dashboard terms and the separation of data for users responsible for more than one program.
+
+### 5.4.5 Instruments and Evaluation Criteria
+
+Two versions of several role instruments existed: the printed testing packet and the Google Forms version. Their tasks and rating questions were not always identical. The quantitative results in this chapter use only the Google Forms questions that participants actually answered. The analysis does not backfill missing answers from the paper packet or merge differently worded questions as if they were the same measure.
+
+Observation records and meeting notes remain useful qualitative evidence, but they are not included in the questionnaire totals. For task outcomes, Easy to Complete was mapped to Accepted. Completed with Difficulty and Needed Help were mapped to Needs Revision. Could Not Complete was mapped to Not Accepted. This mapping is a reporting convention for Appendix G and does not change the participants' original answers.
+
+### 5.4.6 Validation Results
+
+Across the four Google Forms sheets, nine respondents produced 99 task-level ratings. Seventy-six ratings, or 76.77 percent, were Accepted. Sixteen ratings, or 16.16 percent, were classified as Needs Revision. Seven ratings, or 7.07 percent, were Not Accepted. The seven Not Accepted ratings came from one Alumni participant who could not continue through tasks ALU-04 to ALU-10 after an access or approval barrier.
+
+<div className="manuscript-table" role="region" tabIndex="0" aria-label="Table 5.3 User Validation Summary">
+
+**Table 5.3 User Validation Summary**
+
+| Stakeholder group | Participants | Task ratings | Accepted | Needs revision | Not accepted |
+| :---- | :---- | ----- | ----- | ----- | ----- |
+| Faculty | 2 | 22 | 21 | 1 | 0 |
+| Students | 2 | 24 | 18 | 6 | 0 |
+| Secretary | 1 | 9 | 1 | 8 | 0 |
+| Alumni | 4 | 44 | 36 | 1 | 7 |
+| Program Head | 3 | Qualitative sessions | Not scored | Not scored | Not scored |
+| **Quantitative total** | **9** | **99** | **76** | **16** | **7** |
+
+</div>
+
+The questionnaire instruments also used five-point rating items, but the number and wording of items differed by role. The role-level means were 3.94 for Faculty across 32 item ratings, 4.60 for Students across 40 item ratings, 3.65 for the Secretary across 20 item ratings, and 4.14 for Alumni across 88 item ratings. A pooled satisfaction mean is not reported because the instruments were not equivalent and the role sample sizes were small.
+
+
+### 5.4.7 User Feedback and Observations
+
+Faculty feedback identified difficulty with button placement, the Evaluation Tools area, templates, hidden features, and the CILO-to-PLO mapping and manifestation terminology. Participants asked for a simpler flow and an onboarding or user-guidance feature. Faculty session notes also showed that missing student accounts, roster preparation, and assignment context can block meaningful testing.
+
+Student feedback was positive overall, but one participant reported that the first Submit action did not respond. Participants also asked for a user guide and clearer help for finding evaluations, saving, reviewing, submitting, and opening history. Reviewing answers before final submission had the lowest Student item mean.
+
+The Secretary completed one task without help and needed assistance on eight tasks. The comments described difficulty exploring the available features, although categorization helped. This result identifies feature discovery, labels, and role onboarding as high-priority usability work.
+
+Alumni results were mostly positive, but one participant encountered an approval or access barrier that prevented seven tasks. Feedback requested timely approval communication and clearer access status. Session notes also raised account verification, inactivity handling, profile access, autosave expectations, privacy wording, and export or notification behavior.
+
+Program Heads generally found the required functions present but needed guidance to interpret dashboard measures and some outcome terms. Their sessions identified dense analytics views, small or low-contrast text, unclear completion units, program separation for multi-program responsibility, program-owned templates, realistic data, exports, and the need for a qualified review of attainment formulas.
+
+### 5.4.8 Revisions Made
+
+The current post-session codebase contains changes that address several recorded themes. These include multi-role account switching, program-aware deployment targeting, clearer faculty course context and template bindings, baseline template duplication, improved mobile evaluation pages, responsive workflow controls, simplified analytics filters, bounded qualitative evidence, role-aware course filters, and updated Secretary and General Education course filters.
+
+These changes show active response to usability and scope problems, but the issue log must link each revision to a specific finding and evidence reference. Items concerning access approval, onboarding, dashboard interpretation, report exports, formula validation, and complete role data remain open or require confirmation.
+
+### 5.4.9 Retesting Results
+
+The default automated regression suite passed after the current implementation changes. This result verifies that the non-database automated layer remains green. It does not count as participant retesting.
+
+No completed role-based user retest record was available for the findings summarized above. The team must repeat the blocked or difficult tasks with the affected roles, record the tested build, and enter the result in Appendix G-3 before closing those findings.
+
+### 5.4.10 User / Client Acceptance
+
+The available beta results support continued development and targeted retesting. They do not support final user or client acceptance. Appendix G-4 has no consolidated signed acceptance record, several stakeholder roles remain unrepresented, and important usability and access findings have not completed formal retesting.
+
+For the pre-final document, the correct status is validation in progress. Final acceptance must be based on the revised build, completed retest records, remaining limitations, and signed stakeholder confirmation.
+
+## 5.5 Discussion of Results and Limitations
+
+### 5.5.1 Results Against Project Objectives
+
+**OBJ-01.** System CLOIE provides functionality for encoding, organizing, and managing Program / Graduate Outcomes (GOs), Course Intended Learning Outcomes (CILOs), and their relationships within academic programs. The implemented academic structures include academic periods, programs, courses, assignments, rosters, learning outcomes, and CILO-to-PLO mappings. These capabilities provide the system structure required to organize learning-outcome evidence within its academic context. Final verification of the objective remains subject to the completed requirements traceability and corresponding test evidence.
+
+**OBJ-02.** System CLOIE provides digital workflows for stakeholder-based evaluations using the approved evaluation instruments for students, graduating students, alumni, and industry partners. The implemented functionality includes evaluation instruments, deployments, respondent access, response entry, submission, and related evaluation workflows. The extent to which OBJ-02 is fully achieved is determined by the documented functional and user-validation results for each applicable stakeholder workflow.
+
+**OBJ-03.** System CLOIE provides authorized academic personnel with dashboards, analytics, and reports that consolidate learning-outcome and stakeholder evaluation evidence. The available functionality supports analysis using relevant academic and evaluation context, including program, course, academic period, instrument, and stakeholder source. These outputs are intended to support academic review, quality-assurance activities, continuous improvement, and accreditation preparation. Final achievement of the objective depends on the verified requirements and evaluation evidence for the applicable dashboards, analytics, and reports.
+
+**OBJ-04.** System CLOIE implements authenticated access and role- and scope-based restrictions for academic and evaluation information. The system also includes controls for response handling and finalization intended to protect the confidentiality and integrity of evaluation information. These controls provide the mechanisms required by the objective, while final achievement depends on the documented security, authorization, database, browser, and negative-access verification results applicable to the approved security requirements.
+
+### 5.5.2 Results Against Success Criteria
+
+The current evidence shows a working system, a green default automated suite, and usable workflows for several represented participants. It does not satisfy every final threshold in Table 1.1 because the RTM is incomplete, browser and database run references are not consolidated, some approved role workflows were not represented, and user retesting is pending.
+
+The project should therefore report the four objectives as partially supported at the pre-final stage. This status protects the distinction between implementation progress and final verified completion.
+
+### 5.5.3 Results in Relation to Related Literature and Systems
+
+The implementation follows the outcome-based evaluation approach described in Chapter 2 by connecting stakeholder responses to the academic period, course, program, instrument, and learning-outcome context that gives the evidence meaning. It also separates respondent sources rather than treating all feedback as one population.
+
+System CLOIE differs from broad commercial quality-assurance platforms because it is scoped to ACD's roles, terminology, outcome relationships, and evaluation workflow. The beta findings also support the usability literature reviewed in Chapter 2\. A technically complete function does not become usable merely because it exists. Labels, guidance, and visible workflow state affect whether participants can complete the task without help.
+
+### 5.5.4 Technical Strengths
+
+The principal technical strengths are server-enforced authorization, explicit academic and response invariants, immutable published context, atomic response finalization, modular feature boundaries, and automated regression coverage. The application also separates deterministic qualitative evidence from optional artificial-intelligence interpretation and separates production, demo, and continuous-integration authentication modes.
+
+### 5.5.5 Remaining Limitations
+
+The beta sample is small and uneven across roles. The role questionnaires contain different numbers and wording of items, which prevents direct pooled comparison. Three Program Head sessions have qualitative records but no corresponding response sheet. The Dean, General Education Coordinator, and industry-partner roles have no direct beta evidence in the supplied records.
+
+Some sessions used limited or incomplete demonstration data. This constrained trend interpretation, report review, roster workflows, and program comparisons. The outcome-attainment formula requires review by a qualified academic or statistical authority before the project treats it as institutionally approved.
+
+### 5.5.6 Known Defects and Technical Debt
+
+Known open findings include approval or access delays, unclear first-time navigation, dense analytics screens, outcome and completion terminology that needs explanation, one reported unresponsive Submit attempt, incomplete user guidance, and report-export behavior that has not completed validation. Some task failures may result from account or test-data preparation rather than the response form itself, but the user still experiences the workflow as blocked.
+
+The evidence files in the repository also lag behind the completed beta activity. Appendix F and Appendix G must be updated with stable identifiers, actual results, revisions, and retest records. This documentation gap is itself a pre-final risk.
+
+### 5.5.7 Operational and Institutional Constraints
+
+System CLOIE depends on internet access, Google authentication, accurate institutional accounts, complete academic structures, correct role placement, prepared rosters, and approved evaluation instruments. Technical operation also depends on an assigned maintainer, protected credentials, database migration discipline, backups, monitoring, and an agreed support process.
+
+The system presents evidence for academic review. ACD personnel remain responsible for approving outcome definitions, interpreting attainment, changing curricula or instruction, and deciding how the evidence enters quality-assurance or accreditation work.
+
+### 5.5.8 Risks Remaining After Final Validation
+
+The remaining risks include incomplete stakeholder coverage, access barriers that can suppress responses, misunderstood analytics, inaccurate source data, unvalidated report outputs, and weak operational recovery. These risks should remain open until the project records corrective action and evidence.
+
+The section title refers to risks that should remain after final validation. At the current pre-final stage, final validation has not occurred. This subsection therefore identifies risks that must be reassessed after the next beta cycle and before final acceptance.
+
+
+## 5.6 Deployment, Handover and Operational Readiness
+
+### 5.6.1 Deployment Status
+
+System CLOIE has an active production-mode deployment and separate development, staging, demo, and continuous-integration arrangements. Beta sessions used the deployed application. Operational deployment does not equal institutional turnover or final client acceptance.
+
+### 5.6.2 Production Configuration and Environment
+
+The recorded production topology uses a Next.js standalone application in Coolify, a self-hosted Supabase stack, PostgreSQL, Supavisor, Google authentication, and Cloudflare Tunnel. Public database ports remain closed, while application and authentication traffic use the configured web routes. Health checks and the public application route were verified in the deployment inventory.
+
+### 5.6.3 Database Migration and Data Preparation
+
+Prisma defines the application schema, and versioned Supabase migrations carry schema changes to non-local targets. The deployment record reports migration parity for the observed production and staging targets at its verification cutoff. Baseline data includes programs, majors, courses, academic periods, and institutional templates needed for initial operation.
+
+Future migration records must identify the target, backup, reviewed changes, execution result, and rollback path. Demo resets and test fixtures must remain isolated from production data.
+
+### 5.6.4 Backup and Recovery
+
+Initial PostgreSQL, Storage, and configuration archives exist and passed format or readability checks. The backups remain on the same server as the live services. Backup automation, encrypted off-server copies, and a recorded full restore drill are not yet complete. The current arrangement therefore supports limited recovery but not full disaster recovery.
+
+### 5.6.5 User Documentation
+
+Role-specific screenshots and draft interface evidence exist in Appendix E. A complete User Manual has not yet been finalized. Beta feedback shows that the manual should cover first sign-in, role selection, evaluation access, draft and submit behavior, history, approval status, learning-outcome terms, dashboard measures, and common blocked states.
+
+### 5.6.6 Administrator and Technical Documentation
+
+The repository contains architecture decisions, domain context files, deployment architecture, runbooks, testing procedures, and an operational inventory. The main technical document and appendices are still being reconciled with those sources. Final turnover requires a concise administrator guide that identifies routine operations, migrations, monitoring, backup, recovery, incident response, and escalation responsibilities.
+
+### 5.6.7 Training and Knowledge Transfer
+
+The beta sessions provided guided exposure to System CLOIE but did not constitute formal operational training. Training should be delivered by role and should use prepared institutional data. Program Heads and the Secretary need guided practice with scope selection, terminology, configuration, analytics, and reports. Respondents need shorter instructions focused on access, saving, review, submission, and confirmation.
+
+### 5.6.8 System Ownership and Maintenance Responsibilities
+
+Formal ownership and maintenance responsibilities have not been accepted in the current evidence set. The turnover plan must name the institutional owner, application maintainer, infrastructure operator, database custodian, account administrator, backup custodian, and contact for academic-content decisions. The project team should not assume that ICTC or any academic office has accepted a responsibility without a recorded agreement.
+
+### 5.6.9 ICTC Review and Institutional Turnover
+
+ICTC review and institutional turnover remain pending. The final turnover package must include updated source code, database schema and migrations, architecture documentation, the User Manual, the Administrator Guide, dependency and license records, backup and restore procedures, and a protected credential-transfer record.
+
+### 5.6.10 Dependency and License Inventory
+
+The application dependency manifest and lockfile provide the current technical inventory. The final appendix should list production dependencies, their versions, licenses, external services, and material operating requirements. The team must review the list before turnover and record any license or service condition that affects institutional use.
+
+### 5.6.11 Credential and Service-Account Turnover
+
+Runtime credentials, database passwords, authentication secrets, provider keys, recovery codes, and service-account access must never appear in the manuscript or repository. Turnover should use a separate protected process that records the account owner, receiving custodian, transfer status, recovery responsibility, and rotation status without exposing the secret itself.
+
+### 5.6.12 Known Operational Requirements
+
+Before operational acceptance, the institution needs recurring database and Storage backups, retention rules, failure notifications, an encrypted off-server copy, a completed restore drill, disk-capacity monitoring, deployment notifications, rollback procedures, maintenance schedules, and named operators. These open items should remain visible in Appendix E and the deployment evidence until the responsible party verifies completion.
+
+## 5.7 Conclusions and Recommendations
+
+### 5.7.1 Conclusions
+
+System CLOIE has progressed beyond a prototype. The implemented system manages the academic and learning-outcome context needed by evaluations, supports reusable instruments and controlled deployments, collects role-scoped responses, applies response-integrity rules, and presents quantitative and qualitative evidence to authorized users.
+
+The current automated result is strong for the default non-database suite, and the beta data shows that most recorded tasks were completed without difficulty. However, the evidence also shows access barriers, a high need for assistance in the Secretary session, Program Head interpretation problems, incomplete stakeholder coverage, and no formal participant retest or signed acceptance. The project objectives are therefore partially supported at the pre-final stage, not fully achieved.
+
+System CLOIE's demonstrated contribution is a single institutional workflow that preserves the relationships among academic context, learning outcomes, evaluation instruments, respondents, responses, and analytical evidence. Its value depends on correct data, understandable measures, controlled access, and human academic review.
+
+### 5.7.2 Recommendations
+
+The team should standardize one final testing packet for each role and use the same task identifiers, wording, response scale, and version label in both paper and Google Forms formats. Observation records should remain supporting evidence and should not be merged into questionnaire totals. Each future response sheet should identify the tested build and instrument version.
+
+The next beta cycle should retest every Could Not Complete and Needed Help task, then sample the revised navigation and dashboard flows with Program Heads, the Secretary, Faculty members, Students, and Alumni. It should also add direct validation for the Dean, General Education Coordinator, and industry-partner roles where they remain in final scope.
+
+Before final defense, the team should complete Appendix F, populate Appendix G-1 through G-4, link each significant finding to a revision and retest, validate the outcome-attainment formula with a qualified reviewer, and verify required report outputs. The project should also finish the User Manual, Administrator Guide, ICTC review, backup automation, off-server recovery copy, restore drill, monitoring, and protected turnover records.
+
+## LITERATURE CITED
+
+ABET. (2026). *Criteria for accrediting engineering programs, 2026-2027*. [https://www.abet.org/accreditation/accreditation-criteria/criteria-for-accrediting-engineering-programs-2026-2027/](https://www.abet.org/accreditation/accreditation-criteria/criteria-for-accrediting-engineering-programs-2026-2027/)
+Ahmad, M. O., Dennehy, D., Conboy, K., & Oivo, M. (2018). Kanban in software engineering: A systematic mapping study. *Journal of Systems and Software, 137*, 96-113. [https://doi.org/10.1016/j.jss.2017.11.045](https://doi.org/10.1016/j.jss.2017.11.045)
+Alyasin, A., Nasser, R., El Hajj, M., & Harb, H. (2023). Assessing learning outcomes in higher education: From practice to systematization. *TEM Journal, 12*(3), 1593-1604. [https://doi.org/10.18421/TEM123-41](https://doi.org/10.18421/TEM123-41)
+Anthology. (n.d.). *Curriculum map report*. Anthology Outcomes. [https://support.anthology.com/apex/downloadArticleasPDF?id=kaEPU000000558j2AA](https://support.anthology.com/apex/downloadArticleasPDF?id=kaEPU000000558j2AA)
+Bennett, L. K. L., Sloan, K., & Varner, T. L. (2023). Faculty and assessment practitioner needs for student learning outcomes assessment in higher education. *Intersection: A Journal at the Intersection of Assessment and Learning, 4*(2). [https://aalhe.scholasticahq.com/article/84194](https://aalhe.scholasticahq.com/article/84194)
+Castro, R. R. R., Colonia, C. L., Martesio, F. J. P., Pagayon, C. A., Pingot, L. P. S., & Ronquillo, A. C. (2025). Analysis of employer's feedback on BSBA-FM graduate performance as an employee. *Asian Journal of Education and Social Studies, 51*(8), 352-363. [https://doi.org/10.9734/ajess/2025/v51i82246](https://doi.org/10.9734/ajess/2025/v51i82246)
+Chen, L., Geng, X., Lu, M., Shimada, A., & Yamada, M. (2023). How students use learning analytics dashboards in higher education: A learning performance perspective. *SAGE Open, 13*(3), 1-18. [https://doi.org/10.1177/21582440231192151](https://doi.org/10.1177/21582440231192151)
+Commission on Higher Education. (2012). *Policy-standard to enhance quality assurance in Philippine higher education through an outcomes-based and typology-based QA* (CHED Memorandum Order No. 46, Series of 2012). [https://ched.gov.ph/wp-content/uploads/2017/10/CMO-No.46-s2012.pdf](https://ched.gov.ph/wp-content/uploads/2017/10/CMO-No.46-s2012.pdf)
+Commission on Higher Education. (2022). *Policy on quality and quality assurance for Philippine higher education institutions* (CHED Memorandum Order No. 17, Series of 2022). [https://ched.gov.ph/wp-content/uploads/CMO-NO.-17-S.-2022.pdf](https://ched.gov.ph/wp-content/uploads/CMO-NO.-17-S.-2022.pdf)
+Derouich, M. (2025). Ensuring outcome-based curriculum coherence through systematic CLO-PLO alignment and feedback loops. *Discover Education, 4*, Article 486\. [https://doi.org/10.1007/s44217-025-00915-7](https://doi.org/10.1007/s44217-025-00915-7)
+El Marsafawy, H., Roy, R., & Ali, F. (2022). Measuring learning outcomes: Bridging accreditation requirements and LMS functionalities. *Quality Assurance in Education, 30*(4), 555-570. [https://doi.org/10.1108/QAE-11-2021-0186](https://doi.org/10.1108/QAE-11-2021-0186)
+Explorance. (n.d.). *Blue: The feedback analytics platform*. [https://www.explorance.com/products/blue/](https://www.explorance.com/products/blue/)
+Goss, H. (2022). Student learning outcomes assessment in higher education and in academic libraries: A review of the literature. *The Journal of Academic Librarianship, 48*(2), Article 102485\. [https://doi.org/10.1016/j.acalib.2021.102485](https://doi.org/10.1016/j.acalib.2021.102485)
+Hernández-de-Menéndez, M., Morales-Menendez, R., Escobar, C. A., & Ramírez Mendoza, R. A. (2022). Learning analytics: State of the art. *International Journal on Interactive Design and Manufacturing, 16*(3), 1209-1230. [https://doi.org/10.1007/s12008-022-00930-0](https://doi.org/10.1007/s12008-022-00930-0)
+Hou, A. Y. C., Hill, C., Justiniano, D., Lin, A. F. Y., & Tasi, S. (2022). Is employer engagement effective in external quality assurance of higher education? A paradigm shift or QA disruption from quality assurance perspectives in Asia. *Higher Education, 84*(5), 935-954. [https://doi.org/10.1007/s10734-021-00808-2](https://doi.org/10.1007/s10734-021-00808-2)
+International Organization for Standardization. (2023). *ISO/IEC 25010:2023 systems and software engineering: Systems and software Quality Requirements and Evaluation (SQuaRE): Product quality model*. [https://www.iso.org/standard/78176.html](https://www.iso.org/standard/78176.html)
+International Organization for Standardization, International Electrotechnical Commission, & Institute of Electrical and Electronics Engineers. (2018). *ISO/IEC/IEEE 29148:2018 systems and software engineering: Life cycle processes: Requirements engineering*. [https://www.iso.org/standard/72089.html](https://www.iso.org/standard/72089.html)
+Khalil, M., Prinsloo, P., & Slade, S. (2023). Fairness, trust, transparency, equity, and responsibility in learning analytics. *Journal of Learning Analytics, 10*(1), 1-7. [https://doi.org/10.18608/jla.2023.7983](https://doi.org/10.18608/jla.2023.7983)
+Nampala, P., Kalule, S. W., Mshenga, P. M., Okello, D. M., Egeru, A., & Ekwamu, A. (2024). Linkages with practice for higher-education curriculum innovation. *Gateways: International Journal of Community Research and Engagement, 17*(1). [https://doi.org/10.5130/ijcre.v17i1.8913](https://doi.org/10.5130/ijcre.v17i1.8913)
+National Privacy Commission. (2012). *Republic Act No. 10173: Data Privacy Act of 2012*. [https://privacy.gov.ph/data-privacy-act/](https://privacy.gov.ph/data-privacy-act/)
+Noushad, P. P. (2024). *Designing and implementing the outcome-based education framework: Theory and practice*. Springer. [https://doi.org/10.1007/978-981-96-0440-1](https://doi.org/10.1007/978-981-96-0440-1)
+Ramaswami, G., Susnjak, T., Mathrani, A., & Umer, R. (2023). Use of predictive analytics within learning analytics dashboards: A review of case studies. *Technology, Knowledge and Learning, 28*(3), 959-980. [https://doi.org/10.1007/s10758-022-09613-x](https://doi.org/10.1007/s10758-022-09613-x)
+Samuel, S., & Farrer, H. (2025). Integrating the PDCA cycle for continuous improvement and academic quality enhancement in higher education. *Journal of Comparative & International Higher Education, 17*(2), 115-124. [https://doi.org/10.32674/yzwgmy25](https://doi.org/10.32674/yzwgmy25)
+Sarsale, M., Garcia, C., & Uy, I. (2024). Dimensions of program relevance towards employment success: Evidence from a graduate tracer study using principal component analysis. *Journal of Teaching and Learning for Graduate Employability, 15*(1), 205-224. [https://doi.org/10.21153/jtlge2024vol15no1art1895](https://doi.org/10.21153/jtlge2024vol15no1art1895)
+Souppaya, M., Scarfone, K., & Dodson, D. (2022). *Secure Software Development Framework (SSDF) version 1.1: Recommendations for mitigating the risk of software vulnerabilities* (NIST Special Publication 800-218). National Institute of Standards and Technology. [https://doi.org/10.6028/NIST.SP.800-218](https://doi.org/10.6028/NIST.SP.800-218)
+Watermark. (2026). *How to create and edit curriculum maps*. [https://support.watermarkinsights.com/hc/en-us/articles/4684773748123-How-to-Create-and-Edit-Curriculum-Maps](https://support.watermarkinsights.com/hc/en-us/articles/4684773748123-How-to-Create-and-Edit-Curriculum-Maps)
+World Wide Web Consortium. (2024). *Web Content Accessibility Guidelines (WCAG) 2.2*. [https://www.w3.org/TR/WCAG22/](https://www.w3.org/TR/WCAG22/)
+
+Supporting appendix records are outside the scope of this website edition. References to those records identify source evidence, not published appendix pages.

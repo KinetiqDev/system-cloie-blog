@@ -1,15 +1,42 @@
 ---
 import cloieLogo from '../assets/cloie-logo.svg';
+import Icon from './Icon.astro';
 import { getChapters, chapterPath } from '../lib/chapters';
+import { FRONT_MATTER } from '../lib/front-matter';
+import { DEPLOYMENTS } from '../lib/system';
 import { withBase } from '../lib/url';
 import '../styles/footer.css';
 
-// Derived from the chapter collection for the same reason as the header.
+// Derived from the chapter collection and the front-matter list for the same
+// reason as the header: one source of truth, so a new chapter or front-matter
+// page appears here without an edit.
 const chapters = await getChapters();
-const links = [
-  { path: '/', label: 'Home' },
-  ...chapters.map((chapter) => ({ path: chapterPath(chapter), label: chapter.data.navLabel })),
-  { path: '/references', label: 'References' },
+const groups = [
+  {
+    heading: 'Chapters',
+    links: chapters.map((chapter) => ({
+      path: chapterPath(chapter),
+      label: chapter.data.navLabel,
+    })),
+  },
+  {
+    heading: 'Overview',
+    links: FRONT_MATTER.map(({ path, label }) => ({ path, label })),
+  },
+  {
+    heading: 'Resources',
+    links: [
+      { path: '/references', label: 'References' },
+      { path: '/', label: 'Home' },
+    ],
+  },
+  {
+    // Every environment the system has, including the two a visitor is not
+    // meant to open: naming them beats leaving someone to guess a hostname.
+    heading: 'Deployments',
+    external: true,
+    links: DEPLOYMENTS.map(({ label, url }) => ({ path: url, label })),
+  },
 ];
 ---
 
@@ -24,10 +51,28 @@ const links = [
 
     <nav class="footer__links" aria-label="Footer navigation">
       {
-        links.map((link) => (
-          <a href={withBase(link.path)} class="footer__link">
-            {link.label}
-          </a>
+        groups.map((group) => (
+          <div class="footer__group">
+            <span class="footer__heading">{group.heading}</span>
+            {group.links.map((link) =>
+              group.external ? (
+                <a
+                  href={link.path}
+                  class="footer__link footer__link--external"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {link.label}
+                  <Icon name="external-link" size={12} />
+                  <span class="sr-only">(opens in a new tab)</span>
+                </a>
+              ) : (
+                <a href={withBase(link.path)} class="footer__link">
+                  {link.label}
+                </a>
+              )
+            )}
+          </div>
         ))
       }
     </nav>

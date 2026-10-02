@@ -24,9 +24,9 @@ but it was the wrong shape for a document-first site:
 
 Astro removes all three problems: prose lives in Markdown, presentation lives in
 `.astro` components that render to static HTML, and routing is the filesystem.
-Client JavaScript is now limited to the four behaviours that genuinely need a
-browser (theme toggle, mobile drawer, scroll reveal, back-to-top) and totals a
-few kilobytes.
+Client JavaScript is now limited to the five behaviours that genuinely need a
+browser (theme toggle, header disclosures, mobile drawer, scroll reveal,
+back-to-top) and totals a few kilobytes.
 
 The CLOIE visual identity — colours, typography, card system, chapter banners,
 dark/light palettes — was carried over as-is.
@@ -47,8 +47,9 @@ src/
 │   │   └── Section.astro       One manuscript section, rendered as a card
 │   ├── BackToTop.astro      Back-to-top button + top-of-page sentinel
 │   ├── Footer.astro         Site footer
-│   ├── Header.astro         Logo, nav, theme toggle, mobile drawer
+│   ├── Header.astro         Logo, top-level nav, theme toggle, mobile drawer
 │   ├── Icon.astro           Renders the inline Lucide geometry
+│   ├── NavMenu.astro        One top-level disclosure in the header bar
 │   └── Reveal.astro         Scroll-triggered entrance wrapper
 ├── content/
 │   ├── chapters/            ← THE MANUSCRIPT LIVES HERE
@@ -260,3 +261,24 @@ Two consequences of the migration are worth knowing about:
   ever needs per-request behaviour, that is a separate decision.
 
 `.astro/` (generated types) and `dist/` are build output and are gitignored.
+
+## 2026 manuscript edition
+
+The site now contains Chapters 1–5 from the current CLOIE technical manuscript,
+with the 2026 guide's chapter structure. Appendix records are not published in
+this edition. Source inconsistencies and pending verification remain visible.
+
+Front matter is available at `/abstract`, `/contents`, `/figures`, `/tables`, and
+`/acronyms`. Chapter routes remain `/chapter1` through `/chapter5` and use their
+frontmatter `slug`. Contents derive from rendered headings. Figure and table
+lists use `src/lib/figures.ts` and `src/lib/tables.ts`.
+
+Diagrams live in `src/assets/figures/` as WebP files. `Figure.astro` now accepts a
+registry ID, for example `<Figure id="fig-4-1-context" />`, rather than the older
+`src`, `alt`, and `caption` props shown above. Alt text and captions live in the
+registry. The converted asset set is approximately 772 KB.
+
+`npm run verify` runs lint, Astro checks, the build, and the internal link checker.
+The print stylesheet uses Letter pages with one-inch margins and disables page
+entrance animations so PDF output cannot capture partially transparent content.
+It does not generate a combined manuscript PDF or Roman/Arabic page numbering.

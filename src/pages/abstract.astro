@@ -1,0 +1,28 @@
+---
+import { getEntry, render } from 'astro:content';
+import FrontMatterLayout from '../layouts/FrontMatterLayout.astro';
+import { FRONT_MATTER } from '../lib/front-matter';
+
+/**
+ * The Abstract, the one front-matter page that is genuinely prose. The
+ * remaining pages (contents, figures, tables) are derived from the chapter
+ * collection and the figure/table registries instead of being authored, so they
+ * cannot fall out of step with the chapters.
+ */
+const entry = await getEntry('frontMatter', 'abstract');
+if (!entry) throw new Error('Missing front-matter entry: abstract');
+const { Content } = await render(entry);
+---
+
+<FrontMatterLayout
+  title={entry.data.title}
+  label={entry.data.navLabel}
+  description={entry.data.description}
+  current="/abstract"
+  siblings={FRONT_MATTER.map(({ path, label }) => ({
+    path: path,
+    label,
+  }))}
+>
+  <Content />
+</FrontMatterLayout>

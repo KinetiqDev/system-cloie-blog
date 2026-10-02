@@ -1,201 +1,301 @@
 ---
 chapter: 3
-title: 'Methodology'
+phase: process
+title: 'Project Methodology and Engineering Process'
 navLabel: 'Chapter 3'
+cardTitle: 'Methodology'
 description: >-
-  Summary of CLOIE's software development framework, requirements, software and
-  hardware needs, and feasibility issues.
+  How the team actually worked: the Kanban-based iterative approach, how
+  requirements were elicited and managed, how the repository and configuration
+  were controlled, how security and AI assistance were handled, the testing
+  strategy, and the milestones, risks, and feasibility position.
 summary: >-
-  Development framework, requirements summary, planned software/hardware
-  stack, and feasibility analysis.
+  The iterative Kanban approach, requirements engineering, trunk-based
+  development, secure and responsible development, the testing strategy,
+  milestones, risks, and feasibility.
 order: 3
 slug: chapter3
 ---
 
-import Section from '../../components/chapter/Section.astro'
-import Callout from '../../components/chapter/Callout.astro'
-import Card from '../../components/chapter/Card.astro'
-import CardGrid from '../../components/chapter/CardGrid.astro'
-import Chips from '../../components/chapter/Chips.astro'
-import Figure from '../../components/chapter/Figure.astro'
-import kanbanFigure from '../../assets/Kanban-workflow-figure.png'
-import ganttChart from '../../assets/gantt-chart.png'
+import Figure from '../../components/chapter/Figure.astro';
 
-<Section>
+## 3.1 Development Approach and Lifecycle
 
-## 3.1 Software Development Framework
+<Figure id="fig-3-1-kanban" />
 
-Chapter 3 frames CLOIE development as a structured yet flexible process: tasks are visualized, prioritized continuously, and refined through feedback while staying aligned with capstone milestones. This aligns with Kanban's emphasis on workflow visibility and flow management (Anderson, 2010).
+### 3.1.1 Agile Kanban Planning
 
-<CardGrid variant="method">
-<Card title="Backlog">
+The proponents used Agile Kanban because the project contained changing institutional requirements and work items of different sizes. Kanban supports visible work states and continuous flow without requiring a fixed sprint duration. Studies of software teams report that Kanban can support changing priorities, coordination, and continuous delivery when teams adapt it to their working context (Ahmad et al., 2018).
 
-All planned features, requirements, and refinements are listed and prioritized.
+Project planning used two linked Notion databases. CLOIE Backlog contained module-level work such as user access and authentication, academic structure, evaluation instruments, deployment, outcomes management, response collection, analytics, report export, and infrastructure. CLOIE Tasks contained the work needed to complete those module items.
 
-</Card>
-<Card title="To Do">
+Each task could record its module, priority, assignee, work type, description, Definition of Done, and related backlog item. The task board used the states Backlog, To Do, In Progress, Testing, and Done. Status-transition dates retained evidence of when a task entered active work, testing, and completion. The backlog also summarized progress from its related tasks.
 
-Ready tasks are selected based on priority, dependencies, and milestone relevance.
+Notion supported module planning and workload visibility. GitHub held the technical specification, discussion, implementation history, and review evidence for code changes. This separation kept the planning board readable while allowing complex changes to retain detailed acceptance criteria and technical records.
 
-</Card>
-<Card title="In Progress">
+The process had no fixed iteration length. A work item advanced when its dependencies and acceptance conditions were understood. Priority could change after a client consultation, an adviser review, a defect, a security concern, or a newly discovered domain rule.
 
-Active implementation focuses on core modules before layered enhancements.
+### 3.1.2 Iterative Delivery Lifecycle
 
-</Card>
-<Card title="Testing">
+The team used the following lifecycle for substantial changes:
 
-Built tasks are validated for correctness, usability, and expected behavior.
+1. A requirement, defect, stakeholder request, or technical concern entered the backlog.
 
-</Card>
-<Card title="Done">
+2. The proponents investigated the affected workflow, domain rules, and current implementation.
 
-Verified tasks are marked complete and retained as stable increments.
+3. The full-stack developer or the proponent responsible for the analysis wrote or refined the GitHub issue specification and its acceptance criteria.
 
-</Card>
-</CardGrid>
+4. Large changes were divided into vertical slices. The issue structure identified blocking work, work that could proceed in parallel, and the order needed to preserve a working system.
 
-<Figure
-  src={kanbanFigure}
-  alt="Kanban board workflow showing the five stages"
-  caption="Figure 4. Kanban Board Workflow Stages"
-/>
+5. Implementation took place on a short-lived branch. Independent slices could use separate Git worktrees so that development and testing did not interfere with another branch.
 
-<Callout variant="insight" title="Why Kanban Was Selected">
+6. The developer ran the applicable unit, component, database, browser, accessibility, build, and manual checks before or during pull-request review.
 
-The capstone documentation highlights Kanban's fit for a small team with evolving requirements. It supports visible progress, continuous reprioritization, and incremental delivery without sprint overhead while still preserving milestone discipline.
+7. GitHub Actions and AI-assisted review identified failures or code concerns. The developer assessed each finding, revised the branch where needed, and reran the affected checks.
 
-</Callout>
+8. After the pull request met its acceptance criteria and quality gates, the change merged into main. The proponents then updated affected requirements, ADRs, context files, tests, and project records.
 
-</Section>
+The full-stack developer used AI-assisted coding tools for bounded implementation, investigation, and review tasks. AI output did not replace repository evidence or human judgment. Every proposed change remained subject to diff inspection, automated tests, browser checks where applicable, and human acceptance before merge.
 
-<Section>
+Feedback could reopen completed work. For example, changes in institutional responsibility led to revisions in outcome ownership and administrative workflows. Later architectural review also removed Dean enrollment oversight and changed the rules for PLO and CILO question bindings. These changes were recorded through issues, tests, documentation, and ADRs rather than being hidden in the final code.
 
-## 3.2 Requirements
+Release checkpoints included working local builds, passing pull-request checks, non-production deployments, formal beta activity, and production-oriented verification. These checkpoints did not by themselves prove final acceptance. Chapter 5 and the supporting appendices contain the corresponding results and completion evidence.
 
-The requirements specification is organized into user expectations, required system behaviors, and quality constraints that keep CLOIE practical, secure, and maintainable.
+## 3.2 Requirements Engineering and Stakeholder Engagement
 
-<CardGrid variant="requirement">
-<Card title="3.2.1 User Requirements">
+Requirements engineering continued throughout the project. ISO/IEC/IEEE 29148:2018 treats requirements definition and management as lifecycle activities. System CLOIE applied this principle by keeping stable identifiers, acceptance criteria, change records, and traceability links as the system changed.
 
-CLOIE supports role-specific workflows for all intended stakeholder groups:
+### 3.2.1 Stakeholders and Requirements Elicitation
 
-<Chips items={['Faculty', 'Students', 'Graduating Students', 'Alumni', 'Industry Partners', 'Program Heads & Deans', 'System Admins']} />
+The client consultations established the institutional problem, required evaluation instruments, respondent groups, expected reports, and the boundary between system evidence and academic decision-making. Adviser consultations addressed capstone scope, documentation, development approach, evaluation, and presentation.
 
-- Stakeholders require secure, role-based access and context-specific outputs.
-- Users need clear forms, confidentiality protection, and efficient participation.
-- Program-level customization must remain controlled and isolated by design.
-</Card>
-<Card title="3.2.2 Functional Requirements">
+The operational stakeholder groups represented in the system are the Secretary, College Dean, General Education Coordinator, Program Heads, Faculty Members, Students, Alumni, and Industry Partners. Their inclusion as system roles does not imply that every member of each group joined every consultation or validation activity. Chapter 5 and Appendix G identify only the groups that participated in recorded validation.
 
-The system must deliver core end-to-end modules:
+The proponents used client and adviser consultations, institutional document review, evaluation-instrument analysis, workflow analysis, interface review, implementation findings, and test results to refine requirements. The institutional instruments included the Post-Term CILO Evaluation Tool, Graduating Student Exit Survey, Alumni Evaluation Tool, and Industry Partner Internship Evaluation Tool.
 
-- User and access management
-- Outcomes management (PLOs, GOs, course-level mappings)
-- Evaluation instrument management with version control
-- Evaluation cycle configuration and control
-- Response collection, validation, and processing
-- Analytics and consolidated reporting
-- Qualitative feedback handling
-- Administrative configuration and governance controls
-</Card>
-<Card title="3.2.3 Non-Functional Requirements">
+Use cases described how each actor interacted with the system. Interface sketches and issue-level design work helped clarify workflows that written requirements did not fully resolve. These artifacts supported analysis, but they did not count as proof that a feature was implemented or accepted.
 
-Quality standards ensure the platform remains dependable:
+### 3.2.2 Requirements Analysis, Prioritization and Validation
 
-<Chips items={['Usability', 'Performance', 'Security', 'Confidentiality', 'Reliability', 'Scalability', 'Availability', 'Responsiveness', 'Maintainability']} />
+The proponents assessed each request against the project objectives and boundaries. Work received higher priority when it supported evaluation context, controlled response collection, learning-outcome evidence, analytics, reports, security, data integrity, or a dependency needed by those capabilities.
 
-These constraints align with CLOIE's role as a multi-user, report-oriented, college-level monitoring system.
+The analysis also identified the actor and academic scope for each operation. A general statement such as "manage outcomes" was insufficient because ILO, PLO, and CILO responsibilities belong to different roles and contexts. The same rule applied to courses, assignments, evaluations, responses, analytics, and reports.
 
-</Card>
-</CardGrid>
+Priority reflected stakeholder need, dependency, architectural risk, security, data integrity, and readiness of the underlying model. Notion recorded operational priority, while the approved requirements and Appendix F provide the formal requirement priority and status.
 
-</Section>
+Requirements were validated through consultation, issue review, implementation, automated tests, manual verification, and stakeholder validation. A requirement remained incomplete when its implementation lacked the acceptance or test evidence needed to support it.
 
-<Section>
+### 3.2.3 Change Management and Traceability
 
-## 3.2.4 Software and Hardware Requirements
+A change began when new evidence contradicted an earlier assumption or introduced a new need. The proponents assessed its effect on scope, domain ownership, authorization, data, interfaces, tests, and deployment. Large changes received a GitHub specification and, when the decision affected several modules or would be difficult to reverse, an ADR.
 
-<CardGrid variant="stack">
-<Card title="Software Requirements">
+The repository records changes such as multi-role accounts with an active-role context, General Education Coordinator ownership of ILOs, removal of Dean enrollment oversight, revised publication gates, institution-time-zone rendering, and expanded CILO question binding. These records show how the project corrected earlier decisions without rewriting its history.
 
-#### Development Software
+Open proposals remain separate from implemented behavior. Email-password authentication and email notifications for published evaluations, including GitHub issues 621 and 629, remain pending until the team approves, implements, tests, and documents them.
 
-- Windows 10/11, Visual Studio Code, Git/GitHub
-- Figma and modeling tools (Visual Paradigm/Draw.io)
-- Browser testing via Chrome, Firefox, Edge, or Safari
+Appendix F is the controlling Requirements Traceability Matrix. It connects each objective and approved requirement to acceptance criteria, design components, implementation evidence, tests, validation, status, and change references. The matrix retains stable OBJ, FR, NFR, SEC, DR, INT, UC, and TC identifiers. Code alone does not justify a Verified or Passed status.
 
-#### Application Development Stack
+## 3.3 Development Workflow, Collaboration and Configuration Management
 
-- Next.js and TypeScript
-- Tailwind CSS and shadcn/ui
-- React Hook Form, Zod, TanStack Query
-- Chart.js, Recharts, wordcloud2.js, winkNLP, stopword
-- PostgreSQL and Supabase
-- Vitest and Playwright
+### 3.3.1 Source Control and Trunk-Based Integration
 
-#### Deployment Services
+System CLOIE uses Git and GitHub for source control. The repository contains the application, database schema and migrations, tests, specifications, ADRs, feature context files, deployment documentation, scripts, and engineering records.
 
-- Cloud hosting suitable for web/PWA deployment
-- Vercel-equivalent frontend deployment
-- Supabase-equivalent managed backend/database services
+The project used a lightweight trunk-based workflow. Main was the sole long-lived integration branch. The developer created short-lived feature, fix, refactor, documentation, continuous-integration, or operations branches and opened pull requests back to main. This avoided the additional staging and development branches used by Git Flow, which would have added coordination work without clear value for a project with one full-stack developer.
 
-</Card>
-<Card title="Hardware Requirements">
+A pull request grouped the implementation, tests, discussion, CI results, and review findings for a change. Recent repository history shows repeated branch-to-main pull requests rather than a final bulk upload. Conventional Commit categories identify the purpose of commits, including feature, fix, refactor, test, documentation, build, CI, and operations work.
 
-#### For Development
+The chapter does not claim a required human approval count or a particular branch-protection rule. GitHub configuration and pull-request records provide the evidence for any such controls included in the final supporting material.
 
-- Intel Core i5 / Ryzen 5 or higher
-- At least 8 GB RAM
-- At least 256 GB SSD
-- Stable broadband internet connection
+### 3.3.2 Issue Specifications, Vertical Slices and Parallel Work
 
-#### For End Users
+GitHub issues served as executable specifications for substantial work. An issue documented the problem, current state, constraints, acceptance criteria, affected areas, and known risks. A large feature could use a parent issue with sub-issues that each delivered an independently testable vertical slice.
 
-- Desktop, laptop, tablet, or smartphone
-- Modern web browser
-- Stable internet access
+The slice plan identified blockers and parallel work. A slice normally included the affected user interface, service logic, authorization, persistence, and tests needed to produce a working result. This reduced the risk of completing one technical layer while leaving the user workflow unusable.
 
-This hardware profile supports cross-device access for all stakeholder groups.
+Separate Git worktrees allowed independent branches or AI-assisted coding tasks to proceed in parallel. Each worktree used its own branch and verification cycle. The developer reviewed and integrated the completed slices through pull requests rather than combining unreviewed outputs.
 
-</Card>
-</CardGrid>
+Notion tracked the module and task state. GitHub retained the technical discussion and code history. ADRs recorded cross-cutting decisions, while CONTEXT-MAP.md and feature-level CONTEXT.md files recorded domain terms, invariants, ownership, and module boundaries.
 
-</Section>
+### 3.3.3 Code Review and Quality Gates
 
-<Section>
+The developer ran focused checks while implementing a change. Pull requests to main then entered the GitHub Actions pipeline. The current pipeline separates static checks, node and DOM unit-test jobs, a risk-selected production build, database integration, and browser end-to-end testing.
 
-## 3.3 Feasibility Issues
+Static checks run Prettier verification and ESLint on the affected files. Vitest runs the node and DOM test projects. Changes that affect application or production behavior trigger a Next.js production build. Database-sensitive changes use a disposable PostgreSQL service, replay the canonical migrations, load deterministic fixtures, and run the gated database-invariant suites. Browser-sensitive changes run Playwright against a production build with isolated CI authentication and desktop, mobile, and selected visual checks.
 
-Feasibility analysis evaluates whether CLOIE is practical to build and adopt within capstone constraints.
+Separate workflows run code-intelligence checks and CodeQL security analysis. Scheduled verification adds deeper database, browser, cross-browser, production-authentication-boundary, and demo-isolation checks.
 
-<Figure
-  src={ganttChart}
-  alt="Project timeline showing development phases from March to September 2026"
-  caption="Figure 5. Project Timeline (March–September 2026)"
-/>
+Pull requests may also receive AI-assisted review from Greptile or GitHub review tooling. The developer treats those comments as findings to assess, not automatic decisions. A change merges only after the relevant failures are corrected or the reviewer finding is resolved with evidence. The affected checks run again after revision.
 
-<CardGrid variant="feasibility">
-<Card title="3.3.1 Economic Feasibility">
+### 3.3.4 Environment, Deployment and Configuration Management
 
-The proposed web/PWA direction is financially realistic for a student-led project because it avoids separate native implementations and leverages widely available tools and cloud services.
+The development and deployment model separates local development, continuous integration, non-production testing, and primary production. Local development uses Node.js, pnpm, and a local Supabase Docker stack. Development-only authentication remains disabled in production behavior.
 
-</Card>
-<Card title="3.3.2 Technical Feasibility">
+The Coolify staging environment contains Dev and Preview application resources. The Dev resource supports a development server with hot reload through dev.system-cloie.app. The Preview resource runs a built non-main branch through preview.system-cloie.app so the team can inspect production-mode behavior before merging. The formal beta activity used the deployed non-production setup to make role-specific workflows available to representative users.
 
-CLOIE's required modules fit modern web architecture and relational data structures, with incremental delivery possible from core modules to advanced reporting features.
+Primary production runs the main branch at system-cloie.app. Coolify builds the System CLOIE container, and Cloudflare Tunnel publishes the application and API domains. The deployment model supports redeployment after integration, but this chapter does not claim that the GitHub push webhook is currently verified from end to end.
 
-</Card>
-<Card title="3.3.3 Operational Feasibility">
+System CLOIE uses independently operated, self-hosted Supabase backends. Local, CI, staging, beta or demo, and production data targets remain separate. CI uses disposable PostgreSQL containers and must not write test data to an institutional backend.
 
-The system aligns with existing academic practices at Assumption College of Davao and complements current institutional systems rather than replacing LMS/SIS workflows.
+The repository documents public build variables and server-only configuration separately. Secrets, OAuth credentials, signing keys, and database credentials remain outside version control. Database migrations run as controlled deployment actions instead of running automatically when the application starts.
 
-</Card>
-<Card title="3.3.4 Schedule Feasibility">
+### 3.3.5 Documentation, Dependencies and Contribution Evidence
 
-The March to September 2026 timeline is workable through staged milestones, early core-module prioritization, and continuous Kanban-guided progress.
+The project records difficult-to-reverse decisions in ADRs. CONTEXT-MAP.md indexes the feature-level CONTEXT.md files that define domain responsibilities, terms, and invariants. Specifications, runbooks, test documentation, and deployment inventories record details that do not belong in source-code comments.
 
-</Card>
-</CardGrid>
+The repository uses pnpm with a committed lockfile and a pinned Node.js runtime. The main stack includes Next.js and TypeScript, PostgreSQL through self-hosted Supabase, Prisma, Zod, React Hook Form, Tailwind CSS, Recharts, Vitest, Testing Library, and Playwright. Appendix E retains the detailed dependency versions, licenses, external-processing concerns, and operational requirements.
 
-</Section>
+One proponent served as the full-stack developer. The other proponent supported systems analysis, documentation, testing coordination, consultations, and project presentation where the records show that work. Named contribution evidence comes from commits, pull requests, issues, authored documents, testing artifacts, and consultation records. The supporting appendices retain those details rather than relying on the initial division of labor.
+
+## 3.4 Secure and Responsible Development
+
+Security and privacy affected requirements, design, implementation, testing, and deployment. This follows the NIST Secure Software Development Framework, which treats security as part of the development lifecycle rather than a final inspection (Souppaya et al., 2022).
+
+### 3.4.1 Identity, Authorization and Confidential Data
+
+Primary production uses Supabase Auth with Google OAuth and approved institutional domains. The application separates the authentication identity from the System CLOIE domain user. An account may hold several assigned roles, but one server-validated active role controls the current session and authorization context.
+
+Authentication does not grant unrestricted access. Server-side services check the role and the applicable program, course, General Education, assignment, deployment, or respondent scope. The codebase also contains negative tests for cross-role access and database policies.
+
+System CLOIE retains identity where eligibility, response integrity, or duplicate prevention requires it. Authorized analytics and review views limit respondent identification according to the workflow. The manuscript therefore describes responses as confidential, de-identified, pseudonymized, or aggregated according to the actual view. It does not make an unsupported claim of absolute anonymity.
+
+Free-text responses require stricter handling because a respondent may include identifying details. Raw comments remain subject to authorization and data-minimization rules. The AI boundary receives deterministic, de-identified evidence rather than unrestricted respondent text.
+
+### 3.4.2 Validation, Secrets, Dependencies and Infrastructure
+
+Forms use Zod schemas, while services enforce business and authorization rules that the browser cannot prove. PostgreSQL constraints, indexes, and database-invariant tests protect rules that must remain valid across interfaces.
+
+A syntactically valid identifier does not establish ownership or access. Services therefore validate both the input shape and its domain meaning. Publication, respondent eligibility, academic scope, and response-finalization checks run on the server.
+
+The application reads secrets and connection details from environment configuration. The repository contains an example environment file but does not commit operational credentials. The application container runs as a non-root user, exposes a health endpoint, and keeps schema migration separate from application startup.
+
+Dependency locks improve reproducibility but do not prove that dependencies are secure. CodeQL, dependency review, update testing, and the Appendix E inventory support ongoing maintenance.
+
+### 3.4.3 Backup, Recovery and Incident Readiness
+
+Committed migrations and controlled seed data can rebuild local and disposable test environments. Production recovery requires more. It depends on retained database, storage, and configuration backups, an assigned operator, a restore procedure, and evidence from a restore test.
+
+The current deployment inventory records database, storage, and configuration archives. Those copies share the production server. Automated backup retention, an encrypted off-server copy, and a recorded restore drill remain open operational work. Chapter 5 must report the verified readiness state without treating the existing archives as complete disaster recovery.
+
+The turnover records must identify the future operator, maintenance process, credential custody, incident contact, rollback procedure, and recovery responsibilities. Actual credentials must not appear in the manuscript or appendices.
+
+### 3.4.4 Responsible AI-Assisted Interpretation
+
+System CLOIE separates deterministic analytics from optional AI-assisted interpretation. The application calculates counts, distributions, averages, completion rates, and other quantitative evidence. The AI provider does not replace those calculations.
+
+When enabled, the server sends bounded, aggregate-derived qualitative evidence through an OpenAI-compatible interface. The input excludes respondent identifiers and raw comment text. The provider interprets the supplied structure and returns text for an authorized academic user to review.
+
+AI output cannot authorize access, alter domain records, classify official outcomes, or make curriculum decisions. Academic personnel remain responsible for interpretation and action. Chapter 5 must identify the provider, model, configuration, limitations, and validation evidence used for the evaluated build.
+
+## 3.5 Verification, Validation and Testing Strategy
+
+Chapter 3 defines how the team verified and validated System CLOIE. Test counts, defects, participant results, acceptance decisions, and retest outcomes belong in Chapter 5 and Appendix G.
+
+### 3.5.1 Automated Verification Layers
+
+Vitest and Testing Library cover application logic, services, validation, components, and route behavior. Database-invariant suites verify migrations, constraints, row-level security, academic-state rules, publication, response lifecycle, user assignments, and related persistence behavior against a disposable database.
+
+Playwright exercises complete role-based journeys against a production build. The CI configuration includes desktop and mobile Chromium projects, accessibility scenarios, cross-role privacy tests, failure-state checks, and selected visual baselines. Scheduled runs add Firefox and WebKit coverage where required.
+
+The production build acts as a separate quality gate because type, bundling, server-rendering, or route errors may not appear in isolated tests. Risk selection skips expensive jobs only when changed files cannot affect the corresponding area. Static checks and unit tests continue to run on pull requests.
+
+### 3.5.2 Test Environments and Data Isolation
+
+Unit tests use fixtures, mocks, and isolated application data. Database and browser CI jobs start a disposable PostgreSQL container, replay migrations, seed the required fixture, run the tests, and discard the environment.
+
+Playwright uses deterministic test accounts and a CI-only authentication path. Local development uses a separate development-only path. Primary production uses Google OAuth and cannot enable the development or CI path.
+
+The Dev and Preview resources allow deployed inspection without using production data. Preview provides a built branch for production-mode behavior. Formal beta testing used non-production infrastructure with role-appropriate accounts. Appendix G records the validated build and environment.
+
+### 3.5.3 Manual and Beta Validation
+
+The proponents performed manual checks for visual quality, responsive behavior, error messages, interaction state, and workflow combinations that automated tests did not cover. The full-stack developer also inspected affected desktop and mobile paths while implementing and reviewing a change.
+
+Formal beta testing allowed representative users to access the deployed system through the roles relevant to their work. The activity assessed whether users could complete the intended tasks and identify defects, usability problems, unclear content, or missing workflow rules.
+
+Chapter 3 records the method only. Appendix G-2 must contain the validation type, build, date, mode, stakeholder groups, participant count, tasks, method, and findings. Chapter 5 reports the results after the records are reconciled. No participant count, pass rate, or acceptance decision is inferred from access to the beta environment alone.
+
+### 3.5.4 Acceptance, Defect Handling and Retesting
+
+A test begins from an identified revision or build with a reproducible environment. Database-dependent checks start only after migration and fixture verification. Browser checks start only after the application and test contract pass their health checks.
+
+Acceptance criteria come from the approved requirement, GitHub issue, or Definition of Done. A successful test process is not enough when the observed behavior does not meet those criteria. Critical FR, NFR, SEC, DR, and INT items must link to observable criteria in Chapter 4 and Appendix F.
+
+A failed test, review comment, manual finding, or stakeholder concern becomes an issue or validation record. The developer identifies the cause, revises the implementation or requirement, reruns the affected test, and performs related regression checks. Playwright retries remain disabled so that a failed run followed by a pass is not hidden as a clean result.
+
+Appendix G-3 links each significant finding to its priority, revision, changed area, retest result, and closure status. Unresolved findings remain visible.
+
+### 3.5.5 Evidence Retention
+
+Evidence may include GitHub Actions runs, test reports, Playwright traces, screenshots, pull requests, commits, build records, database-test output, manual test records, and signed validation forms.
+
+Appendix G-1 records system tests. Appendix G-2 records user or stakeholder validation. Appendix G-3 records findings, revisions, and retesting. Appendix G-4 records the final user or client validation summary and acceptance. A blank form or an unrecorded demonstration does not prove that validation occurred.
+
+## 3.6 Project Management, Risks and Milestones
+
+The project used Notion for module and task flow and GitHub for technical execution. The chapter summarizes the main milestones and risks. Detailed board history, issue records, pull requests, CI evidence, meeting records, and contribution evidence remain in the supporting appendices.
+
+### 3.6.1 Milestones and Release Status
+
+The milestone summary uses completion criteria and evidence rather than unsupported calendar estimates.
+
+<div className="manuscript-table" role="region" tabIndex="0" aria-label="Table 3.1. Milestone and Release Summary">
+
+**Table 3.1. Milestone and Release Summary**
+
+| Milestone | Completion criterion | Evidence | Status |
+| :---- | :---- | :---- | :---- |
+| Requirements and domain baseline | Approved objectives, requirements, roles, and domain rules are traceable and current. | Consultations, Notion backlog, Appendix F, ADRs, and context files | Established and maintained as requirements change |
+| Core role and workflow implementation | Critical role-scoped evaluation, response, analytics, and administration workflows are implemented and tested. | Merged issues and pull requests, code, migrations, and automated tests | In progress; the current build implements the main workflow set |
+| CI and security verification baseline | Pull requests run the applicable static, unit, build, database, browser, code-intelligence, and security checks. | GitHub Actions runs and pull-request checks | Operational |
+| Staging, Preview, and formal beta activity | A non-production build is available to representative roles and findings are recorded. | Coolify Dev and Preview deployments and Appendix G beta records | Conducted; evidence reconciliation remains open |
+| Final validation, production readiness, and handover | Critical requirements are verified, major findings are retested, and deployment and recovery responsibilities are accepted. | Chapter 5, Appendices F and G, and deployment and turnover records | In progress |
+
+</div>
+
+### 3.6.2 Major Project Risks
+
+The risk summary records the controls currently used and the work that remains open.
+
+<div className="manuscript-table" role="region" tabIndex="0" aria-label="Table 3.2. Major Project Risk Summary">
+
+**Table 3.2. Major Project Risk Summary**
+
+| Risk | Likelihood | Impact | Mitigation | Owner | Status |
+| :---- | :---- | :---- | :---- | :---- | :---- |
+| Requirements drift | High | High | Keep stable IDs; update GitHub specifications, ADRs, context files, tests, and the RTM. | Proponents | Managed |
+| Developer continuity | Medium | High | Use small slices, pull requests, automated tests, current documentation, runbooks, and handover records. | Proponents | Open until handover |
+| Access or confidentiality failure | Medium | High | Enforce server-side role and scope checks, database policies, negative tests, and limited raw-response access. | Developer | Managed |
+| Deployment or recovery failure | Medium | High | Test migrations, isolate targets, monitor health, retain backups, and complete off-server backup and restore tests. | Developer and operator | Open |
+| Incomplete validation evidence | High | High | Record the build, participants, tasks, findings, revisions, and retests in Appendix G. | Proponents | Open |
+| AI privacy or authority misuse | Medium | High | Send aggregate-derived data only, exclude raw comments, keep calls server-side, and require human review. | Developer and academic user | Managed |
+
+</div>
+
+## 3.7 Feasibility and Sustainability
+
+### 3.7.1 Technical and Operational Feasibility
+
+The current implementation demonstrates technical feasibility. System CLOIE has a working feature-driven modular monolith built with Next.js and TypeScript, PostgreSQL and self-hosted Supabase, Prisma data access, Google OAuth, role-scoped workflows, migrations, automated tests, Docker images, and GitHub Actions.
+
+The modular feature structure keeps domain rules near their components, services, schemas, and tests. ADRs and context files record cross-cutting decisions. The same application path runs against separate local, CI, non-production, and production backends.
+
+Operational feasibility depends on institutional data, assigned role owners, participant access, training, and a maintainer after turnover. System CLOIE supports evaluation evidence and does not replace the institution's learning management system, student information system, grading process, curriculum authority, or accreditation decisions. Formal beta validation provides evidence about actual use, but Chapter 5 must report its results.
+
+### 3.7.2 Schedule and Organizational Feasibility
+
+Agile Kanban allowed the team to deliver vertical slices while requirements changed. The same flexibility created a schedule risk because late changes could displace documentation, validation, or operational work.
+
+One full-stack developer handled the codebase. Issue slicing, automated tests, CI, ADRs, context files, and runbooks reduced dependence on memory, but they did not remove the continuity risk. The proponents must prioritize critical requirements and defer work that cannot be implemented and verified before final submission.
+
+Institutional feasibility also depends on confirmed ownership of user administration, learning outcomes, deployments, data protection, hosting, backups, and incident response. The final turnover and acceptance records must name the responsible institutional unit or maintainer.
+
+### 3.7.3 Economic Considerations and Sustainability
+
+No verified cost-benefit calculation drove the selected architecture. The chapter therefore does not invent labor values, commercial-license savings, or return-on-investment figures.
+
+The operating model may incur costs for the host, domain, network services, storage, backups, external APIs, maintenance, and future upgrades. Chapter 5 may report verified costs when the final deployment arrangement provides them.
+
+Long-term sustainability depends on current documentation, recoverable data, dependency maintenance, tested migrations, monitored infrastructure, and institutional ownership. The Docker deployment, committed migrations, lockfile, automated tests, CI workflows, ADRs, context documentation, and runbooks support maintenance. Sustainability remains conditional until the team completes backup automation, an off-server copy, restore testing, credential transfer, and operator handover.
+
+Supporting appendix records are outside the scope of this website edition. References to those records identify source evidence, not published appendix pages.

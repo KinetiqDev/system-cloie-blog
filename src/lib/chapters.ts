@@ -22,16 +22,23 @@ export async function getChapters(): Promise<Chapter[]> {
   return chapters.sort((a, b) => a.data.order - b.data.order || a.data.chapter - b.data.chapter);
 }
 
-/** Public URL of a chapter, driven by its frontmatter `slug`. */
+/**
+ * Public URL of a chapter, driven by its frontmatter `slug`.
+ *
+ * The route comes from `slug`, not from the collection entry `id`. The glob
+ * loader derives `id` from the source filename, so renaming `chapter-4.mdx`
+ * would silently republish a public URL; `slug` is the declared, stable
+ * contract and is what `[...slug].astro` matches on.
+ */
 export function chapterPath(chapter: Chapter): string {
-  return `/${chapter.id}`;
+  return `/${chapter.data.slug}`;
 }
 
 /** Locate a chapter and its previous/next siblings in the manuscript. */
-export async function getChapterNeighbours(id: string): Promise<ChapterNeighbours> {
+export async function getChapterNeighbours(slug: string): Promise<ChapterNeighbours> {
   const chapters = await getChapters();
-  const index = chapters.findIndex((chapter) => chapter.id === id);
-  if (index === -1) throw new Error(`Unknown chapter id: ${id}`);
+  const index = chapters.findIndex((chapter) => chapter.data.slug === slug);
+  if (index === -1) throw new Error(`Unknown chapter slug: ${slug}`);
   return {
     current: chapters[index]!,
     index,
