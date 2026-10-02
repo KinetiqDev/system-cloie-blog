@@ -376,6 +376,11 @@ img {
 /* ===== BADGE ===== */
 .badge {
   display: inline-block;
+  /* A flex item is blockified, so `align-items: stretch` on a flex COLUMN
+     parent would pull the pill to the full card width. Chapter badges sit in a
+     flex row and never hit this; the refs badge is a direct column child and
+     did. */
+  align-self: flex-start;
   padding: 4px 12px;
   border-radius: var(--radius-full);
   font-size: 12px;
