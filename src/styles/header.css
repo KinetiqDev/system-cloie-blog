@@ -128,6 +128,17 @@
   position: relative;
 }
 
+/* Bridges the ten-pixel gap under the trigger, and only while the panel is
+   open: dwelling in that gap must not arm the close timer. */
+.nav-menu[data-menu-open='true']::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 100%;
+  width: 100%;
+  height: 10px;
+}
+
 /* The trigger is a button sitting in a row of links, so it gives up the
    user-agent's chrome without giving up `.header__link`'s type. */
 .nav-menu__trigger {

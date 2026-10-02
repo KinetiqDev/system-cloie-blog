@@ -144,8 +144,11 @@ for (const menu of menus) {
   });
 
   menu.addEventListener('pointerenter', (event) => {
-    if (event.pointerType !== 'mouse' || menu.dataset.menuOpen === 'true') return;
+    if (event.pointerType !== 'mouse') return;
+    // Unconditional: crossing the gap to the panel re-enters while still open,
+    // so an early return would leave the close timer armed under the pointer.
     cancelPendingClose();
+    if (menu.dataset.menuOpen === 'true') return;
     closeMenus(menu);
     setMenuOpen(menu, true);
     hoveredAt.set(menu, Date.now());
