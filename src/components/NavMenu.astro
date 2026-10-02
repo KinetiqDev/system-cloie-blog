@@ -1,0 +1,64 @@
+---
+/**
+ * A top-level navigation disclosure in the desktop bar.
+ *
+ * The bar carries the manuscript's three classes — Overview, Chapters and
+ * References — rather than its twelve leaf pages, so a sixth chapter never
+ * lengthens it. The items are the same objects the mobile drawer groups, which
+ * is what keeps the two surfaces from drifting apart.
+ *
+ * Plain disclosure semantics (a button plus links), not `role="menu"`: site
+ * navigation does not need arrow-key roving tabindex, and Tab order stays
+ * document order.
+ */
+import Icon from './Icon.astro';
+import { withBase } from '../lib/url';
+
+export interface MenuItem {
+  path: string;
+  label: string;
+  /** Second line in the panel. Omitted where there is nothing to say. */
+  description?: string;
+  current?: boolean;
+}
+
+interface Props {
+  /** DOM id stem; the trigger's `aria-controls` is derived from it. */
+  id: string;
+  label: string;
+  items: MenuItem[];
+}
+
+const { id, label, items } = Astro.props;
+const panelId = `${id}-panel`;
+const hasCurrent = items.some((item) => item.current);
+---
+
+<div class="nav-menu" data-nav-menu>
+  <button
+    type="button"
+    class:list={['header__link', 'nav-menu__trigger', { 'header__link--active': hasCurrent }]}
+    data-menu-trigger
+    aria-expanded="false"
+    aria-controls={panelId}
+  >
+    {label}
+    <Icon name="chevron-down" size={14} class="nav-menu__caret" />
+    {hasCurrent && <span class="header__link-indicator" aria-hidden="true" />}
+  </button>
+
+  <div class="nav-menu__panel" id={panelId} data-menu-panel inert>
+    {
+      items.map((item) => (
+        <a
+          href={withBase(item.path)}
+          class:list={['nav-menu__item', { 'nav-menu__item--active': item.current }]}
+          aria-current={item.current ? 'page' : undefined}
+        >
+          <span class="nav-menu__item-label">{item.label}</span>
+          {item.description && <span class="nav-menu__item-desc">{item.description}</span>}
+        </a>
+      ))
+    }
+  </div>
+</div>

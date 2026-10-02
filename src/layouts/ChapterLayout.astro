@@ -3,7 +3,7 @@ import type { MarkdownHeading } from 'astro';
 import BaseLayout from './BaseLayout.astro';
 import Icon from '../components/Icon.astro';
 import Reveal from '../components/Reveal.astro';
-import { sectionLabel, type ChapterNeighbours } from '../lib/chapters';
+import { sectionLabel, chapterPath, type ChapterNeighbours } from '../lib/chapters';
 import { withBase } from '../lib/url';
 import '../styles/chapter.css';
 
@@ -83,7 +83,7 @@ const jumpLinks = toc
         <nav class="chapter-nav" aria-label="Chapter navigation">
           {
             previous ? (
-              <a href={withBase(`/${previous.id}`)} class="btn btn-outline">
+              <a href={withBase(chapterPath(previous))} class="btn btn-outline">
                 <Icon name="arrow-left" size={16} /> Previous: {previous.data.navLabel}
               </a>
             ) : (
@@ -99,7 +99,7 @@ const jumpLinks = toc
 
           {
             next ? (
-              <a href={withBase(`/${next.id}`)} class="btn btn-primary">
+              <a href={withBase(chapterPath(next))} class="btn btn-primary">
                 Next: {next.data.navLabel} <Icon name="arrow-right" size={16} />
               </a>
             ) : (

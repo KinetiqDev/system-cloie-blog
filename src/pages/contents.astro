@@ -1,0 +1,141 @@
+---
+import { render } from 'astro:content';
+import FrontMatterLayout from '../layouts/FrontMatterLayout.astro';
+import { getChapters, chapterPath, sectionLabel } from '../lib/chapters';
+import { FRONT_MATTER } from '../lib/front-matter';
+import { withBase } from '../lib/url';
+
+/**
+ * Table of Contents, derived.
+ *
+ * Built from each chapter's own rendered headings rather than a hand-maintained
+ * list, so a new or renamed section appears here the moment the chapter changes
+ * and can never drift. Three heading levels are shown; the guide warns against
+ * unnecessary heading levels, and the manuscript stays at three.
+ */
+const chapters = await getChapters();
+
+const entries = await Promise.all(
+  chapters.map(async (chapter) => {
+    const { headings } = await render(chapter);
+    return {
+      chapter,
+      path: chapterPath(chapter),
+      // Level 1 is the chapter title itself, already rendered as the row heading.
+      sections: headings
+        .filter((heading) => heading.depth === 2 || heading.depth === 3)
+        .map((heading) => ({ ...heading, depth: heading.depth - 1 })),
+    };
+  })
+);
+---
+
+<FrontMatterLayout
+  title="Table of Contents"
+  label="Contents"
+  description={FRONT_MATTER.find((item) => item.path === '/contents')!.description}
+  current="/contents"
+  siblings={FRONT_MATTER.map(({ path, label }) => ({ path: path, label }))}
+>
+  <nav class="toc" aria-label="Manuscript chapters and sections">
+    {
+      entries.map(({ chapter, path, sections }) => (
+        <section class="toc__chapter">
+          <h2 class="toc__chapter-title">
+            <a href={withBase(path)}>
+              <span class="toc__num">{chapter.data.navLabel}</span>
+              {chapter.data.title}
+            </a>
+          </h2>
+          <ol class="toc__sections">
+            {sections.map((section) => (
+              <li class:list={['toc__item', `toc__item--d${section.depth}`]}>
+                <a href={withBase(`${path}#${section.slug}`)}>
+                  <span class="toc__label">{sectionLabel(section.text)}</span>
+                </a>
+              </li>
+            ))}
+          </ol>
+        </section>
+      ))
+    }
+  </nav>
+</FrontMatterLayout>
+
+<style>
+  .toc {
+    max-width: 840px;
+  }
+
+  .toc__chapter {
+    margin-bottom: 34px;
+  }
+
+  .toc__chapter-title {
+    font-size: 19px;
+    font-weight: 750;
+    margin: 0 0 10px;
+    line-height: 1.35;
+  }
+
+  .toc__chapter-title a {
+    color: var(--cloie-text);
+    text-decoration: none;
+    display: flex;
+    gap: 10px;
+    align-items: baseline;
+  }
+
+  .toc__chapter-title a:hover {
+    color: var(--cloie-blue-dark);
+  }
+
+  .toc__num {
+    font-size: 12.5px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--cloie-blue-dark);
+    flex: none;
+    padding-top: 3px;
+  }
+
+  [data-theme='dark'] .toc__chapter-title a:hover {
+    color: var(--cloie-blue);
+  }
+
+  .toc__sections {
+    list-style: none;
+    margin: 0;
+    padding: 0 0 0 2px;
+    border-left: 2px solid var(--cloie-border);
+  }
+
+  .toc__item a {
+    display: block;
+    padding: 6px 0 6px 18px;
+    font-size: 15px;
+    color: var(--cloie-text-secondary);
+    text-decoration: none;
+    line-height: 1.45;
+    border-left: 2px solid transparent;
+    margin-left: -2px;
+  }
+
+  .toc__item a:hover {
+    color: var(--cloie-blue-dark);
+    border-left-color: var(--cloie-blue);
+    background: rgba(15, 168, 251, 0.03);
+  }
+
+  [data-theme='dark'] .toc__item a:hover {
+    color: var(--cloie-blue);
+  }
+
+  /* Sub-sections sit one step in, with a smaller label. */
+  .toc__item--d2 a {
+    padding-left: 36px;
+    font-size: 14px;
+    color: var(--cloie-text-muted);
+  }
+</style>

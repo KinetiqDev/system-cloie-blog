@@ -1,0 +1,69 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import Reveal from '../components/Reveal.astro';
+import { withBase } from '../lib/url';
+import '../styles/chapter.css';
+
+interface Props {
+  title: string;
+  /** Short label used in the breadcrumb, e.g. `Abstract`. */
+  label: string;
+  description: string;
+  /** The list of other front-matter pages, for the in-page nav. */
+  siblings: { path: string; label: string }[];
+  /** Path of the current page, so the nav can mark it. */
+  current: string;
+}
+
+const { title, label, description, siblings, current } = Astro.props;
+---
+
+<BaseLayout title={label} description={description}>
+  <div class="page-wrapper">
+    <section class="chapter-banner">
+      <div class="chapter-banner__orbs" aria-hidden="true">
+        <div class="chapter-banner__orb chapter-banner__orb--1"></div>
+        <div class="chapter-banner__orb chapter-banner__orb--2"></div>
+      </div>
+      <div class="container chapter-banner__content">
+        <Reveal>
+          <span class="badge">Overview</span>
+          <h1 class="chapter-banner__title">{title}</h1>
+          <p class="chapter-banner__desc">{description}</p>
+          <p class="chapter-banner__breadcrumb">
+            <a href={withBase('/')}>Home</a> / {label}
+          </p>
+        </Reveal>
+
+        <Reveal delay={0.15}>
+          <nav class="chapter-banner__jumps" aria-label="Front matter pages">
+            {siblings.map((sibling) => (
+              <a
+                href={withBase(sibling.path)}
+                class="chapter-banner__jump"
+                aria-current={sibling.path === current ? 'page' : undefined}
+              >
+                {sibling.label}
+              </a>
+            ))}
+          </nav>
+        </Reveal>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container chapter-content">
+        <slot />
+      </div>
+    </section>
+
+    <div class="container">
+      <Reveal>
+        <nav class="chapter-nav" aria-label="Continue reading">
+          <a href={withBase('/')} class="btn btn-outline">Back to Home</a>
+          <a href={withBase('/chapter1')} class="btn btn-primary">Chapter 1 <span aria-hidden="true">&rarr;</span></a>
+        </nav>
+      </Reveal>
+    </div>
+  </div>
+</BaseLayout>

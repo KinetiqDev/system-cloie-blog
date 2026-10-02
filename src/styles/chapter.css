@@ -116,6 +116,16 @@
   color: #fff;
 }
 
+/* The front-matter pages use this same row as a navigation list, so the page
+   you are on has to be visibly the current one — `aria-current` alone is not
+   something a sighted reader can perceive. */
+.chapter-banner__jump[aria-current='page'] {
+  background: var(--cloie-blue);
+  border-color: var(--cloie-blue);
+  color: #fff;
+  cursor: default;
+}
+
 /* ===== Chapter content ===== */
 .chapter-content {
   display: grid;
@@ -427,4 +437,30 @@
   .chapter-cta .btn {
     width: 100%;
   }
+}
+
+.chapter-content table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+.chapter-content th, .chapter-content td {
+  padding: 12px;
+  border: 1px solid var(--cloie-border);
+  text-align: left;
+  vertical-align: top;
+}
+.chapter-content th { background: var(--cloie-bg-section-alt); }
+.manuscript-table {
+  overflow-x: auto;
+  margin: 24px 0;
+}
+.manuscript-table:focus-visible { outline: 2px solid var(--cloie-blue); }
+@media print {
+  .chapter-content, .chapter-content * {
+    color: #000 !important;
+    opacity: 1 !important;
+    background: transparent !important;
+  }
+  .manuscript-table { overflow: visible; }
 }

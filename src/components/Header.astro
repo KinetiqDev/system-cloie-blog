@@ -1,8 +1,11 @@
 ---
 import Icon from './Icon.astro';
+import NavMenu, { type MenuItem } from './NavMenu.astro';
 import cloieLogo from '../assets/cloie-logo.svg';
 import { getChapters, chapterPath } from '../lib/chapters';
+import { FRONT_MATTER } from '../lib/front-matter';
 import { withBase } from '../lib/url';
+import { PRODUCTION } from '../lib/system';
 import '../styles/header.css';
 
 interface Props {
@@ -11,24 +14,50 @@ interface Props {
 
 const { currentPath } = Astro.props;
 
-// Navigation is derived from the chapter collection so the menus grow with
-// the manuscript instead of being hand-maintained.
+// The manuscript's top-level structure, not its leaf pages. Both the desktop
+// bar's disclosures and the mobile drawer are built from these groups, so the
+// two surfaces cannot disagree about what the document contains, and adding a
+// chapter never lengthens the bar.
 const chapters = await getChapters();
-const navItems = [
-  { path: '/', label: 'Home' },
-  ...chapters.map((chapter) => ({
-    path: chapterPath(chapter),
-    label: chapter.data.navLabel,
-  })),
-  { path: '/references', label: 'References' },
+const isActive = (path: string) => currentPath === path;
+
+const frontMatterItems: MenuItem[] = FRONT_MATTER.map((item) => ({
+  path: item.path,
+  label: item.label,
+  description: item.description,
+  current: isActive(item.path),
+}));
+
+const chapterItems: MenuItem[] = chapters.map((chapter) => ({
+  path: chapterPath(chapter),
+  label: chapter.data.navLabel,
+  description: `${chapter.data.cardTitle ?? chapter.data.title} — ${chapter.data.summary}`,
+  current: isActive(chapterPath(chapter)),
+}));
+
+const resourceItems: MenuItem[] = [{ path: '/references', label: 'References' }];
+
+const drawerGroups = [
+  { heading: null, items: [{ path: '/', label: 'Home' }] },
+  { heading: 'Overview', items: frontMatterItems },
+  { heading: 'Chapters', items: chapterItems },
+  { heading: 'Resources', items: resourceItems },
 ];
 
-const isActive = (path: string) => currentPath === path;
+// The drawer's title slot reports where the reader is in the manuscript; the
+// banner and jump rows on the page body already do the same job there.
+const position = (() => {
+  const chapter = chapters.find((entry) => chapterPath(entry) === currentPath);
+  if (chapter) return `Chapters · ${chapter.data.navLabel}`;
+  const front = FRONT_MATTER.find((item) => item.path === currentPath);
+  if (front) return `Overview · ${front.label}`;
+  return isActive('/references') ? 'References' : 'Navigation';
+})();
 ---
 
 <header class="header" data-header>
   <div class="header__inner container">
-    <a class="header__logo" href={withBase('/')} aria-label={`${navItems[0]!.label} — PROJECT CLOIE home`}>
+    <a class="header__logo" href={withBase('/')} aria-label="Home — PROJECT CLOIE">
       <img
         src={cloieLogo.src}
         width="40"
@@ -41,18 +70,29 @@ const isActive = (path: string) => currentPath === path;
     </a>
 
     <nav class="header__nav" aria-label="Main navigation">
-      {
-        navItems.map((item) => (
-          <a
-            href={withBase(item.path)}
-            class:list={['header__link', { 'header__link--active': isActive(item.path) }]}
-            aria-current={isActive(item.path) ? 'page' : undefined}
-          >
-            {item.label}
-            {isActive(item.path) && <span class="header__link-indicator" aria-hidden="true" />}
-          </a>
-        ))
-      }
+      <NavMenu id="front-matter" label="Overview" items={frontMatterItems} />
+      <NavMenu id="chapters" label="Chapters" items={chapterItems} />
+      <a
+        href={withBase('/references')}
+        class:list={['header__link', { 'header__link--active': isActive('/references') }]}
+        aria-current={isActive('/references') ? 'page' : undefined}
+      >
+        References
+        {isActive('/references') && <span class="header__link-indicator" aria-hidden="true" />}
+      </a>
+
+      {/* The system the manuscript documents. It leaves the site, so it is
+          marked external and says so for anyone who cannot see the icon. */}
+      <a
+        href={PRODUCTION.url}
+        class="header__link header__link--external"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        System
+        <Icon name="external-link" size={13} />
+        <span class="sr-only">CLOIE (opens in a new tab)</span>
+      </a>
     </nav>
 
     <div class="header__actions">
@@ -92,20 +132,41 @@ const isActive = (path: string) => currentPath === path;
     inert
   >
     <div class="mobile-nav__header">
-      <span class="mobile-nav__title">Navigation</span>
+      <span class="mobile-nav__title">{position}</span>
     </div>
     <div class="mobile-nav__links">
       {
-        navItems.map((item) => (
-          <a
-            href={withBase(item.path)}
-            class:list={['mobile-nav__link', { 'mobile-nav__link--active': isActive(item.path) }]}
-            aria-current={isActive(item.path) ? 'page' : undefined}
-          >
-            {item.label}
-          </a>
+        drawerGroups.map((group) => (
+          <div class="mobile-nav__group">
+            {group.heading && <span class="mobile-nav__heading">{group.heading}</span>}
+            {group.items.map((item) => (
+              <a
+                href={withBase(item.path)}
+                class:list={['mobile-nav__link', { 'mobile-nav__link--active': isActive(item.path) }]}
+                aria-current={isActive(item.path) ? 'page' : undefined}
+              >
+                {item.label}
+              </a>
+            ))}
+          </div>
         ))
       }
+    </div>
+
+    {/* The system is the thing the manuscript documents, so on mobile it gets
+        its own action at the foot of the drawer rather than another row in the
+        page index. */}
+    <div class="mobile-nav__system">
+      <a
+        href={PRODUCTION.url}
+        class="mobile-nav__system-link"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <Icon name="external-link" size={15} />
+        Open the CLOIE system
+        <span class="sr-only">(opens in a new tab)</span>
+      </a>
     </div>
   </nav>
 </div>

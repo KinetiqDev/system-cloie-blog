@@ -56,12 +56,32 @@
   margin: 0;
 }
 
+/* Three labelled groups side by side, collapsing to a single column on narrow
+   viewports. Each group is a plain block so the footer stays readable even if a
+   group ends up with only one link. */
 .footer__links {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 8px 24px;
+  gap: 32px 48px;
   margin-bottom: 28px;
+  text-align: left;
+}
+
+.footer__group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 120px;
+}
+
+.footer__heading {
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.6;
+  margin-bottom: 8px;
 }
 
 .footer__link {
@@ -75,6 +95,18 @@
 
 .footer__link:hover {
   color: #ffd700;
+}
+
+/* Deployment links leave the site; the glyph is the only cue, so it sits in
+   the text's own colour and never carries meaning alone. */
+.footer__link--external {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.footer__link--external svg {
+  opacity: 0.6;
 }
 
 .footer__bottom {
@@ -94,6 +126,14 @@
   }
 
   .footer__links {
-    gap: 12px 20px;
+    gap: 24px 32px;
+  }
+}
+
+@media (max-width: 420px) {
+  .footer__links {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
   }
 }

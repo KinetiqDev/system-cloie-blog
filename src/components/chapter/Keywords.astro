@@ -1,0 +1,57 @@
+---
+/**
+ * The keyword list that follows an abstract.
+ *
+ * A component rather than inline markup because the styling is scoped here and
+ * MDX cannot carry a `<style>` block. The capstone guide asks for three to five
+ * keywords immediately after the abstract; the manuscript has five.
+ */
+interface Props {
+  items: string[];
+  /** Label before the list. */
+  label?: string;
+}
+
+const { items, label = 'Keywords' } = Astro.props;
+---
+
+<div class="keywords" role="list" aria-label={label}>
+  <span class="keywords__label" role="listitem">{label}</span>
+  {items.map((item) => (
+    <span class="keywords__item" role="listitem">{item}</span>
+  ))}
+</div>
+
+<style>
+  .keywords {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 8px 10px;
+    margin-top: 28px;
+    padding-top: 20px;
+    border-top: 1px solid var(--cloie-border);
+  }
+
+  .keywords__label {
+    font-size: 12.5px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--cloie-text-muted);
+    margin-right: 4px;
+  }
+
+  .keywords__item {
+    font-size: 14px;
+    color: var(--cloie-text-secondary);
+    background: var(--cloie-bg-section-alt);
+    border: 1px solid var(--cloie-border);
+    border-radius: var(--radius-full);
+    padding: 3px 12px;
+  }
+
+  [data-theme='dark'] .keywords__item {
+    background: rgba(15, 168, 251, 0.08);
+  }
+</style>

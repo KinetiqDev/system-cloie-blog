@@ -1,0 +1,333 @@
+---
+chapter: 4
+phase: design
+title: 'Requirements and System Design'
+navLabel: 'Chapter 4'
+cardTitle: 'Requirements & Design'
+description: >-
+  What System CLOIE must do, and how it is structured to do it: the system
+  boundary, the prioritized requirements, the interaction model, the solution
+  architecture, the data model, the security controls, and the deployment
+  topology.
+summary: >-
+  The prioritized requirements, the interaction model, the modular-monolith
+  architecture, the entity model, the trust boundaries, and the deployment
+  topology behind System CLOIE.
+order: 4
+slug: chapter4
+---
+
+import Figure from '../../components/chapter/Figure.astro';
+
+System CLOIE supports institutional evaluation and evidence management at Assumption College of Davao. It connects academic structures, course assignments, learning outcomes, evaluation instruments, responses, and analytics. The system does not replace the institution's learning management system, student information system, grading process, instructional delivery, academic decision authority, or accreditation process.
+
+## 4.1 System context and stakeholders
+
+<Figure id="fig-4-1-context" />
+
+### 4.1.1 System boundary
+
+System CLOIE supports institutional learning-outcome evaluation and evidence management at Assumption College of Davao. Its boundary includes academic configuration, outcome mapping, evaluation instruments, deployments, response collection, and role-scoped evidence review. The system does not replace the learning management system, student information system, grading process, curriculum authority, or accreditation decisions.
+
+The application consists of the System CLOIE web application and its feature modules. Authentication and PostgreSQL persistence run through a separately operated, self-hosted Supabase backend. The application also connects to Google OAuth and, when configured, a bounded OpenAI-compatible service for aggregate qualitative analysis.
+
+Figure 4.1 identifies the actors, external services, and information exchanges at the system boundary.
+
+
+###### *Figure 4.1. System CLOIE Context Diagram*
+
+### 4.1.2 External actors and user groups
+
+Administrative users are the Secretary, College Dean, Program Head, General Education Coordinator, and Faculty Member. Respondent users are students, alumni, and industry partners. Administrative users configure academic records, prepare evaluations, and review evidence within their authority. Respondents complete only the deployments for which the server confirms eligibility.
+
+An account may hold more than one role. Each protected request uses one active role resolved by the server. Program Head access is limited to assigned programs, Faculty Member access depends on course assignments, General Education Coordinator access applies to the college-wide General Education scope, and respondent access depends on deployment eligibility.
+
+### 4.1.3 External systems and service dependencies
+
+Google OAuth supplies the production sign-in flow through Supabase Auth. PostgreSQL stores application data, and Prisma provides the data-access layer. Cloudflare Tunnel routes public traffic to the deployed services. Tailscale restricts administrative access to the host and Coolify. The optional analysis provider receives only bounded aggregate inputs prepared by the server.
+
+### 4.1.4 Stakeholder responsibilities
+
+The Secretary maintains users, academic periods, programs, majors, courses, and baseline instruments. Program Heads manage program-scoped outcomes, assignments, instruments, deployments, and evidence. The General Education Coordinator manages Institutional Learning Outcomes and General Education course assignments. Faculty Members work within assigned courses. The College Dean reviews college-wide readiness and mapping evidence. Respondents provide evaluation data. Appendix C contains the detailed actor descriptions, use cases, and role-permission matrix.
+
+## 4.2 Requirements specification
+
+The requirement identifiers in this section follow the current manuscript baseline. Appendix C contains the full approved statements and acceptance criteria. Appendix F maps each requirement to its source, design element, implementation evidence, and verification result.
+
+### 4.2.1 Functional requirements
+
+FR-01 through FR-06 cover production authentication, institutional identity resolution, active-role selection, role-scoped access, account administration, and respondent onboarding. FR-07 through FR-17 cover academic periods, programs, courses, course assignments, and rosters. FR-18 through FR-26 cover Institutional Learning Outcomes, Program Learning Outcomes, Course Intended Learning Outcomes, and their mappings.
+
+FR-27 through FR-33 cover versioned instruments, deployment context, readiness checks, publication, and closure. FR-34 through FR-40 cover eligibility, drafts, answer validation, review, atomic submission, and completion history. FR-41 through FR-49 cover role-scoped quantitative and qualitative evidence, historical comparison, and academic review.
+
+### 4.2.2 Quality and non-functional requirements
+
+NFR-01 through NFR-08 address reliable state changes, understandable workflows, responsive layouts, applicable WCAG 2.2 Level AA targets, maintainability, browser compatibility, and recoverability. Appendix F must state the approved measurement conditions and thresholds before Chapter 5 reports a performance or usability result.
+
+### 4.2.3 Security and privacy requirements
+
+SEC-01 through SEC-04 require Google OAuth, session checks, active-role checks, and resource-scope authorization. SEC-05 through SEC-08 protect response limits, finalized submissions, respondent identity, and qualitative feedback. SEC-09 through SEC-12 require server-side validation, server-only secrets, protected confirmation for sensitive actions, and target verification for destructive database or environment operations.
+
+### 4.2.4 Data and integrity requirements
+
+DR-01 through DR-03 require stable identifiers and the academic relationships needed to reconstruct an evaluation context. DR-04 through DR-06 preserve the meaning of archived outcomes and historical evidence. DR-07 through DR-10 require database constraints, separation of mutable configuration from submitted evidence, stable course-level outcomes, and complete mapping records.
+
+### 4.2.5 Integration and infrastructure requirements
+
+INT-01 through INT-05 cover Google OAuth through self-hosted Supabase Auth, PostgreSQL access through Prisma, committed migrations, the Dockerized Next.js application, and separation of public and privileged configuration. INT-06 permits bounded server-side qualitative assistance. The provider must not receive unrestricted respondent-identifying data or replace deterministic analysis.
+
+### 4.2.6 Prioritization and acceptance criteria
+
+The approved priority and acceptance criteria belong with each detailed requirement in Appendix C. A requirement is not complete because a screen or route exists. Verification must show the required behavior, authorization, data rule, and failure handling under the stated conditions. Proposed work, including email-password authentication and publication email notifications, remains separate from the implemented baseline until approval and verification.
+
+### 4.2.7 Requirements traceability
+
+Appendix F is the source for requirement-to-design, implementation, and test traceability. The current repository traceability matrix and the manuscript use conflicting identifiers for some requirements. The appendices must reconcile those identifiers before the final manuscript treats either set as authoritative.
+
+## 4.3 Use case and user interaction model
+
+<Figure id="fig-4-2-use-case" />
+
+### 4.3.1 Major actor groups
+
+The use case model separates administrative actors from respondents. Administrative actors operate within college, program, General Education, or course scopes. Respondents interact with assigned or invited evaluations. The server resolves the active role and resource scope before it permits a use case.
+
+### 4.3.2 Major use cases
+
+Administrative use cases cover account and academic configuration, course assignments, learning outcomes and mappings, instrument authoring, deployment preparation, publication, closure, and evidence review. Respondent use cases cover onboarding, active-role selection when applicable, evaluation discovery, draft completion, review, final submission, and completion history. Figure 4.2 summarizes the major actors and their permitted interaction groups. It does not replace the authorization matrix.
+
+
+###### *Figure 4.2. System CLOIE Use Case Diagram*
+
+### 4.3.3 Role-scoped interaction summary
+
+The Secretary maintains shared institutional records and baseline instruments but does not manage outcome catalogs or publish program work on behalf of another role. Program Heads work within assigned programs. The General Education Coordinator manages college-wide General Education outcomes and assignments. Faculty Members work within assigned course contexts. The Dean reviews readiness and mapping evidence across the college without receiving unrestricted mutation authority.
+
+The respondent workflow presents only eligible deployments. The evaluation wizard validates each section, can save a draft, shows a review step, and requires explicit final confirmation. The server creates the final response and its answers atomically. Ordinary respondent actions cannot edit a finalized submission.
+
+### 4.3.4 Detailed use case reference
+
+Appendix C contains the detailed use case specifications, preconditions, main flows, alternate flows, postconditions, and role-permission matrix.
+
+## 4.4 Solution architecture
+
+<Figure id="fig-4-3-architecture" />
+
+### 4.4.1 Architectural overview
+
+System CLOIE is a Next.js App Router modular monolith. Feature-owned modules contain the domain rules, application services, schemas, components, and tests for each capability. Shared packages contain only cross-cutting contracts and infrastructure. Figure 4.3 shows the logical layers and external services.
+
+
+###### *Figure 4.3. System CLOIE Solution Architecture*
+
+### 4.4.2 Client and presentation layer
+
+React Server Components are the default for pages and data-bound layouts. Client Components are limited to interactive controls that require browser state. Administrative workspaces use role-aware navigation and context selectors. Respondent pages use a guided evaluation workflow.
+
+### 4.4.3 Request and application boundary
+
+Server Actions are the primary application interface for protected mutations and most form submissions. A small set of route handlers supports authentication callbacks, legal acknowledgement, health checks, and bounded dean read operations. The request boundary refreshes Supabase sessions, while each protected operation performs its own authorization.
+
+### 4.4.4 Modular monolith structure
+
+Modules own their data rules and expose explicit services or contracts when another feature needs them. This structure keeps deployment simple for a single development team while preventing page components from becoming the place where business rules live.
+
+### 4.4.5 Data access and persistence
+
+Prisma is the application data-access layer, and PostgreSQL is the system of record. Committed migrations define schema changes. Transactions and constraints protect publication, mapping, roster, response, and final-submission rules that cannot depend on interface state.
+
+### 4.4.6 External services
+
+Self-hosted Supabase provides authentication and PostgreSQL services. Google OAuth is the production identity provider. The optional OpenAI-compatible service analyzes bounded aggregate qualitative inputs. Cloudflare Tunnel and Coolify support public routing and container operation.
+
+### 4.4.7 Architectural decisions and trade-offs
+
+The modular monolith avoids the operational cost of distributed services while retaining feature ownership. Server-rendered pages reduce client data exposure, but interactive workflows still use focused client components. Self-hosting gives the project control over data and deployment, but it also places backup, patching, monitoring, and recovery duties on the operator. Appendix E records the detailed architecture and relevant architectural decisions.
+
+## 4.5 Data design
+
+<Figure id="fig-4-4-erd" />
+
+### 4.5.1 Data design overview
+
+The data model groups records by identity, academic structure, learning outcomes, instruments, deployments, and responses. Figure 4.4 presents these groups and their principal relationships. Appendix E contains the complete physical entity-relationship diagram, fields, keys, constraints, and data dictionary.
+
+
+###### *Figure 4.4. System CLOIE Conceptual Entity Relationship Diagram*
+
+
+### 4.5.2 Identity and role data
+
+Identity records connect a Supabase-authenticated account to the System CLOIE user, assigned roles, active role, program assignments, and respondent profiles. Role assignment alone does not grant access to every record. Program, course, college, and deployment relationships further limit access.
+
+### 4.5.3 Academic structure and period data
+
+Academic periods, programs, majors, courses, sections, course offerings, faculty assignments, and rosters establish the context for outcomes and evaluations. Historical records retain their period and assignment references so later edits to active configuration do not change past evidence.
+
+### 4.5.4 Learning outcome data
+
+Institutional Learning Outcomes, Program Learning Outcomes, and Course Intended Learning Outcomes use typed mappings and manifestation values. Course Intended Learning Outcomes remain tied to their course context. Readiness checks require the mappings needed by the selected instrument or deployment.
+
+### 4.5.5 Evaluation instrument and deployment data
+
+An instrument defines its version, sections, questions, response types, and applicable evaluation context. A deployment records the selected instrument version, academic context, schedule, respondent rules, publication state, and closure state. Publication freezes the configuration needed to interpret collected responses.
+
+### 4.5.6 Response and answer data
+
+A response belongs to one respondent context and one deployment. Draft data remains mutable until final submission. The final submission creates or finalizes the response and its answers in one transaction. Database constraints enforce the permitted response count and protect finalized evidence.
+
+### 4.5.7 Data traceability
+
+Stable identifiers and preserved relationships connect each answer to its question, instrument version, deployment, academic period, course or central context, and applicable learning outcomes. These links support requirement traceability and historical analysis without rewriting submitted evidence.
+
+### 4.5.8 Data constraints, validation, and integrity
+
+Server-side schemas validate input before persistence. Relational constraints, unique keys, enumerated states, and transactions protect rules that span records. Application checks provide clearer messages, while the database remains the final guard against duplicate or inconsistent writes.
+
+### 4.5.9 Data ownership, retention, and sensitive-data handling
+
+Institutional owners must define retention, archival, export, and deletion rules for accounts, academic records, instruments, and responses. Respondent identity and qualitative text are sensitive. Role-scoped queries and evidence views limit their disclosure. Appendix E provides the data dictionary and detailed ownership notes; Appendix G records validated privacy and security evidence.
+
+## 4.6 Component, API, and integration design
+
+### 4.6.1 Major system modules
+
+The main feature modules cover authentication, users and roles, academic structure, courses and assignments, learning outcomes, instruments, deployments, responses, analytics, and General Education workflows. Each module owns its domain rules and exposes only the operations required by other modules.
+
+### 4.6.2 Server Actions and application interfaces
+
+The application primarily uses Server Actions and does not expose a general public REST API. Protected writes follow this path: interface, Server Action, authentication and authorization, feature service, validation and business rules, Prisma, PostgreSQL, result handling, cache or path revalidation, and user feedback.
+
+Limited route handlers support cases that need an HTTP boundary, including authentication, legal acknowledgement, health checks, and bounded dean read operations. Appendix E contains the detailed component and interface inventory.
+
+### 4.6.3 Authentication integration
+
+The browser starts Google OAuth through Supabase Auth. The callback establishes the session, and the request boundary refreshes it when needed. Protected operations resolve the System CLOIE user, active role, and resource scope on the server. Development and test authentication paths remain separate from primary production.
+
+### 4.6.4 Database integration
+
+Feature services use Prisma against PostgreSQL. Transactions group dependent writes, and committed migrations version schema changes. Continuous integration uses disposable data stores and deterministic fixtures rather than staging or production data.
+
+### 4.6.5 Analytics and text-processing pipeline
+
+Analytics services read finalized, role-permitted evidence and calculate deterministic summaries. Qualitative processing removes stop words and applies local text processing before any optional provider call. The external provider receives bounded aggregate inputs only. It does not receive raw comments, sentences, response identifiers, or respondent identifiers.
+
+### 4.6.6 Failure handling and error boundaries
+
+Validation failures return field or workflow messages without committing partial state. Authorization failures deny the operation even if the client submits a valid shape. Transactions roll back dependent writes. External analysis failures return a controlled unavailable state and do not block deterministic analytics or alter source responses.
+
+### 4.6.7 Detailed integration reference
+
+Appendix E contains the component boundaries, internal contracts, route-handler inventory, data-flow details, and external-service configuration. The evaluation evidence and analytics flow belongs there if the final manuscript includes a separate diagram.
+
+## 4.7 User experience and interface design
+
+The System CLOIE interface applies role and academic scope to navigation, page context, available actions, and data presentation. Administrative workspaces support comparison and oversight on desktop, while respondent workflows reduce information density and keep progress and submission status visible. Appendix E.9 presents selected interface evidence and key user flows; the complete screenshot archive remains in the project repository.
+
+### 4.7.1 Design goals and conventions
+
+The interface keeps the active role, selected academic context, and record state visible where they affect an operation. Labels use the terms defined by the academic and evaluation domains. Forms prevent incomplete or invalid actions when practical, but server-side validation remains authoritative. High-impact actions expose their scope and require a deliberate confirmation.
+
+### 4.7.2 Navigation and role context
+
+Authenticated desktop pages use a persistent sidebar and top bar, while mobile pages use a navigation drawer or bottom navigation appropriate to the respondent flow. Active-route markers, page titles, breadcrumbs, and program or course selectors identify the current location. A Program Head with several assignments selects a program before entering a scoped workspace. Cross-role access returns an explicit denial instead of exposing a restricted page. Appendix E.9, Figures E.1 through E.3 and Figure E.8, show these patterns.
+
+### 4.7.3 Administrative and faculty workflows
+
+Secretary interfaces combine searchable tables, filters, forms, and impact previews for account and academic-structure work. Dean, Program Head, and General Education Coordinator pages present oversight information within the authorized college or program scope. Faculty pages keep outcome alignment, evaluation publication, and aggregate results within the selected course. Appendix E.9, Figures E.4 through E.15, documents representative administrative and faculty workflows.
+
+### 4.7.4 Respondent evaluation lifecycle
+
+Students, alumni, and industry partners see only evaluations allowed by their eligibility, verification, assignment, and submission state. The evaluation flow moves from the available list to instructions, sectioned questions, validation, final submission, and read-only history. A saved draft remains distinct from a finalized response. Appendix E.9, Figures E.16 through E.22, traces the principal respondent states.
+
+### 4.7.5 Responsive and accessible behavior
+
+Layouts adapt the information hierarchy for desktop and mobile instead of scaling the desktop page unchanged. Mobile navigation remains reachable without hover, controls retain readable labels and touch targets, and rating options wrap without clipping. The interface uses visible focus, text labels, status messages, and error identification so color is not the sole carrier of meaning. Figures E.2, E.16, E.18, E.19, E.21, and E.22 provide representative mobile and accessibility evidence. Chapter 5 and Appendix G must report the criteria that were tested and the corresponding results.
+
+### 4.7.6 Feedback, error, and submission states
+
+Workflows distinguish blocked access, validation failure, preview, confirmation, success, and finalized states. Messages identify what happened and, when another action is possible, state what the user can do next. The client reports completion only after the server confirms the write. Figures E.3, E.5, E.6, E.19, E.20, and E.22 illustrate these states without treating a displayed control as proof of authorization or execution.
+
+### 4.7.7 Interface evidence and stakeholder input
+
+Appendix E.9 uses a selected set of screenshots from the documented System CLOIE build to explain implemented interface behavior. The figures support the design discussion, but they do not establish user acceptance or prove that an administrative action was executed. Chapter 5 and Appendix G should report stakeholder findings only when a dated record identifies the participant context, observation, resulting change, and verification evidence.
+
+## 4.8 Security and privacy design
+
+<Figure id="fig-4-5-trust-boundary" />
+
+### 4.8.1 Authentication
+
+Primary production uses Google OAuth through Supabase Auth. The request boundary refreshes the session, but every protected server operation remains responsible for authentication and authorization. Development and test sign-in paths are isolated from primary production.
+
+### 4.8.2 Role-based and scope-based authorization
+
+The server resolves the active role and checks the requested program, college, course, assignment, deployment, or respondent scope. Interface visibility does not grant authority. Multiple-role users must select the role under which they are acting.
+
+### 4.8.3 Response integrity
+
+The server enforces eligibility, response limits, required answers, and final-submission state. Final submission uses an atomic operation. Ordinary respondent actions cannot edit a finalized response.
+
+### 4.8.4 Evaluation confidentiality
+
+The design does not treat every response as anonymous. Internal identity relationships may be needed for eligibility and integrity. Evidence views use confidential, pseudonymized, de-identified, or aggregated data according to role and purpose. Identified response detail is limited to an authorized Program Head workflow. Qualitative text remains sensitive even when a name is absent.
+
+### 4.8.5 Input and state validation
+
+Server-side schemas validate protected input. Services verify role, scope, current record state, and related records before a write. Sensitive mutations use the required confirmation and freshness checks.
+
+### 4.8.6 Sensitive configuration and communication
+
+OAuth secrets, database credentials, signing secrets, confirmation secrets, and external-service keys remain in server or deployment configuration. Browser configuration contains only public client values. Logs must not record tokens, secrets, or complete response payloads.
+
+### 4.8.7 Logging, auditability, backup, and recovery
+
+Audit records should identify security-relevant administrative actions without copying sensitive content. Recovery covers PostgreSQL data, Supabase Storage, runtime configuration, and secret custody. A complete process requires scheduled backups, encrypted off-server copies, failure reporting, retention rules, and a tested restore procedure. These controls remain requirements until operational evidence verifies them.
+
+### 4.8.8 Threat and trust-boundary analysis
+
+The main trust boundaries are the public browser, Next.js server, Supabase Auth, PostgreSQL, optional analysis provider, and private infrastructure administration path. Figure 4.5 shows where identity, authorization data, respondent text, credentials, and administrative access cross those boundaries.
+
+
+###### *Figure 4.5. System CLOIE Trust Boundary and Sensitive Data Flow*
+
+## 4.9 Deployment and infrastructure design
+
+<Figure id="fig-4-6-deployment" />
+
+### 4.9.1 Deployment overview
+
+System CLOIE uses separate local, continuous-integration, non-production, and production contexts. Each context has its own configuration and data boundary. Figure 4.6 shows the production routing, application container, Supabase services, database path, and private administration path.
+
+
+###### *Figure 4.6. System CLOIE Deployment and Infrastructure Topology*
+
+### 4.9.2 Runtime environment
+
+The repository defines supported Node.js and pnpm versions. Local development uses the Supabase CLI Docker stack. Continuous integration builds and tests the application against disposable services and deterministic data.
+
+### 4.9.3 Application hosting
+
+Primary production runs as a standalone Next.js container on an Ubuntu host managed by Coolify. Non-main branch deployments may support review or beta work only when the deployment inventory confirms the branch, domain, backend, and access controls.
+
+### 4.9.4 Self-hosted Supabase backend
+
+A separate self-hosted Supabase resource provides Auth, PostgreSQL, Supavisor, and supporting services. Non-production targets must not share primary production data or authentication settings.
+
+### 4.9.5 Public routing and external services
+
+Cloudflare Tunnel routes public web and Supabase API traffic without router port forwarding. PostgreSQL, Supavisor, Secure Shell, and Coolify administration remain off the public Internet. Operators use Tailscale for private administrative access. Google OAuth and the optional analysis provider are the main external application services.
+
+### 4.9.6 Configuration and secrets
+
+Each environment receives configuration at deployment time. Public client settings are separated from server credentials. The deployment kind fixes the permitted authentication regime and backend target.
+
+### 4.9.7 Migration, backup, and recovery considerations
+
+Schema changes use committed migrations and a verified target. Before a production migration, the operator reviews pending changes, captures the required backup, applies the migration, checks the schema and health endpoint, and verifies the affected workflow. Rollback planning must cover both the application image and database changes.
+
+### 4.9.8 Operational readiness reference
+
+The application exposes /api/health. Logs, host reachability, disk capacity, database health, backup failures, and service failures need an assigned monitoring and notification process. The GitHub-to-Coolify webhook, automated off-server backups, restore drills, and monitoring must not be described as complete until the deployment records contain evidence. Appendix E contains the deployment topology and operations design; Appendix G contains verified operational evidence.
+
+Supporting appendix records are outside the scope of this website edition. References to those records identify source evidence, not published appendix pages.

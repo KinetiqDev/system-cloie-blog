@@ -21,6 +21,12 @@ const chapters = defineCollection({
   schema: z.object({
     /** Chapter number as printed in the manuscript (1, 2, 3, ...). */
     chapter: z.number().int().positive(),
+    /**
+     * The phase of the engineering argument this chapter belongs to, shown as
+     * a label on the home page chapter card so the list reads as a sequence
+     * (context → evidence → process → design → outcomes) rather than a menu.
+     */
+    phase: z.enum(['context', 'evidence', 'process', 'design', 'outcomes']),
     /** Chapter title shown in the banner and page title. */
     title: z.string(),
     /** Short label used in the header, footer and previous/next controls. */
@@ -37,13 +43,49 @@ const chapters = defineCollection({
     /** Sort order of the chapter in the manuscript. */
     order: z.number().int().positive(),
     /**
-     * URL segment for the chapter, without a leading slash. Overrides the
-     * generated entry id, which is how `/chapter1` … `/chapterN` are defined.
-     * Existing links stay valid as chapters are added.
+     * URL segment for the chapter, without a leading slash. This is the
+     * published route — `chapterPath()` and `[...slug].astro` both key on it,
+     * never on the loader-generated entry `id`, so renaming a source file can
+     * never republish a public URL. Existing links stay valid.
      */
     slug: z.string().regex(/^[a-z0-9][a-z0-9-/]*$/),
     /** Set to `false` to hide the in-page jump navigation. Defaults to `true`. */
     toc: z.boolean().default(true),
+    /**
+     * Evidence state of the chapter, surfaced on the home page and in the
+     * banner. The CLOIE manuscript deliberately reports unfinished validation
+     * rather than estimating a completion rate, and the capstone guide rewards
+     * exactly that — so the state is stated, not hidden.
+     */
+    evidenceState: z
+      .enum(['verified', 'partial', 'unresolved', 'unreported'])
+      .optional(),
+    /** Optional short caveat shown next to `evidenceState`. */
+    evidenceNote: z.string().optional(),
+  }),
+});
+
+/**
+ * Authored front matter of the manuscript.
+ *
+ * Only the pages that are genuinely prose live here — the abstract and the
+ * acronym list. The table of contents, list of figures and list of tables are
+ * *derived* from the chapter collection and the figure/table registries, so
+ * they are pages rather than content files and cannot fall out of step.
+ */
+const frontMatter = defineCollection({
+  loader: glob({ base: './src/content/front-matter', pattern: '**/*.{md,mdx}' }),
+  schema: z.object({
+    /** Route segment, without a leading slash. */
+    slug: z.string().regex(/^[a-z0-9][a-z0-9-]*$/),
+    /** Page title, used in the banner and the document title. */
+    title: z.string(),
+    /** Short label for navigation. */
+    navLabel: z.string(),
+    /** One-line summary shown in the banner. */
+    description: z.string(),
+    /** Sort order within the front-matter block. */
+    order: z.number().int().positive(),
   }),
 });
 
@@ -63,4 +105,4 @@ const references = defineCollection({
   }),
 });
 
-export const collections = { chapters, references };
+export const collections = { chapters, frontMatter, references };

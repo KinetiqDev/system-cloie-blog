@@ -1,0 +1,160 @@
+---
+import { getTable, type TableId } from '../../lib/tables';
+
+/**
+ * A manuscript table.
+ *
+ * The capstone guide requires table titles to appear *above* the table (figure
+ * captions appear below, which `Figure.astro` already does), so this component
+ * is deliberately asymmetric with it.
+ *
+ * Number and caption come from the registry in `src/lib/tables.ts`, mirroring
+ * `Figure.astro`, so the inline caption and the List of Tables row cannot
+ * drift. Authors write the `<table>` itself in the slot — MDX handles that
+ * better than a column/row prop API — and this component owns the caption, the
+ * caption anchor, and the horizontal-scroll container.
+ *
+ * The scroll container is a labelled `region` so a keyboard user can actually
+ * reach and scroll a wide table; that labelling is the accessible name a
+ * `<caption>` element would otherwise provide.
+ */
+interface Props {
+  /** Registry key. See `TableId` in `src/lib/tables.ts`. */
+  id: TableId;
+  /** Override the printed number, e.g. `4.1a`. */
+  number?: string;
+  /** Override the caption text. */
+  caption?: string;
+  /** Override the registry note printed under the table. Pass `note=""` to drop it. */
+  note?: string;
+  /** Let the table use full-bleed width on wide viewports. */
+  wide?: boolean;
+}
+
+const { id, number, caption, note, wide = false } = Astro.props;
+const table = getTable(id);
+const noteText = note === '' ? undefined : (note ?? table.note);
+---
+
+<figure class:list={['ms-table', { 'ms-table--wide': wide }]} id={id}>
+  <figcaption class="ms-table__caption">
+    <strong>Table {number ?? table.number}.</strong> {caption ?? table.caption}
+  </figcaption>
+  <div class="ms-table__scroll" role="region" aria-label={`Table ${number ?? table.number}. ${caption ?? table.caption}`} tabindex="0">
+    <slot />
+  </div>
+  {noteText && <p class="ms-table__note">{noteText}</p>}
+</figure>
+
+<style>
+  .ms-table {
+    margin: 28px 0;
+  }
+
+  .ms-table__caption {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--cloie-text);
+    line-height: 1.4;
+    margin-bottom: 10px;
+  }
+
+  /* Opt-in full-bleed for the wide tables. Uses a negative-margin/translate
+     pair rather than a viewport unit so it still sits inside the page gutter
+     and cannot introduce a horizontal scrollbar on the document. */
+  .ms-table--wide {
+    width: calc(100% + 2 * var(--ms-bleed, 0px));
+    margin-left: calc(-1 * var(--ms-bleed, 0px));
+  }
+
+  /* The focus ring lives on the scroll container so a keyboard user can see
+     they have reached a scrollable region. */
+  .ms-table__scroll {
+    overflow-x: auto;
+    border: 1px solid var(--cloie-border);
+    border-radius: var(--radius-md);
+    background: var(--cloie-bg-card);
+    box-shadow: var(--cloie-shadow-sm);
+  }
+
+  .ms-table__scroll:focus-visible {
+    outline: 2px solid var(--cloie-blue);
+    outline-offset: 2px;
+  }
+
+  .ms-table :global(table) {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14.5px;
+    line-height: 1.55;
+  }
+
+  .ms-table :global(caption) {
+    text-align: left;
+    font-weight: 700;
+    padding: 12px 16px 0;
+  }
+
+  .ms-table :global(th) {
+    text-align: left;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--cloie-text-secondary);
+    background: var(--cloie-bg-section-alt);
+    padding: 11px 14px;
+    border-bottom: 2px solid var(--cloie-border);
+    white-space: nowrap;
+  }
+
+  .ms-table :global(td) {
+    padding: 11px 14px;
+    border-bottom: 1px solid var(--cloie-border-light);
+    color: var(--cloie-text);
+    vertical-align: top;
+  }
+
+  .ms-table :global(tbody tr:last-child td) {
+    border-bottom: none;
+  }
+
+  .ms-table :global(tbody tr:hover td) {
+    background: rgba(15, 168, 251, 0.03);
+  }
+
+  /* A numeric or identifier column should not wrap mid-token. */
+  .ms-table :global(td:first-child) {
+    white-space: nowrap;
+    font-weight: 600;
+  }
+
+  .ms-table :global(th[scope='row']) {
+    text-transform: none;
+    font-size: 14px;
+    letter-spacing: 0;
+    color: var(--cloie-text);
+    background: transparent;
+    white-space: normal;
+    /* The header rule is 2px for the column headings; a row heading is body
+       content and should get the body divider, or each pill grows a hard rule
+       under it. */
+    border-bottom: 1px solid var(--cloie-border-light);
+  }
+
+  .ms-table__note {
+    font-size: 13.5px;
+    color: var(--cloie-text-muted);
+    margin: 10px 0 0;
+  }
+
+  [data-theme='dark'] .ms-table__scroll {
+    border-color: var(--cloie-border);
+    background: var(--cloie-bg-elevated);
+  }
+
+  [data-theme='dark'] .ms-table :global(th) {
+    background: rgba(15, 168, 251, 0.07);
+    color: var(--cloie-text-secondary);
+  }
+</style>

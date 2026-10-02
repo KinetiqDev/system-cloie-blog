@@ -293,11 +293,27 @@ img {
   transform: scaleX(1);
 }
 
-.card-icon {
-  font-size: 40px;
-  margin-bottom: 16px;
-  display: block;
-  line-height: 1;
+.card__icon-wrap {
+  width: 52px;
+  height: 52px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(15, 168, 251, 0.08);
+  color: var(--cloie-blue);
+  margin-bottom: 18px;
+}
+
+.card__icon-wrap--sm {
+  width: 42px;
+  height: 42px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 14px;
+}
+
+[data-theme='dark'] .card__icon-wrap {
+  background: rgba(15, 168, 251, 0.12);
 }
 
 .card h3 {
