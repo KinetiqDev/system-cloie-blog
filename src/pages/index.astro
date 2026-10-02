@@ -73,9 +73,11 @@ const features: { icon: IconName; title: string; desc: string }[] = [
   },
 ];
 
-const benefits: { variant: 'blue' | 'gold'; icon: IconName; title: string; items: string[] }[] = [
+// One accent for all four. The groups are peers — the section subtitle calls
+// them "key academic groups" as a single set — so alternating a second colour
+// by index implied a ranking that does not exist.
+const benefits: { icon: IconName; title: string; items: string[] }[] = [
   {
-    variant: 'blue',
     icon: 'school',
     title: 'Higher Education Institutions',
     items: [
@@ -85,7 +87,6 @@ const benefits: { variant: 'blue' | 'gold'; icon: IconName; title: string; items
     ],
   },
   {
-    variant: 'gold',
     icon: 'graduation-cap',
     title: 'Students',
     items: [
@@ -95,7 +96,6 @@ const benefits: { variant: 'blue' | 'gold'; icon: IconName; title: string; items
     ],
   },
   {
-    variant: 'blue',
     icon: 'user-check',
     title: 'Educators',
     items: [
@@ -105,7 +105,6 @@ const benefits: { variant: 'blue' | 'gold'; icon: IconName; title: string; items
     ],
   },
   {
-    variant: 'gold',
     icon: 'clipboard-list',
     title: 'Administrators',
     items: [
@@ -382,7 +381,7 @@ const statusChapters = chapters.filter((chapter) => chapter.data.evidenceState);
           {
             benefits.map((item, i) => (
               <Reveal delay={i * 0.08}>
-                <div class:list={['card', 'card--benefit', `card--benefit-${item.variant}`]}>
+                <div class="card card--benefit">
                   <div class="card__icon-wrap card__icon-wrap--sm">
                     <Icon name={item.icon} size={24} />
                   </div>

@@ -274,19 +274,6 @@
   border-left: 4px solid var(--cloie-blue);
 }
 
-.card--benefit-gold {
-  border-left-color: var(--cloie-gold);
-}
-
-.card--benefit-gold .card__icon-wrap--sm {
-  background: rgba(255, 215, 0, 0.1);
-  color: #b8860b;
-}
-
-[data-theme='dark'] .card--benefit-gold .card__icon-wrap--sm {
-  color: var(--cloie-gold);
-}
-
 .benefits__list {
   list-style: none;
   padding: 0;
@@ -310,10 +297,6 @@
   height: 6px;
   border-radius: 50%;
   background: var(--cloie-blue);
-}
-
-.card--benefit-gold .benefits__list li::before {
-  background: var(--cloie-gold);
 }
 
 /* ===== STAKEHOLDERS ===== */
