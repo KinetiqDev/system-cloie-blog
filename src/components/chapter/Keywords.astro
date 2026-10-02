@@ -13,33 +13,46 @@ interface Props {
 }
 
 const { items, label = 'Keywords' } = Astro.props;
+
+// Anchor for `aria-labelledby`, so the list is named by its visible label
+// without the label becoming one of its own items. Derived from the label so
+// the build stays deterministic.
+const id = `keywords-${label.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
 ---
 
-<div class="keywords" role="list" aria-label={label}>
-  <span class="keywords__label" role="listitem">{label}</span>
-  {items.map((item) => (
-    <span class="keywords__item" role="listitem">{item}</span>
-  ))}
+<div class="keywords">
+  <span class="keywords__label" id={`${id}-label`}>{label}</span>
+  <ul class="keywords__list" aria-labelledby={`${id}-label`}>
+    {items.map((item) => (
+      <li class="keywords__item">{item}</li>
+    ))}
+  </ul>
 </div>
 
 <style>
   .keywords {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: 8px 10px;
     margin-top: 28px;
     padding-top: 20px;
     border-top: 1px solid var(--cloie-border);
   }
 
   .keywords__label {
+    display: block;
     font-size: 12.5px;
     font-weight: 700;
     letter-spacing: 0.06em;
     text-transform: uppercase;
     color: var(--cloie-text-muted);
-    margin-right: 4px;
+    margin-bottom: 8px;
+  }
+
+  .keywords__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 10px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
   }
 
   .keywords__item {
