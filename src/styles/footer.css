@@ -46,8 +46,12 @@
   letter-spacing: -0.01em;
 }
 
+/* Hover must not darken the text: gold on this gradient is a lower contrast
+   ratio than the white it replaces, so the hover state made links harder to
+   read. White plus an underline keeps the affordance without the regression. */
 .footer__title:hover {
-  color: #ffd700;
+  color: var(--cloie-white);
+  text-decoration: underline;
 }
 
 .footer__course {
@@ -94,7 +98,8 @@
 }
 
 .footer__link:hover {
-  color: #ffd700;
+  color: var(--cloie-white);
+  text-decoration: underline;
 }
 
 /* Deployment links leave the site; the glyph is the only cue, so it sits in
