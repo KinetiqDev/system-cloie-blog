@@ -512,6 +512,14 @@ img {
 }
 
 /* ===== SCROLL REVEAL (replaces Framer Motion AnimatedSection) ===== */
+/* A grid stretches this wrapper to the row height, but a block child does not
+   fill its parent, so cards inside a reveal sat at content height and left a
+   ragged bottom edge. Filling the wrapper lets the card take the row height
+   the grid already computed. */
+.reveal > * {
+  height: 100%;
+}
+
 .js .reveal {
   opacity: 0;
   transform: translate(var(--reveal-x, 0px), var(--reveal-y, 40px));
