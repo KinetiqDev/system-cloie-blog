@@ -148,19 +148,7 @@
   font-size: 16px;
   color: var(--cloie-text-muted);
   max-width: 640px;
-  margin: 0 auto 16px;
-}
-
-.hero__subline {
-  font-size: 13px;
-  color: var(--cloie-blue-dark);
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  margin-bottom: 24px;
-}
-
-[data-theme='dark'] .hero__subline {
-  color: var(--cloie-blue);
+  margin: 0 auto 28px;
 }
 
 .hero__chips {
