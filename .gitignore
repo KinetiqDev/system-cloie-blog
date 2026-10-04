@@ -3,6 +3,23 @@ node_modules/
 .pnp
 .pnp.js
 
+# Package manager: npm is authoritative here. CI runs `npm ci` with
+# `cache: npm`, the README documents npm throughout, and package-lock.json is
+# the tracked lockfile. These two files are an unfinished local pnpm experiment
+# and must not be committed:
+#
+#   - pnpm-workspace.yaml holds an unresolved scaffold placeholder
+#     (`allowBuilds: esbuild: set this to true or false`) where pnpm's schema
+#     expects a boolean. It was never filled in.
+#   - pnpm-lock.yaml already disagrees with package-lock.json
+#     (@types/node 26.6.4 vs 26.6.3), so committing both would enshrine two
+#     sources of truth for a project whose CI only ever reads one.
+#
+# If the project ever moves to pnpm, delete these two lines in the same change
+# that migrates CI, the README, and the tracked lockfile together.
+pnpm-lock.yaml
+pnpm-workspace.yaml
+
 # Build
 dist/
 build/
