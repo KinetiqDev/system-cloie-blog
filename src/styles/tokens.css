@@ -139,11 +139,10 @@
   --selected-bg: #eff6ff;
   --selected-fg: #1e40af;
 
-  /* EXTENSION: brand-orb and watermark strength. The hero and banner washes
-     are the loudest decoration on the site, so their opacity is the first
-     thing that has to give in dark mode — as a role, not as a branch. */
+  /* EXTENSION: brand-orb strength. The hero and banner washes are the loudest
+     decoration on the site, so their opacity is the first thing that has to
+     give in dark mode — as a role, not as a branch. */
   --orb-opacity: 0.3;
-  --watermark-opacity: 0.06;
   /* EXTENSION: the fixed header's translucent backdrop. Slightly more opaque in
    * dark so the blur reads against a dark page rather than vanishing into it.
    * Previously a hand-written `color-mix` in two places. */
@@ -493,7 +492,6 @@
   --selected-fg: #bfdbfe;
 
   --orb-opacity: 0.12;
-  --watermark-opacity: 0.04;
   --header-backdrop: color-mix(in srgb, var(--surface-secondary) 85%, transparent);
 
   --brand-gold-wash: color-mix(in srgb, var(--brand-gold) 8%, transparent);

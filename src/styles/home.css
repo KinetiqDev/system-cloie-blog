@@ -63,24 +63,6 @@
   }
 }
 
-/* Background image is set inline from the imported asset so it picks up the
-   configured base path (GitHub Pages project URLs are served from a subpath). */
-.hero__watermark {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 500px;
-  height: 500px;
-  background-size: contain;
-  background-position: center;
-  background-repeat: no-repeat;
-  filter: blur(12px);
-  opacity: var(--watermark-opacity);
-  opacity: 0.08;
-  pointer-events: none;
-}
-
 
 .hero__content {
   position: relative;

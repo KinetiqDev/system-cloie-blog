@@ -93,7 +93,7 @@ Every extension is marked `EXTENSION:` in `tokens.css` with its justification. U
 | `--heading-accent` | replaces 11 theme branches that all said "primary-hover in light, primary in dark" |
 | `--surface-tinted` | a tinted plane: opaque in light, translucent brand wash in dark, so it separates by luminance rather than by an opaque block |
 | `--text-muted-on-tint` | `--text-muted` clears AA on a card but measures 4.4:1 on the tinted bands; those surfaces carry their own verified ink |
-| `--orb-opacity`, `--watermark-opacity` | the loudest decoration is the first thing that must give in dark mode |
+| `--orb-opacity` | the loudest decoration is the first thing that must give in dark mode |
 | `--shadow-cta` | a brand-tinted shadow for the primary control; the one elevation allowed a brand cast, derived from the brand rather than a literal |
 | `--gradient-footer`, `--color-on-brand`, `--on-brand-muted/subtle` | the footer's brand field and its own verified ink ramp |
 | `--line-height-reading` | the manuscript's 1.7 rhythm. Deliberately a bare **number**, not a rem length: a number recomputes against each element's own font size, so a 12 px badge inherits 20.4 px and a 14.4 px table cell inherits 24.48 px. A length would hand every element the body line box |
