@@ -97,6 +97,7 @@ Every extension is marked `EXTENSION:` in `tokens.css` with its justification. U
 | `--shadow-cta` | a brand-tinted shadow for the primary control; the one elevation allowed a brand cast, derived from the brand rather than a literal |
 | `--gradient-footer`, `--color-on-brand`, `--on-brand-muted/subtle` | the footer's brand field and its own verified ink ramp |
 | `--line-height-reading` | the manuscript's 1.7 rhythm. Deliberately a bare **number**, not a rem length: a number recomputes against each element's own font size, so a 12 px badge inherits 20.4 px and a 14.4 px table cell inherits 24.48 px. A length would hand every element the body line box |
+| `--page-pad-bottom`, `--page-pad-bottom-compact` | the page's bottom rhythm: the interval between a route's last content group and the footer. The page wrapper had a top rhythm and no bottom counterpart, so every document route ended flush against the footer with a measured gap of 0, and the closing prev/next navigation read as clipped by the footer's edge rather than separated from it. 96px / 64px, both on the 4/8 rhythm and just under the section rhythm so a page ends calmly rather than announcing a section that isn't there. `print.css` zeroes it so print gains no trailing page |
 | `--print-ink`, `--print-paper`, `--print-ink-muted`, `--print-rule*` | see section 8 |
 
 ## 5. Visual Foundations
@@ -111,20 +112,27 @@ Every extension is marked `EXTENSION:` in `tokens.css` with its justification. U
 - Headings wear `--text-primary`. The one deliberate exception is the manuscript's brand-tinted heading, which resolves to `--heading-accent` rather than to a literal.
 - `tabular-nums` on figure and table numbering and any aligned numeric column.
 
-### 5.2 Radius, Borders, Elevation
+### 5.2 Spacing Rhythm
+
+- 4/8 rhythm throughout; spacing roles, not one-off values.
+- **Every route has both a top and a bottom rhythm.** The page wrapper clears the fixed header at the top and holds `--page-pad-bottom` at the bottom, so the last content group on a route is always separated from the footer, which is a different plane (a brand field) and must never butt against an interactive control.
+- Section separation (`--section-pad-y`, 100px / 72px) is deliberately a little larger than the page-bottom rhythm (96px / 64px): a real section is a bigger event than a page ending.
+- Group by proximity before reaching for a container.
+
+### 5.3 Radius, Borders, Elevation
 
 - Radius ladder: 2 / 4 / 8 / 12 / 16 / 24, plus `full` for pills.
 - Cards and document panels: `rounded-xl` (16 px). `rounded-2xl` is reserved for portal and hero.
 - Six-step minimal shadow scale. Strong elevation is overlay-only.
 - Dark mode relies on luminance and borders before shadow; its scale is flatter and deeper rather than a copy of light.
 
-### 5.3 Controls
+### 5.4 Controls
 
 Upstream's ladder — xs 24 / sm 32 / default 40 / lg 48 — with `@media (any-pointer: coarse)` raising interactive controls to 44 px. Viewport width does not identify an input method.
 
 `.btn` carries the `lg` floor with padding landing it at 54 px, because the site's primary action is a presentation-scale control.
 
-### 5.4 Motion
+### 5.5 Motion
 
 150–300 ms on opacity and transform. `prefers-reduced-motion` is honoured globally, and scroll-reveal content is forced visible rather than left hidden, so nothing depends on animation to be read.
 

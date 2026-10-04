@@ -306,6 +306,22 @@
    * separates a presentation section from the next, at full and compact. */
   --section-pad-y: 6.25rem; /* 100px */
   --section-pad-y-compact: 4.5rem; /* 72px */
+
+  /* EXTENSION: the page's bottom rhythm — the interval between the last
+   * content group on a route and the footer, which is a different plane (a
+   * brand field) and must not butt against an interactive control.
+   *
+   * The page wrapper had a top rhythm and no bottom counterpart, so on every
+   * document route the closing navigation sat flush against the footer: zero
+   * measured gap, and the buttons read as clipped by the footer's edge rather
+   * than separated from it. `.page-wrapper` already has `padding-top` for the
+   * fixed header; this is its counterpart.
+   *
+   * 96px at full width, 64px compact. Both on the 4/8 rhythm, and just under
+   * the section rhythm so the page ends calmly rather than announcing a new
+   * section that is not there. */
+  --page-pad-bottom: 6rem;
+  --page-pad-bottom-compact: 4rem;
 }
 
 /* ---------------------------------------------------------------------------

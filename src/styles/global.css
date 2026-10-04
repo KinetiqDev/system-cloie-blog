@@ -561,7 +561,11 @@ img {
 /* ===== PAGE ENTRANCE (replaces the AnimatePresence route fade) ===== */
 .page-wrapper {
   min-height: 100vh;
+  /* Top rhythm clears the fixed header; bottom rhythm separates the closing
+     content group from the footer. Without the second one, the prev/next
+     navigation ends flush against the footer on every document route. */
   padding-top: var(--header-height);
+  padding-bottom: var(--page-pad-bottom);
   animation: page-enter var(--transition-base) ease both;
 }
 
@@ -635,6 +639,10 @@ img {
 
   .section {
     padding: var(--section-pad-y-compact) 0;
+  }
+
+  .page-wrapper {
+    padding-bottom: var(--page-pad-bottom-compact);
   }
 
   .chapter-article {
