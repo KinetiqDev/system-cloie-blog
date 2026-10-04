@@ -34,11 +34,11 @@
    * surfaces only (`team__role--gold`, `chip-gold`, `badge-gold`, sponsor
    * panels) and is never an interactive or status colour. */
   --brand-gold: #ffd700;
-  --brand-gold-deep: #e6c200;
-  /* Amber ink on a gold wash. Gold at full strength fails AA as text, so the
-   * gold surfaces carry their own verified darker ink rather than inheriting
-   * one. See docs/design.md section 6 (tinted surfaces carry their own ink). */
-  --brand-gold-ink: #92700c;
+  /* Amber ink on a gold wash. Gold at full strength fails AA as text, and the
+   * first ink tried (#92700c) still measured 4.40:1 on the badge's 12% gold
+   * wash. Stepped to #85610a, which clears 4.5:1 on both gold washes with
+   * margin. See docs/design.md section 4.3 (a tinted pairing owns its ink). */
+  --brand-gold-ink: #85610a;
 }
 
 /* ---------------------------------------------------------------------------
@@ -144,10 +144,21 @@
      thing that has to give in dark mode — as a role, not as a branch. */
   --orb-opacity: 0.3;
   --watermark-opacity: 0.06;
+  /* EXTENSION: the fixed header's translucent backdrop. Slightly more opaque in
+   * dark so the blur reads against a dark page rather than vanishing into it.
+   * Previously a hand-written `color-mix` in two places. */
+  --header-backdrop: color-mix(in srgb, var(--surface-secondary) 80%, transparent);
 
   /* EXTENSION: gold panel wash, for the caution/warning cards in a chapter
      grid. Paired with `--brand-gold-ink`, never with the gold itself. */
   --brand-gold-wash: color-mix(in srgb, var(--brand-gold) 4%, transparent);
+  /* EXTENSION: the chapter-banner jump pill. A white wash in light (it sits on
+   * the banner's pale gradient) and a brand wash in dark. */
+  --banner-pill-bg: color-mix(in srgb, var(--color-on-primary) 60%, transparent);
+  --banner-pill-border: var(--primary-wash-border);
+  /* Gold border for ACD-seal surfaces. Its own step, so the seal treatment is
+     defined once and cannot drift from the wash it sits on. */
+  --brand-gold-border: color-mix(in srgb, var(--brand-gold) 30%, transparent);
 }
 
 /* ---------------------------------------------------------------------------
@@ -375,14 +386,13 @@
   /* The wordmark and primary button. Derived from the operational primary, so
    * the CTA carries the system colour rather than the retired invented cyan. */
   --gradient-primary: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-  --gradient-gold: linear-gradient(135deg, #ffd700 0%, #f59e0b 100%);
   /* CHROME: header backdrop. Upstream permits backdrop blur on "approved
    * landing chrome" only; the fixed header is that chrome. */
   --gradient-glass: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.7) 100%);
   /* EXCEPTION: the footer is the site's one large brand field, so it takes a
    * gradient rather than a flat primary fill. Derived from the brand blue with
    * the mark's cyan at its centre. */
-  --gradient-footer: linear-gradient(135deg, #1d4ed8 0%, #0598e3 50%, #1d4ed8 100%);
+  --gradient-footer: linear-gradient(135deg, #1d4ed8 0%, #0369a1 50%, #1d4ed8 100%);
   /* Ink on a brand-blue field. Distinct from `--color-on-primary`, which is ink
    * on the interactive primary, because the footer field is the deeper blue. */
   --color-on-brand: #ffffff;
@@ -468,8 +478,10 @@
 
   --orb-opacity: 0.12;
   --watermark-opacity: 0.04;
+  --header-backdrop: color-mix(in srgb, var(--surface-secondary) 85%, transparent);
 
   --brand-gold-wash: color-mix(in srgb, var(--brand-gold) 8%, transparent);
+  --banner-pill-bg: var(--primary-wash-muted);
 
   /* Neutral secondary */
   --secondary-bg: #1e293b;

@@ -132,7 +132,20 @@ Upstream's ladder — xs 24 / sm 32 / default 40 / lg 48 — with `@media (any-p
 
 Light and Dark, resolved before first paint by a synchronous inline script (upstream's first-paint bootstrap contract). Default follows the OS; an explicit choice persists under `cloie-theme` and wins.
 
-**`.dark` is the only theme selector in any stylesheet.** No component branches on the theme. What used to be 57 component-level `[data-theme='dark']` overrides are now semantic roles that resolve per theme; five of them were pure no-ops and were deleted outright. `data-theme` survives as *state* for the toggle to read and write, and as nothing else. `check:tokens` fails the build if a selector reappears.
+**`.dark` is the only theme selector in any stylesheet, and no rule under it sets a value.** Every theme difference lives in a role in `tokens.css`.
+
+What used to be 57 component-level `[data-theme='dark']` overrides are now semantic roles that resolve per theme; five were pure no-ops and were deleted outright. `data-theme` survives as *state* for the toggle to read and write, and as nothing else.
+
+Three `.dark` rules remain, and each is named rather than merely tolerated:
+
+| Rule | Why it is not a value branch |
+| --- | --- |
+| `.header__theme-icon--sun` / `--moon` | swaps which glyph is painted. A representation change with identical accessible meaning — the button's `aria-label` is set once by `theme.ts`. |
+| `.dark *` in `print.css` | print is light-only by definition; `tokens.css` re-asserts the light role set inside `@media print` so the guarantee does not depend on each component having a print rule. |
+
+`check:tokens` enforces both halves: the attribute form and the class form each fail the build if they set a declaration.
+
+**A lesson from this pass, recorded because it nearly shipped silently.** Rewriting `[data-theme='dark']` to `.dark` mechanically left three orphaned selector prefixes — `.dark .chapter-article h2,` followed by a blank line and then `.chapter-article h3 {`. CSS merges those into one selector list, so the h3 rule silently also applied under `.dark`. The declarations happened to agree, so no screenshot showed a problem. A mechanical find-and-replace across selector lists needs its output read, not trusted.
 
 A role's meaning never changes across themes — only its value.
 
@@ -163,7 +176,7 @@ On **Class A** surfaces, without exception:
 
 - raw colour, shadow, radius, or type values
 - gradient, glow, backdrop blur, hover lift, or any other decoration
-- a stylesheet selector that branches on the theme
+- a stylesheet rule that branches on the theme to set a value (`.dark` may swap a glyph or apply the print override; nothing else)
 - a tinting step chosen by hand instead of a `--primary-wash-*` role
 - colour-only status
 - text below `--font-size-caption`
@@ -186,5 +199,6 @@ On **all** surfaces:
 4. any stylesheet branching on `[data-theme]`
 5. any reference to a retired `--cloie-*` alias
 6. decoration inside a Class A reading selector
+7. a `.dark` rule that sets a value
 
-Checks 3 and 6 were both written after they caught a real defect during this migration.
+Checks 3, 6, and 7 were each written after they caught a real defect during this work — a token self-reference cycle, decoration leaking into a reading surface, and eight value-branches that the earlier attribute-only check had let through.

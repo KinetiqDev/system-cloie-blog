@@ -279,3 +279,105 @@ Both were written specifically to fail on something, and both did:
 
 - **Phase 7's public token-reference page.** The upstream Showcase has no equivalent here yet. A token reference is cheap and static, but it adds a route to a document site whose value is its navigation, so it wants a decision rather than a default.
 - **The authored chapter components are unexercised.** `Section`, `Callout`, `Table`, `Chips`, `Keywords`, `EvidenceStatus`, `Disclosure`, `CardGrid` are in the library but the shipped MDX only imports `Figure`. They were re-keyed and verified by reading, not by rendering; the first chapter that uses them is the real test.
+
+
+---
+
+## 8. Dark-mode contrast pass (second session)
+
+Triggered by a report that the primary dark blue read as dark-on-dark. It was
+correct, and the cause was a decision made in Phase 1.
+
+### The cause
+
+`--gradient-primary` was made **theme-invariant** in Phase 1, on the reasoning
+that one fill plus one ink (`#ffffff`) keeps every filled primary control
+consistent. That reasoning holds for buttons, the skip link, and back-to-top —
+a surface with white text on it. It does **not** hold for gradient-clipped
+*text*, which has no fill: the gradient is its ink, and dark ink on a dark page
+is simply dark ink on a dark page.
+
+Measured from rendered pixels, before the fix:
+
+| Element | light | dark | required |
+| --- | --- | --- | --- |
+| `.hero__title` | 5.69 | **2.90** | 3.0 |
+| `.header__logo-text` | 6.25 | **3.37** | 3.0 |
+| `.section-title` | 4.85 | **3.20** | 3.0 |
+
+### A blind spot I had built in
+
+The Phase 1 contrast checker contained this:
+
+```js
+// Skip gradient-clipped text: its fill comes from background-clip, which
+// computed color cannot express, so any ratio here would be fiction.
+```
+
+That reasoning was correct and the consequence was not: **the audit that
+reported "0 contrast failures" was structurally incapable of seeing the single
+worst failure on the site.** The most prominent text was invisible to the tool
+that certified it. Any measurement that cannot see a class of defect must be
+reported as not covering that class, not as passing it.
+
+### What changed
+
+- Gradient-clipped text is **gone**, replaced by `--heading-accent` — the role
+  that already means "brand-tinted heading ink on its own surface" and already
+  resolves per theme (`#1d4ed8` light, `#60a5fa` dark). No new value pair.
+  Emphasis now comes from weight and scale, which is also what the quality bar
+  asks for: gradient text is a listed default to refuse.
+- `.team__role--gold` wears `--brand-gold-ink`; `.not-found__code` wears
+  `--heading-accent`.
+- The footer's centre stop moved from the mark's `#0598e3` to `#0369a1`. White
+  body text on `#0598e3` was 3.18:1 and the muted link ink 2.54:1 — both failing,
+  in **both** themes, and invisible to the earlier audit for the same reason the
+  gradient text was. At `#0369a1` they are 5.93:1 and 4.74:1.
+- Tinted-plane copy that inherited the card's neutral muted ink was moved onto
+  `--text-muted-on-tint` (benefits list, refs card, about panel, hero
+  description). The gold refs card takes `--brand-gold-ink`, because secondary
+  copy on a coloured surface is tinted from that hue, never borrowed grey.
+- `--brand-gold-ink` stepped `#92700c` → `#85610a`; the old value measured 4.40:1
+  on the badge's 12% gold wash.
+
+**Result: 0 contrast failures across 13 routes x 2 themes**, measured with the
+gradient-text exclusion removed, so the number now covers every text element on
+the site rather than every element except the loudest ones.
+
+### Detector: 12 findings to 0
+
+| Antipattern | Count | Action |
+| --- | --- | --- |
+| `gradient-text` | 6 | removed; solid theme-resolving ink |
+| `side-tab` | 6 | replaced with a full 1px border over the tinted surface |
+
+The card's 3px gradient top-stripe is gone; elevation is now declared once, as
+the hover shadow over a resting border, instead of four simultaneous hover
+signals.
+
+### A latent bug found while doing it
+
+The Phase 1 find-and-replace of `[data-theme='dark']` to `.dark` left three
+orphaned selector prefixes — `.dark .chapter-article h2,` followed by a blank
+line and then `.chapter-article h3 {`. CSS merges those into one selector list,
+so the h3 rule silently also applied under `.dark`. The declarations happened to
+agree, so no screenshot showed it. A mechanical rewrite of selector lists has to
+be read, not trusted.
+
+### Enforcement gaps closed
+
+The theme-branch gate only looked for the *attribute* form, which meant eight
+value-branches on the `.dark` class went unnoticed — including a hand-written
+`color-mix` in the header that duplicated a token. Three were pure no-ops, four
+needed new roles (`--header-backdrop`, `--banner-pill-bg/-border`,
+`--watermark-opacity`), one was the icon swap and one the print override, both
+legitimately not "a value".
+
+`check:tokens` now gates both forms, with a named allowlist for the two
+representation-level exceptions, and the raw-colour scan skips comment content
+— a checker that forbids naming a hex in a comment pushes people to write worse
+comments or skip documenting the decision. Both new gates were verified to fail
+on an injected violation before being trusted.
+
+**Gates now: 7.** Raw colour, mark recolour, token cycles, `[data-theme]`
+branches, `.dark` value branches, retired aliases, Class A decoration.

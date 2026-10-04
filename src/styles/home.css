@@ -76,13 +76,11 @@
   background-position: center;
   background-repeat: no-repeat;
   filter: blur(12px);
+  opacity: var(--watermark-opacity);
   opacity: 0.08;
   pointer-events: none;
 }
 
-.dark .hero__watermark {
-  opacity: 0.04;
-}
 
 .hero__content {
   position: relative;
@@ -123,10 +121,11 @@
 .hero__title {
   font-size: clamp(42px, 7vw, 64px);
   font-weight: 900;
-  background: var(--gradient-primary);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  /* 64px of #2563eb on a #162032 hero measured 2.9:1 in dark mode — below the
+     3:1 floor for large text. `--heading-accent` lifts to #60a5fa there (5.8:1)
+     and is unchanged in light, so the wordmark carries its emphasis through
+     scale and weight rather than through a gradient that cannot adapt. */
+  color: var(--heading-accent);
   margin-bottom: 12px;
   letter-spacing: -0.03em;
   line-height: 1.1;
@@ -250,8 +249,12 @@
   align-items: start;
 }
 
+/* A benefit card reads as a card through the standard 1px border and surface.
+   The 4px coloured side rule it used to carry was the one element telling a
+   reader "this one is special", and nothing in the content made it special. */
 .card--benefit {
-  border-left: 4px solid var(--color-primary);
+  border-color: var(--primary-wash-border);
+  background: var(--surface-tinted);
 }
 
 .benefits__list {
@@ -260,9 +263,11 @@
   margin: 10px 0 0;
 }
 
+/* The benefit cards are a tinted plane, so their list copy carries the tinted
+   ink rather than inheriting the card's. */
 .benefits__list li {
   padding: 5px 0;
-  color: var(--text-muted);
+  color: var(--text-muted-on-tint);
   font-size: 14px;
   position: relative;
   padding-left: 18px;
@@ -376,10 +381,9 @@
 .status {
   margin-top: 40px;
   padding: 24px 26px;
-  border: 1px solid var(--border-default);
-  border-left: 4px solid var(--color-primary);
+  border: 1px solid var(--primary-wash-border);
   border-radius: var(--radius-lg);
-  background: var(--surface-primary);
+  background: var(--surface-tinted);
 }
 
 .status__title {
@@ -475,8 +479,18 @@
   font-size: 13px;
 }
 
+/* The references card is marked by the ACD seal, not by a coloured tab. A full
+   gold-tinted border over the gold wash carries the same institutional signal
+   without the one-sided rule. */
 .card--refs {
-  border-left: 3px solid var(--brand-gold);
+  border-color: var(--brand-gold-border);
+  background: var(--brand-gold-wash);
+}
+
+/* The refs card is a gold plane. Secondary copy on a coloured surface is
+   tinted from that surface's own hue, never borrowed from the neutral ramp. */
+.card--refs p {
+  color: var(--brand-gold-ink);
 }
 
 /* ===== SPONSOR ===== */
@@ -527,18 +541,14 @@
   display: inline-block;
   font-size: 13px;
   font-weight: 700;
-  background: var(--gradient-primary);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--heading-accent);
   margin-bottom: 10px;
 }
 
+/* Gold at full strength fails AA as text, so the role chip wears the verified
+   gold ink: #92700c in light, #ffd700 in dark. */
 .team__role--gold {
-  background: var(--gradient-gold);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--brand-gold-ink);
 }
 
 .team__bio {

@@ -114,7 +114,7 @@
 }
 
 .footer__bottom {
-  border-top: 1px solid var(--on-brand-subtle);
+  border-top: 1px solid var(--on-brand-muted);
   padding-top: 20px;
   font-size: 13px;
   opacity: 0.75;

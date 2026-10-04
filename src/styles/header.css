@@ -5,16 +5,13 @@
   right: 0;
   z-index: 1000;
   height: var(--header-height);
-  background: color-mix(in srgb, var(--surface-secondary) 80%, transparent);
+  background: var(--header-backdrop);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border-bottom: 1px solid transparent;
   transition: all var(--transition-base);
 }
 
-.dark .header {
-  background: color-mix(in srgb, var(--surface-secondary) 85%, transparent);
-}
 
 .header--scrolled {
   border-bottom-color: var(--border-default);
@@ -53,10 +50,12 @@
 .header__logo-text {
   font-size: 20px;
   font-weight: 800;
-  background: var(--gradient-primary);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  /* Solid, not gradient-clipped. `--heading-accent` is the role for brand-tinted
+     heading ink on its own surface and already resolves per theme: #1d4ed8 in
+     light, #60a5fa in dark. The gradient token was theme-invariant, which put
+     #2563eb ink on a #0f172a header in dark mode at 3.4:1. Emphasis here comes
+     from weight, not from a gradient across the letterforms. */
+  color: var(--heading-accent);
   letter-spacing: -0.02em;
 }
 

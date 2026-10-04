@@ -251,10 +251,7 @@ img {
   font-size: var(--font-size-display-md);
   line-height: var(--line-height-display-md);
   font-weight: 700;
-  background: var(--gradient-primary);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--heading-accent);
   margin-bottom: var(--space-3);
   letter-spacing: -0.02em;
 }
@@ -357,40 +354,30 @@ img {
 }
 
 /* ===== CARDS =====
-   Upstream card contract: neutral surface, border/ring, minimal shadow; cyan
-   is a small accent or marker, never a decorative full-card fill. The top rule
-   that scales in on hover is the site's Class B expression and is scoped to
-   `.card` on presentation surfaces. */
+   Upstream card contract: neutral surface, border/ring, minimal shadow; brand
+   colour is a small accent or marker, never a decorative fill.
+
+   The card used to carry four hover signals at once — a 3px gradient stripe
+   scaling in from the top edge, a border-colour change, a shadow, and a 4px
+   lift. One of them was decoration with nothing to point at. Elevation is now
+   declared once, as the hover shadow, over a resting 1px border. */
 .card {
   background: var(--surface-primary);
   border-radius: var(--radius-xl);
   border: 1px solid var(--border-default);
   padding: var(--space-8);
-  transition: all var(--transition-base);
+  transition:
+    border-color var(--transition-base),
+    box-shadow var(--transition-base),
+    transform var(--transition-base);
   position: relative;
   overflow: hidden;
-}
-
-.card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: var(--gradient-primary);
-  transform: scaleX(0);
-  transition: transform var(--transition-base);
 }
 
 .card:hover {
   border-color: var(--primary-wash-strong);
   box-shadow: var(--shadow-lg);
   transform: translateY(-4px);
-}
-
-.card:hover::before {
-  transform: scaleX(1);
 }
 
 .card__icon-wrap {
@@ -514,8 +501,6 @@ img {
   letter-spacing: -0.01em;
 }
 
-.dark .chapter-article h2,
-
 .chapter-article h3 {
   font-size: var(--font-size-heading-md);
   color: var(--heading-accent);
@@ -523,16 +508,12 @@ img {
   font-weight: 700;
 }
 
-.dark .chapter-article h3,
-
 .chapter-article h4 {
   font-size: var(--font-size-body-md);
   color: var(--heading-accent);
   margin: var(--space-4) 0 var(--space-2);
   font-weight: 700;
 }
-
-.dark .chapter-article h4,
 
 .chapter-article p {
   color: var(--text-secondary);

@@ -52,6 +52,39 @@ const COLOR_PATTERNS = [
 /** Recolours inside the mark are a brand-integrity violation, not a token one. */
 const MARK_GUARD = /src[/\\]assets[/\\]cloie-logo\.svg$/;
 
+/**
+ * Blank out comment content, preserving byte offsets and line numbers.
+ *
+ * The raw-colour rule is about *values*, not prose. Contrast evidence has to be
+ * written down next to the declaration it justifies — "measured 2.9:1, #2563eb
+ * on #162032" — and a checker that forbids naming a hex in a comment pushes
+ * people to write worse comments, or to skip documenting the decision. Spaces
+ * keep every reported line number pointing at the right line.
+ */
+function stripComments(text) {
+  let out = '';
+  let i = 0;
+  const blank = (n) => ' '.repeat(n);
+  while (i < text.length) {
+    const two = text.slice(i, i + 2);
+    if (two === '/*') {
+      const end = text.indexOf('*/', i + 2);
+      const stop = end === -1 ? text.length : end + 2;
+      out += blank(stop - i);
+      i = stop;
+    } else if (two === '//') {
+      const end = text.indexOf('\n', i);
+      const stop = end === -1 ? text.length : end;
+      out += blank(stop - i);
+      i = stop;
+    } else {
+      out += text[i];
+      i += 1;
+    }
+  }
+  return out;
+}
+
 function walk(dir, out = []) {
   for (const entry of readdirSync(dir)) {
     const full = join(dir, entry);
@@ -81,9 +114,8 @@ for (const file of files) {
   const fileRel = rel(file);
   if (isAllowed(fileRel)) continue;
 
-  const lines = readFileSync(file, 'utf8').split('\n');
+  const lines = stripComments(readFileSync(file, 'utf8')).split('\n');
   lines.forEach((line, i) => {
-    if (line.trimStart().startsWith('*') || line.trimStart().startsWith('//')) return;
     for (const { re, label } of COLOR_PATTERNS) {
       re.lastIndex = 0;
       let m;
@@ -148,6 +180,45 @@ const legacy = cssFiles.reduce((n, f) => {
 
 if (themeBranches === 0) ok('no stylesheet branches on [data-theme] — the theme resolves through roles');
 else fail(`${themeBranches} selector(s) still branch on [data-theme]; use a semantic role or .dark`);
+
+/*
+ * `.dark` is the *only* theme selector, which makes it the one place a theme
+ * branch can hide. Checking only for the old attribute form let eight
+ * value-branches through on the class — including three orphaned prefixes that
+ * silently merged rule boundaries. So the class form is checked too, with a
+ * named allowlist for the two cases that are legitimately not "a value":
+ * the sun/moon glyph swap (a representation change with identical accessible
+ * meaning) and the print override (paper is light-only by definition).
+ */
+const VALUE_BRANCH_ALLOWLIST = [
+  { pattern: 'header__theme-icon', why: 'sun/moon glyph swap — representation, not value' },
+  { pattern: 'print.css', why: 'print is light-only by definition (tokens.css print block)' },
+];
+
+const DECLARATION_PROPS =
+  /\b(background|background-color|color|border(?:-[a-z]+)?|box-shadow|opacity|fill|stroke)\s*:/;
+const BRANCH_RULE = /(\.dark[^{]*)\{([^{}]*)\}/g;
+
+let valueBranches = 0;
+for (const file of cssFiles) {
+  const fileRel = rel(file);
+  if (fileRel.endsWith('tokens.css')) continue; // the role set itself lives here
+  if (VALUE_BRANCH_ALLOWLIST.some((a) => fileRel.endsWith(a.pattern))) continue;
+
+  const text = stripComments(readFileSync(file, 'utf8'));
+  let m;
+  BRANCH_RULE.lastIndex = 0;
+  while ((m = BRANCH_RULE.exec(text)) !== null) {
+    const [, selector, body] = m;
+    if (!DECLARATION_PROPS.test(body)) continue;
+    valueBranches++;
+    fail(
+      `${fileRel}: theme branch sets a value -> \`${selector.trim().slice(0, 60)}\`. ` +
+        `Move the difference into a token in tokens.css.`,
+    );
+  }
+}
+if (valueBranches === 0) ok('no .dark rule sets a value — every theme difference lives in a token');
 
 if (legacy === 0) ok('no references to the retired --cloie-* compatibility aliases');
 else fail(`${legacy} reference(s) to a retired --cloie-* alias`);

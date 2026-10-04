@@ -92,14 +92,11 @@
   text-decoration: none;
   font-weight: 600;
   font-size: 13px;
-  background: color-mix(in srgb, var(--color-on-primary) 60%, transparent);
+  background: var(--banner-pill-bg);
+  border-color: var(--banner-pill-border);
   transition: all var(--transition-fast);
 }
 
-.dark .chapter-banner__jump {
-  background: var(--primary-wash-muted);
-  border-color: var(--primary-wash-border);
-}
 
 .chapter-banner__jump:hover {
   background: var(--gradient-primary);
@@ -144,15 +141,15 @@
   padding: 20px 24px;
   border-radius: var(--radius-lg);
   border: 1px solid var(--primary-wash-border);
-  background: linear-gradient(135deg, var(--primary-wash-subtle) 0%, var(--primary-wash-subtle) 100%);
-  border-left: 4px solid var(--color-primary);
+  background: var(--primary-wash-subtle);
+  border-color: var(--primary-wash-border);
 }
 
 .callout--objective {
   margin: 14px 0 18px;
   padding: 18px 20px;
-  border-left: 4px solid var(--color-primary);
   background: var(--primary-wash-subtle);
+  border: 1px solid var(--primary-wash-border);
   border-radius: var(--radius-md);
 }
 

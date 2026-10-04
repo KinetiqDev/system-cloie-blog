@@ -42,10 +42,9 @@ import { withBase } from '../lib/url';
     line-height: 1;
     letter-spacing: -0.04em;
     margin: 0;
-    background: var(--gradient-primary);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
+    /* Same reasoning as `.hero__title`: a theme-invariant gradient put
+       #2563eb on the dark page plane. `--heading-accent` lifts per theme. */
+    color: var(--heading-accent);
   }
 
   .not-found__title {
