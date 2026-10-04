@@ -33,7 +33,7 @@ const id = `keywords-${label.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
   .keywords {
     margin-top: 28px;
     padding-top: 20px;
-    border-top: 1px solid var(--cloie-border);
+    border-top: 1px solid var(--border-default);
   }
 
   .keywords__label {
@@ -42,7 +42,7 @@ const id = `keywords-${label.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
     font-weight: 700;
     letter-spacing: 0.06em;
     text-transform: uppercase;
-    color: var(--cloie-text-muted);
+    color: var(--text-muted);
     margin-bottom: 8px;
   }
 
@@ -57,14 +57,11 @@ const id = `keywords-${label.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
 
   .keywords__item {
     font-size: 14px;
-    color: var(--cloie-text-secondary);
-    background: var(--cloie-bg-section-alt);
-    border: 1px solid var(--cloie-border);
+    color: var(--text-secondary);
+    background: var(--surface-tinted);
+    border: 1px solid var(--border-default);
     border-radius: var(--radius-full);
     padding: 3px 12px;
   }
 
-  [data-theme='dark'] .keywords__item {
-    background: rgba(15, 168, 251, 0.08);
-  }
 </style>

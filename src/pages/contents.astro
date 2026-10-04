@@ -79,7 +79,7 @@ const entries = await Promise.all(
   }
 
   .toc__chapter-title a {
-    color: var(--cloie-text);
+    color: var(--text-primary);
     text-decoration: none;
     display: flex;
     gap: 10px;
@@ -87,7 +87,7 @@ const entries = await Promise.all(
   }
 
   .toc__chapter-title a:hover {
-    color: var(--cloie-blue-dark);
+    color: var(--heading-accent);
   }
 
   .toc__num {
@@ -95,27 +95,24 @@ const entries = await Promise.all(
     font-weight: 700;
     letter-spacing: 0.05em;
     text-transform: uppercase;
-    color: var(--cloie-blue-dark);
+    color: var(--color-primary-hover);
     flex: none;
     padding-top: 3px;
   }
 
-  [data-theme='dark'] .toc__chapter-title a:hover {
-    color: var(--cloie-blue);
-  }
 
   .toc__sections {
     list-style: none;
     margin: 0;
     padding: 0 0 0 2px;
-    border-left: 2px solid var(--cloie-border);
+    border-left: 2px solid var(--border-default);
   }
 
   .toc__item a {
     display: block;
     padding: 6px 0 6px 18px;
     font-size: 15px;
-    color: var(--cloie-text-secondary);
+    color: var(--text-secondary);
     text-decoration: none;
     line-height: 1.45;
     border-left: 2px solid transparent;
@@ -123,19 +120,16 @@ const entries = await Promise.all(
   }
 
   .toc__item a:hover {
-    color: var(--cloie-blue-dark);
-    border-left-color: var(--cloie-blue);
-    background: rgba(15, 168, 251, 0.03);
+    color: var(--heading-accent);
+    border-left-color: var(--color-primary);
+    background: var(--primary-wash-subtle);
   }
 
-  [data-theme='dark'] .toc__item a:hover {
-    color: var(--cloie-blue);
-  }
 
   /* Sub-sections sit one step in, with a smaller label. */
   .toc__item--d2 a {
     padding-left: 36px;
     font-size: 14px;
-    color: var(--cloie-text-muted);
+    color: var(--text-muted);
   }
 </style>

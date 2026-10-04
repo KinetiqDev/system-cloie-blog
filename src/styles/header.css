@@ -5,20 +5,17 @@
   right: 0;
   z-index: 1000;
   height: var(--header-height);
-  background: rgba(248, 250, 252, 0.8);
+  background: var(--header-backdrop);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border-bottom: 1px solid transparent;
   transition: all var(--transition-base);
 }
 
-[data-theme='dark'] .header {
-  background: rgba(15, 23, 42, 0.85);
-}
 
 .header--scrolled {
-  border-bottom-color: var(--cloie-border);
-  box-shadow: var(--cloie-shadow-sm);
+  border-bottom-color: var(--border-default);
+  box-shadow: var(--shadow-sm);
 }
 
 .header__inner {
@@ -44,19 +41,21 @@
   /* The logo is a dark vector on a transparent canvas: it needs a light disc
      to read against the dark header, and `contain` so its circular artwork is
      never cropped by the mask. */
-  background: var(--cloie-logo-surface);
+  background: var(--brand-logo-plate);
   object-fit: contain;
   padding: 3px;
-  box-shadow: 0 2px 8px rgba(15, 168, 251, 0.2);
+  box-shadow: 0 2px 8px var(--primary-wash-border);
 }
 
 .header__logo-text {
   font-size: 20px;
   font-weight: 800;
-  background: var(--gradient-blue);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  /* Solid, not gradient-clipped. `--heading-accent` is the role for brand-tinted
+     heading ink on its own surface and already resolves per theme: #1d4ed8 in
+     light, #60a5fa in dark. The gradient token was theme-invariant, which put
+     #2563eb ink on a #0f172a header in dark mode at 3.4:1. Emphasis here comes
+     from weight, not from a gradient across the letterforms. */
+  color: var(--heading-accent);
   letter-spacing: -0.02em;
 }
 
@@ -73,7 +72,7 @@
   padding: 8px 13px;
   font-size: 14px;
   font-weight: 600;
-  color: var(--cloie-text-secondary);
+  color: var(--text-secondary);
   text-decoration: none;
   border-radius: var(--radius-full);
   transition: color var(--transition-fast);
@@ -81,11 +80,11 @@
 }
 
 .header__link:hover {
-  color: var(--cloie-blue);
+  color: var(--color-primary);
 }
 
 .header__link--active {
-  color: var(--cloie-blue);
+  color: var(--color-primary);
 }
 
 /* Replaces the Framer Motion `layoutId="nav-indicator"` sliding bar. */
@@ -95,7 +94,7 @@
   left: 8px;
   right: 8px;
   height: 2px;
-  background: var(--gradient-blue);
+  background: var(--gradient-primary);
   border-radius: 1px;
   animation: nav-indicator-in 0.3s var(--ease-out-expo) both;
 }
@@ -166,10 +165,10 @@
   max-height: min(62vh, 470px);
   overflow-y: auto;
   padding: 8px;
-  background: var(--cloie-bg-card);
-  border: 1px solid var(--cloie-border);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--cloie-shadow-xl);
+  background: var(--surface-primary);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
   opacity: 0;
   visibility: hidden;
   transform: translateY(-6px);
@@ -192,29 +191,29 @@
 .nav-menu__item {
   display: block;
   padding: 10px 12px;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-lg);
   text-decoration: none;
   transition: background var(--transition-fast);
 }
 
 .nav-menu__item:hover {
-  background: rgba(15, 168, 251, 0.06);
+  background: var(--primary-wash-subtle);
 }
 
 .nav-menu__item--active {
-  background: rgba(15, 168, 251, 0.1);
+  background: var(--primary-wash-muted);
 }
 
 .nav-menu__item-label {
   display: block;
   font-size: 14px;
   font-weight: 600;
-  color: var(--cloie-text);
+  color: var(--text-primary);
 }
 
 .nav-menu__item:hover .nav-menu__item-label,
 .nav-menu__item--active .nav-menu__item-label {
-  color: var(--cloie-blue);
+  color: var(--color-primary);
 }
 
 /* One sentence of orientation, clamped so a long chapter summary can never
@@ -228,7 +227,7 @@
   margin-top: 2px;
   font-size: 12.5px;
   line-height: 1.45;
-  color: var(--cloie-text-muted);
+  color: var(--text-muted);
 }
 
 .header__actions {
@@ -245,17 +244,17 @@
   width: 38px;
   height: 38px;
   border-radius: var(--radius-full);
-  border: 1px solid var(--cloie-border);
-  background: var(--cloie-bg-card);
-  color: var(--cloie-text-secondary);
+  border: 1px solid var(--border-default);
+  background: var(--surface-primary);
+  color: var(--text-secondary);
   cursor: pointer;
   transition: all var(--transition-fast);
 }
 
 .header__theme-btn:hover {
-  border-color: var(--cloie-blue);
-  color: var(--cloie-blue);
-  box-shadow: 0 0 0 3px rgba(15, 168, 251, 0.1);
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--primary-wash-muted);
 }
 
 /* Both glyphs ship in the markup; CSS picks one so the swap needs no JS. */
@@ -268,12 +267,12 @@
   display: none;
 }
 
-[data-theme='dark'] .header__theme-icon--sun {
+.dark .header__theme-icon--sun {
   display: flex;
   transform: rotate(0deg);
 }
 
-[data-theme='dark'] .header__theme-icon--moon {
+.dark .header__theme-icon--moon {
   display: none;
 }
 
@@ -284,16 +283,16 @@
   width: 38px;
   height: 38px;
   border-radius: var(--radius-full);
-  border: 1px solid var(--cloie-border);
-  background: var(--cloie-bg-card);
-  color: var(--cloie-text);
+  border: 1px solid var(--border-default);
+  background: var(--surface-primary);
+  color: var(--text-primary);
   cursor: pointer;
   transition: all var(--transition-fast);
 }
 
 .header__mobile-btn:hover {
-  border-color: var(--cloie-blue);
-  color: var(--cloie-blue);
+  border-color: var(--color-primary);
+  color: var(--color-primary);
 }
 
 .header__burger {
@@ -336,9 +335,9 @@
   right: 0;
   width: min(320px, 85vw);
   height: 100%;
-  background: var(--cloie-bg-card);
-  border-left: 1px solid var(--cloie-border);
-  box-shadow: var(--cloie-shadow-xl);
+  background: var(--surface-primary);
+  border-left: 1px solid var(--border-default);
+  box-shadow: var(--shadow-xl);
   overflow-y: auto;
   transform: translateX(100%);
   transition: transform 0.3s var(--ease-out-expo);
@@ -357,7 +356,7 @@
 
 .mobile-nav__header {
   padding: 20px 24px;
-  border-bottom: 1px solid var(--cloie-border);
+  border-bottom: 1px solid var(--border-default);
 }
 
 .mobile-nav__title {
@@ -365,7 +364,7 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--cloie-text-muted);
+  color: var(--text-muted);
 }
 
 .mobile-nav__links {
@@ -389,7 +388,7 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--cloie-text-muted);
+  color: var(--text-muted);
   padding: 8px 16px 4px;
 }
 
@@ -398,20 +397,20 @@
   padding: 14px 16px;
   font-size: 16px;
   font-weight: 600;
-  color: var(--cloie-text-secondary);
+  color: var(--text-secondary);
   text-decoration: none;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-lg);
   transition: all var(--transition-fast);
 }
 
 .mobile-nav__link:hover {
-  background: rgba(15, 168, 251, 0.06);
-  color: var(--cloie-blue);
+  background: var(--primary-wash-subtle);
+  color: var(--color-primary);
 }
 
 .mobile-nav__link--active {
-  background: rgba(15, 168, 251, 0.1);
-  color: var(--cloie-blue);
+  background: var(--primary-wash-muted);
+  color: var(--color-primary);
 }
 
 /* The drawer indexes the manuscript's pages; the system is the thing those
@@ -420,8 +419,8 @@
   position: sticky;
   bottom: 0;
   padding: 12px;
-  border-top: 1px solid var(--cloie-border);
-  background: var(--cloie-bg-card);
+  border-top: 1px solid var(--border-default);
+  background: var(--surface-primary);
 }
 
 .mobile-nav__system-link {
@@ -429,16 +428,16 @@
   align-items: center;
   gap: 10px;
   padding: 14px 16px;
-  border-radius: var(--radius-md);
-  background: rgba(15, 168, 251, 0.08);
-  color: var(--cloie-blue);
+  border-radius: var(--radius-lg);
+  background: var(--primary-wash-muted);
+  color: var(--color-primary);
   font-size: 15px;
   font-weight: 700;
   text-decoration: none;
 }
 
 .mobile-nav__system-link:hover {
-  background: rgba(15, 168, 251, 0.14);
+  background: var(--primary-wash-muted);
 }
 
 @media (max-width: 900px) {

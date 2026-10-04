@@ -72,7 +72,7 @@ const rows = FIGURES.map((figure) => ({
 <style>
   .list-intro {
     font-size: 15.5px;
-    color: var(--cloie-text-secondary);
+    color: var(--text-secondary);
     max-width: 680px;
     margin-bottom: 26px;
   }
@@ -90,24 +90,25 @@ const rows = FIGURES.map((figure) => ({
     gap: 18px;
     align-items: center;
     padding: 12px 14px;
-    border: 1px solid var(--cloie-border);
-    border-radius: var(--radius-md);
-    background: var(--cloie-bg-card);
+    background: var(--surface-primary);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-lg);
+    background: var(--surface-primary);
     transition: border-color var(--transition-fast);
   }
 
   .figlist__row:hover {
-    border-color: rgba(15, 168, 251, 0.3);
+    border-color: var(--primary-wash-strong);
   }
 
   .figlist__thumb {
     flex: none;
     width: 76px;
     height: 98px;
-    border: 1px solid var(--cloie-border);
-    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-md);
     overflow: hidden;
-    background: #fff;
+    background: var(--surface-primary);
     display: block;
   }
 
@@ -125,14 +126,14 @@ const rows = FIGURES.map((figure) => ({
   .figlist__caption {
     font-size: 15.5px;
     line-height: 1.5;
-    color: var(--cloie-text);
+    color: var(--text-primary);
     margin: 0 0 6px;
   }
 
   .figlist__link {
     font-size: 13.5px;
     font-weight: 600;
-    color: var(--cloie-blue-dark);
+    color: var(--heading-accent);
     text-decoration: none;
   }
 
@@ -140,13 +141,7 @@ const rows = FIGURES.map((figure) => ({
     text-decoration: underline;
   }
 
-  [data-theme='dark'] .figlist__row {
-    background: var(--cloie-bg-elevated);
-  }
 
-  [data-theme='dark'] .figlist__link {
-    color: var(--cloie-blue);
-  }
 
   @media (max-width: 560px) {
     .figlist__row {

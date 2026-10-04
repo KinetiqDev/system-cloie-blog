@@ -53,7 +53,7 @@ const text = label ?? LABELS[status];
     gap: 6px;
     padding: 2px 10px 2px 8px;
     border-radius: var(--radius-full);
-    font-size: 12.5px;
+    font-size: var(--font-size-label-sm);
     font-weight: 650;
     line-height: 1.7;
     white-space: nowrap;
@@ -68,60 +68,44 @@ const text = label ?? LABELS[status];
     flex: none;
   }
 
+  /* Each state resolves to a semantic status role from `tokens.css`, so a
+     state's ink and its wash are defined once and verified in both themes
+     rather than hand-matched per variant. The status dot plus the text label
+     carry the meaning; colour only reinforces it. */
+
   .evidence--verified {
-    color: #0a7a4f;
-    background: rgba(16, 163, 127, 0.1);
-    border-color: rgba(16, 163, 127, 0.28);
+    color: var(--status-success-main);
+    background: var(--status-success-subtle);
+    border-color: color-mix(in srgb, var(--status-success-main) 28%, transparent);
   }
 
   .evidence--partial {
-    color: #9a6800;
-    background: rgba(245, 158, 11, 0.12);
-    border-color: rgba(245, 158, 11, 0.32);
+    color: var(--status-warning-main);
+    background: var(--status-warning-subtle);
+    border-color: color-mix(in srgb, var(--status-warning-main) 32%, transparent);
   }
 
   .evidence--deferred,
   .evidence--changed {
-    color: var(--cloie-blue-dark);
-    background: rgba(15, 168, 251, 0.1);
-    border-color: rgba(15, 168, 251, 0.26);
+    color: var(--link-color);
+    background: var(--color-primary-soft);
+    border-color: var(--primary-wash-border);
   }
 
+  /* EXTENSION: `--status-caution`. "Action required, not yet failed" is not
+     success, warning, or danger, and red would misreport it. */
   .evidence--unresolved,
   .evidence--pending {
-    color: #a3460a;
-    background: rgba(217, 119, 6, 0.1);
-    border-color: rgba(217, 119, 6, 0.26);
+    color: var(--status-caution-main);
+    background: var(--status-caution-subtle);
+    border-color: color-mix(in srgb, var(--status-caution-main) 26%, transparent);
   }
 
   /* Muted grey, not red: "not yet evidenced" is not "failed". */
   .evidence--unreported {
-    color: var(--cloie-text-muted);
-    background: rgba(100, 116, 139, 0.09);
-    border-color: rgba(100, 116, 139, 0.26);
+    color: var(--text-muted);
+    background: color-mix(in srgb, var(--text-muted) 9%, transparent);
+    border-color: color-mix(in srgb, var(--text-muted) 26%, transparent);
     font-weight: 600;
-  }
-
-  [data-theme='dark'] .evidence--verified {
-    color: #34d399;
-  }
-
-  [data-theme='dark'] .evidence--partial {
-    color: #fbbf24;
-  }
-
-  [data-theme='dark'] .evidence--deferred,
-  [data-theme='dark'] .evidence--changed {
-    color: var(--cloie-blue);
-  }
-
-  [data-theme='dark'] .evidence--unresolved,
-  [data-theme='dark'] .evidence--pending {
-    color: #fb923c;
-  }
-
-  [data-theme='dark'] .evidence--unreported {
-    color: var(--cloie-text-muted);
-    background: rgba(100, 116, 139, 0.14);
   }
 </style>

@@ -9,7 +9,6 @@ import { FRONT_MATTER } from '../lib/front-matter';
 import EvidenceStatus from '../components/chapter/EvidenceStatus.astro';
 import { withBase } from '../lib/url';
 import cloieLogo from '../assets/cloie-logo.svg';
-import acdLogo from '../assets/acd-logo.jpg';
 import { PRODUCTION } from '../lib/system';
 import clientPhoto from '../assets/client.png';
 import member1 from '../assets/member1.png';
@@ -190,7 +189,6 @@ const statusChapters = chapters.filter((chapter) => chapter.data.evidenceState);
         <div class="hero__orb hero__orb--2"></div>
         <div class="hero__orb hero__orb--3"></div>
       </div>
-      <div class="hero__watermark" aria-hidden="true" style={`background-image: url(${acdLogo.src})`}></div>
       <div class="container hero__content">
         <Reveal>
           <div class="hero__logo-wrap">

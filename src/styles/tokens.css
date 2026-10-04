@@ -1,0 +1,601 @@
+/* ============================================================================
+ * PROJECT CLOIE — Design Tokens
+ * ============================================================================
+ * Ported from the System CLOIE design system (project-cloie `main`).
+ * Upstream: `src/styles/tokens.css` + `docs/design.md` sections 4-6, 11.
+ *
+ * Contract: this file is the ONLY place a colour, shadow, radius, or type
+ * value may appear. `global.css` and every component consume the roles below.
+ * Governance doc: `docs/design.md`. Migration record: `docs/design-system-adaptation.md`.
+ *
+ * Roles resolve twice — `:root` for light, `.dark` for dark. A role's meaning
+ * is constant across themes; only its value changes.
+ *
+ * Extensions over the upstream role set are marked `EXTENSION:` and are
+ * justified in `docs/design.md`. Upstream has no print or manuscript contract,
+ * so every extension here originates in the document-surface requirement.
+ * ========================================================================== */
+
+/* ---------------------------------------------------------------------------
+ * 1. Brand references
+ * ---------------------------------------------------------------------------
+ * Sampled from the official mark itself (`src/assets/cloie-logo.svg`, byte
+ * identical to the System CLOIE mark), so the site's accent now matches its own
+ * logo. Upstream calls these "brand references": values only, never consumed
+ * directly by a component — they are resolved into the semantic roles below.
+ * ------------------------------------------------------------------------- */
+:root {
+  --brand-blue: #1f62f0; /* the mark's primary blue */
+  --brand-navy: #212160; /* the mark's institutional navy */
+  --brand-cyan: #0598e3; /* the mark's cyan */
+
+  /* ACD institutional gold. EXTENSION: upstream forbids gold as a general UI
+   * family and has no gold role. Here it is scoped to the ACD seal/sponsor
+   * surfaces only (`team__role--gold`, `chip-gold`, `badge-gold`, sponsor
+   * panels) and is never an interactive or status colour. */
+  --brand-gold: #ffd700;
+  /* Amber ink on a gold wash. Gold at full strength fails AA as text, and the
+   * first ink tried (#92700c) still measured 4.40:1 on the badge's 12% gold
+   * wash. Stepped to #85610a, which clears 4.5:1 on both gold washes with
+   * margin. See docs/design.md section 4.3 (a tinted pairing owns its ink). */
+  --brand-gold-ink: #85610a;
+}
+
+/* ---------------------------------------------------------------------------
+ * 2. Operational primary & brand accent
+ * ------------------------------------------------------------------------- */
+:root {
+  --color-primary: #2563eb;
+  --color-primary-hover: #1d4ed8;
+  --color-primary-active: #1e40af;
+  --color-on-primary: #ffffff;
+  --color-primary-soft: #eff6ff;
+  --color-primary-muted: #dbeafe;
+  --color-primary-border: #bfdbfe;
+
+  /* Brand accent: the logo's cyan, for the wordmark, hero wash, and category
+   * accents. NOT the default secondary action — that is `--secondary-bg`. */
+  --brand-accent: var(--brand-cyan);
+  --brand-accent-hover: #0277b4;
+  --brand-accent-active: #025d8f;
+  --brand-accent-soft: #ecfeff;
+  --brand-accent-border: #a5e8fb;
+  --brand-accent-highlight: #22d3ee;
+  --brand-accent-on: #ffffff;
+
+  /* Institutional navy: formal report and institutional framing only. */
+  --navy-ref: var(--brand-navy);
+}
+
+/* ---------------------------------------------------------------------------
+ * 3. Semantic surfaces
+ * ------------------------------------------------------------------------- */
+:root {
+  --surface-primary: #ffffff;
+  --surface-secondary: #f8fafc;
+  --surface-tertiary: #f0f7ff;
+  --surface-muted: #e9eef6;
+  --surface-hover: #eef3f9;
+  --surface-input: #ffffff;
+  --surface-popover: #ffffff;
+  --surface-overlay: #ffffff;
+  --scrim: rgba(15, 23, 42, 0.5);
+
+  /* Backing plate for the CLOIE mark. The mark is a dark vector on a
+     transparent canvas, so it needs a light disc to stay legible in dark mode
+     and over the blue footer. Fixed rather than theme-aware, because the
+     footer gradient is the same in both themes. Logo insets are absolute px,
+     never percentages: a percentage on a padded replaced element resolves
+     against the containing block, not the element box. */
+  --brand-logo-plate: #f7faff;
+}
+
+/* ---------------------------------------------------------------------------
+ * 4. Borders
+ * ------------------------------------------------------------------------- */
+:root {
+  --border-default: #e2e8f0;
+  --border-strong: #7d8da1;
+  /* EXTENSION: row dividers inside a card, where a full-weight rule would make
+   * the card look gridded. Upstream has no subtler divider role. */
+  --border-subtle: #f1f5f9;
+  --input-border: #64748b;
+}
+
+/* ---------------------------------------------------------------------------
+ * 5. Text / foregrounds
+ * ------------------------------------------------------------------------- */
+:root {
+  --text-primary: #1e293b;
+  --text-secondary: #475569;
+  --text-muted: #64748b;
+  --text-disabled: #94a3b8;
+  --text-on-dark: #ffffff;
+
+  /* EXTENSION: muted ink on a tinted plane (the section band, the chapter and
+   * references banners, the hero). `--text-muted` clears AA on a white card but
+   * lands at 4.4:1 on the tinted bands, so those surfaces carry their own
+   * verified ink rather than inheriting the card's — upstream's rule that a
+   * tinted pairing owns its ink. */
+  --text-muted-on-tint: #5b6b81;
+
+  --link-color: var(--color-primary);
+  --link-hover: var(--color-primary-hover);
+
+  /* EXTENSION: the ink a brand-tinted heading or link wears on its own
+     surface. It is darker than the interactive primary in light (so it holds
+     AA against a white or tinted card) and lighter in dark. The site used to
+     branch on the theme at eleven separate call sites to express exactly this;
+     the role replaces those branches without changing a rendered value. */
+  --heading-accent: var(--color-primary-hover);
+
+  /* EXTENSION: a tinted panel — the about panel, keyword chip, table header,
+     callout body. Opaque in light so it reads as a distinct plane, a
+     translucent brand wash in dark so it separates by luminance rather than by
+     an opaque block. Previously eleven theme branches across four files. */
+  --surface-tinted: var(--surface-tertiary);
+
+  --focus-ring: #0284c7;
+  --selected-bg: #eff6ff;
+  --selected-fg: #1e40af;
+
+  /* EXTENSION: brand-orb strength. The hero and banner washes are the loudest
+     decoration on the site, so their opacity is the first thing that has to
+     give in dark mode — as a role, not as a branch. */
+  --orb-opacity: 0.3;
+  /* EXTENSION: the fixed header's translucent backdrop. Slightly more opaque in
+   * dark so the blur reads against a dark page rather than vanishing into it.
+   * Previously a hand-written `color-mix` in two places. */
+  --header-backdrop: color-mix(in srgb, var(--surface-secondary) 80%, transparent);
+
+  /* EXTENSION: gold panel wash, for the caution/warning cards in a chapter
+     grid. Paired with `--brand-gold-ink`, never with the gold itself. */
+  --brand-gold-wash: color-mix(in srgb, var(--brand-gold) 4%, transparent);
+  /* EXTENSION: the chapter-banner jump pill. A white wash in light (it sits on
+   * the banner's pale gradient) and a brand wash in dark. */
+  --banner-pill-bg: color-mix(in srgb, var(--color-on-primary) 60%, transparent);
+  --banner-pill-border: var(--primary-wash-border);
+  /* Gold border for ACD-seal surfaces. Its own step, so the seal treatment is
+     defined once and cannot drift from the wash it sits on. */
+  --brand-gold-border: color-mix(in srgb, var(--brand-gold) 30%, transparent);
+}
+
+/* ---------------------------------------------------------------------------
+ * 6. Neutral secondary action — distinct from brand accent
+ * ------------------------------------------------------------------------- */
+:root {
+  --secondary-bg: #f1f5f9;
+  --secondary-hover: #e2e8f0;
+  --secondary-border: #7d8da1;
+  --secondary-fg: #0f172a;
+}
+
+/* ---------------------------------------------------------------------------
+ * 7. Primary washes
+ * ---------------------------------------------------------------------------
+ * The site's previous colour handling was 72 hand-written
+ * `rgba(15, 168, 251, a)` literals spread across the stylesheets, each
+ * hand-picked for its own surface. Deriving the wash from the live brand
+ * reference with `color-mix` collapses that cluster into four roles that track
+ * the brand and stay correct in both themes.
+ * ------------------------------------------------------------------------- */
+:root {
+  --primary-wash-subtle: color-mix(in srgb, var(--brand-accent) 6%, transparent);
+  --primary-wash-muted: color-mix(in srgb, var(--brand-accent) 10%, transparent);
+  --primary-wash-border: color-mix(in srgb, var(--brand-accent) 22%, transparent);
+  --primary-wash-strong: color-mix(in srgb, var(--brand-accent) 32%, transparent);
+}
+
+/* ---------------------------------------------------------------------------
+ * 8. Status roles
+ * ---------------------------------------------------------------------------
+ * Every status pairs colour with a text label and/or a shape. See
+ * `src/components/chapter/EvidenceStatus.astro`, which carries the manuscript's
+ * seven evidence states on these roles.
+ * ------------------------------------------------------------------------- */
+:root {
+  --status-success-main: #047857;
+  --status-success-subtle: #ecfdf5;
+  --status-success-on: #ffffff;
+
+  --status-warning-main: #b45309;
+  --status-warning-subtle: #fffbeb;
+
+  --status-danger-main: #b91c1c;
+  --status-danger-subtle: #fef2f2;
+
+  --status-info-main: #4f46e5;
+  --status-info-subtle: #eef2ff;
+
+  /* EXTENSION: upstream has four status roles and no amber. The manuscript's
+   * `unresolved` / `pending` states are "action required, not failed" — amber
+   * is that meaning, and red would misreport them as failure. Upstream's
+   * `--status-warning-main` is already amber-brown, but the manuscript needs a
+   * distinct role because `partial` occupies warning. */
+  --status-caution-main: #a3460a;
+  --status-caution-subtle: #fff7ed;
+}
+
+/* ---------------------------------------------------------------------------
+ * 9. Data visualization
+ * ---------------------------------------------------------------------------
+ * Reserved for the figure and table registries. Categorical, not semantic.
+ * ------------------------------------------------------------------------- */
+:root {
+  --chart-1: #2563eb;
+  --chart-2: #0598e3;
+  --chart-3: #047857;
+  --chart-4: #7c3aed;
+  --chart-5: #c2410c;
+}
+
+/* ---------------------------------------------------------------------------
+ * 10. Shadows — minimal institutional scale
+ * ---------------------------------------------------------------------------
+ * Upstream: strong elevation is overlay-only; dark mode relies on luminance and
+ * borders before shadow.
+ *
+ * The site's brand glow is gone. `--shadow-glow` existed only for the hero and
+ * sponsor hover, and once those surfaces moved onto the standard scale it had no
+ * consumer left. A decorative token with no consumer is a trap: the next person
+ * reaches for it, and the brand glow is back. `docs/design.md` section 9 records
+ * the removal.
+ * ------------------------------------------------------------------------- */
+:root {
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.06);
+  --shadow-dropdown: 0 4px 6px -1px rgba(15, 23, 42, 0.07), 0 2px 4px -1px rgba(15, 23, 42, 0.04);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.06), 0 4px 6px -4px rgba(0, 0, 0, 0.06);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.06);
+
+
+  /* EXTENSION: the branded CTA's own elevation. A brand-tinted shadow is not
+   * in the upstream scale, but a primary button that sits flush with the page
+   * reads as unclickable; this is the one role allowed a brand-cast shadow,
+   * and it is derived from the brand reference rather than a literal. */
+  --shadow-cta: 0 4px 14px color-mix(in srgb, var(--color-primary) 30%, transparent);
+  --shadow-cta-hover: 0 6px 20px color-mix(in srgb, var(--color-primary) 45%, transparent);
+}
+
+/* ---------------------------------------------------------------------------
+ * 11b. Font families
+ * ---------------------------------------------------------------------------
+ * `--font-manrope` / `--font-inter` are applied to `<html>` by the font
+ * loader in `BaseLayout.astro` (self-hosted woff2), mirroring the upstream
+ * `next/font` variable pattern without a framework.
+ * ------------------------------------------------------------------------- */
+:root {
+  --font-heading: var(--font-manrope), var(--font-inter), 'Segoe UI', Arial, sans-serif;
+  --font-body: var(--font-inter), 'Segoe UI', Arial, sans-serif;
+  --font-sans: var(--font-inter), 'Segoe UI', Arial, sans-serif;
+  --font-mono:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+}
+
+/* ---------------------------------------------------------------------------
+ * 11. Radius — upstream's 2/4/8/12/16/24 ladder
+ * ------------------------------------------------------------------------- */
+:root {
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 24px;
+  --radius-full: 9999px;
+}
+
+/* ---------------------------------------------------------------------------
+ * 12. Spacing reference — 4/8 rhythm
+ * ------------------------------------------------------------------------- */
+:root {
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-14: 3.5rem;
+  --space-16: 4rem;
+
+  /* Section rhythm. Not spacing steps: this is the vertical padding that
+   * separates a presentation section from the next, at full and compact. */
+  --section-pad-y: 6.25rem; /* 100px */
+  --section-pad-y-compact: 4.5rem; /* 72px */
+
+  /* EXTENSION: the page's bottom rhythm — the interval between the last
+   * content group on a route and the footer, which is a different plane (a
+   * brand field) and must not butt against an interactive control.
+   *
+   * The page wrapper had a top rhythm and no bottom counterpart, so on every
+   * document route the closing navigation sat flush against the footer: zero
+   * measured gap, and the buttons read as clipped by the footer's edge rather
+   * than separated from it. `.page-wrapper` already has `padding-top` for the
+   * fixed header; this is its counterpart.
+   *
+   * 96px at full width, 64px compact. Both on the 4/8 rhythm, and just under
+   * the section rhythm so the page ends calmly rather than announcing a new
+   * section that is not there. */
+  --page-pad-bottom: 6rem;
+  --page-pad-bottom-compact: 4rem;
+}
+
+/* ---------------------------------------------------------------------------
+ * 13. Type scale — upstream's eleven steps
+ * ---------------------------------------------------------------------------
+ * Exposed as the `--font-size-*` / `--line-height-*` pairs below and as the
+ * `.text-*` utilities in `global.css`. `--font-heading` / `--font-body` are
+ * applied to `<html>` by the font loader in `BaseLayout.astro`.
+ * ------------------------------------------------------------------------- */
+:root {
+  --font-size-display-lg: 3rem; /* 48 */
+  --line-height-display-lg: 3.3rem;
+  --font-size-display-md: 2.25rem; /* 36 */
+  --line-height-display-md: 2.7rem;
+  --font-size-heading-xl: 1.75rem; /* 28 */
+  --line-height-heading-xl: 2.25rem;
+  --font-size-heading-lg: 1.25rem; /* 20 */
+  --line-height-heading-lg: 1.625rem;
+  --font-size-heading-md: 1.125rem; /* 18 */
+  --line-height-heading-md: 1.575rem;
+  --font-size-title-lg: 1.125rem;
+  --line-height-title-lg: 1.625rem;
+  --font-size-title-md: 1rem;
+  --line-height-title-md: 1.5rem;
+  --font-size-title-sm: 0.875rem;
+  --line-height-title-sm: 1.375rem;
+  --font-size-body-lg: 1.125rem;
+  --line-height-body-lg: 1.8rem;
+  --font-size-body-md: 1rem;
+  --line-height-body-md: 1.6rem;
+  --font-size-body-sm: 0.875rem;
+  --line-height-body-sm: 1.3125rem;
+  --font-size-label-lg: 0.875rem;
+  --line-height-label-lg: 1.25rem;
+  --font-size-label-md: 0.8125rem;
+  --line-height-label-md: 1.125rem;
+  --font-size-label-sm: 0.75rem;
+  --line-height-label-sm: 1rem;
+  --font-size-caption: 0.75rem;
+  --line-height-caption: 1rem;
+
+  /* Upstream's legibility floor: body copy never below 0.875rem, nothing
+   * below 0.75rem. The manuscript's previous 11.5px chapter-phase label is
+   * retired in favour of `--font-size-caption`. */
+  --font-size-minimum: 0.75rem;
+
+  /* EXTENSION: the manuscript's reading rhythm, 1.7× the element's own font
+   * size. Deliberately a bare NUMBER, not a rem length: a number is recomputed
+   * against each element's own size (so a 12px badge inherits 20.4px and a
+   * 14.4px table cell inherits 24.48px), whereas a length is inherited as one
+   * fixed value and would give every element the body line box.
+   * Upstream pairs each size with its own line-height; this site's body copy
+   * sits at 16px across mixed sizes, so it needs a rhythm that follows them. */
+  --line-height-reading: 1.7;
+}
+
+/* ---------------------------------------------------------------------------
+ * 14. Motion — upstream's 150-300ms band on opacity/transform
+ * ------------------------------------------------------------------------- */
+:root {
+  --transition-fast: 0.15s ease;
+  --transition-base: 0.3s ease;
+  --transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  /* Matches the reveal easing used by `Reveal.astro` / `scripts/reveal.ts`. */
+  --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ---------------------------------------------------------------------------
+ * 15. Decorative gradients — EXCEPTIONS, Class B presentation surfaces only
+ * ---------------------------------------------------------------------------
+ * Upstream forbids decorative gradients outright. They survive here only as
+ * named, scoped exceptions on the presentation surfaces that carry the site's
+ * identity (hero, footer, sponsor). `check:tokens` enforces the scoping: no
+ * gradient token may be referenced from a Class A route.
+ * ------------------------------------------------------------------------- */
+:root {
+  --gradient-hero: linear-gradient(135deg, #ebf8ff 0%, #f0f7ff 30%, #ffffff 70%, #fffbeb 100%);
+  /* The wordmark and primary button. Derived from the operational primary, so
+   * the CTA carries the system colour rather than the retired invented cyan. */
+  --gradient-primary: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  /* CHROME: header backdrop. Upstream permits backdrop blur on "approved
+   * landing chrome" only; the fixed header is that chrome. */
+  --gradient-glass: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.7) 100%);
+  /* EXCEPTION: the footer is the site's one large brand field, so it takes a
+   * gradient rather than a flat primary fill. Derived from the brand blue with
+   * the mark's cyan at its centre. */
+  --gradient-footer: linear-gradient(135deg, #1d4ed8 0%, #0369a1 50%, #1d4ed8 100%);
+  /* Ink on a brand-blue field. Distinct from `--color-on-primary`, which is ink
+   * on the interactive primary, because the footer field is the deeper blue. */
+  --color-on-brand: #ffffff;
+  /* Muted ink on the brand field. A footer rule or secondary link sitting on
+   * the blue needs its own verified step; it cannot borrow the primary ink. */
+  --on-brand-muted: color-mix(in srgb, #ffffff 85%, transparent);
+  --on-brand-subtle: color-mix(in srgb, #ffffff 20%, transparent);
+}
+
+/* ---------------------------------------------------------------------------
+ * 16. Layout constants
+ * ------------------------------------------------------------------------- */
+:root {
+  --header-height: 72px;
+  /* Full-bleed inset for wide manuscript tables. Sits inside the page gutter
+   * so it can never introduce a document-level horizontal scrollbar. */
+  --ms-bleed: 0px;
+}
+
+/* ============================================================================
+ * DARK THEME
+ * ============================================================================
+ * `.dark` is the sole theme selector. Every component override has been moved
+ * onto a semantic role, so no stylesheet branches on the theme any more —
+ * including the ones that used to key off `data-theme`, which is now only
+ * state (read by `scripts/theme.ts`) and never a selector.
+ * ========================================================================== */
+.dark {
+  /* Brand accent: the mark's cyan lifts for legibility on dark surfaces. */
+  --brand-accent: #22b8f0;
+  --brand-accent-hover: #38bdf8;
+  --brand-accent-active: #0ea5e9;
+  --brand-accent-soft: #082f49;
+  --brand-accent-border: #0e7490;
+  --brand-accent-highlight: #67e8f9;
+  --brand-accent-on: #082f49;
+
+  --color-primary: #60a5fa;
+  --color-primary-hover: #93c5fd;
+  --color-primary-active: #bfdbfe;
+  --color-primary-soft: #172554;
+  --color-primary-muted: #1e3a8a;
+  --color-primary-border: #1e40af;
+
+  /* Surfaces */
+  --surface-primary: #1e293b;
+  --surface-secondary: #0f172a;
+  --surface-tertiary: #162032;
+  --surface-muted: #1e293b;
+  --surface-hover: #28344c;
+  --surface-input: #0f172a;
+  --surface-popover: #1e293b;
+  --surface-overlay: #1e293b;
+  --scrim: rgba(2, 6, 23, 0.6);
+
+  /* Borders */
+  --border-default: #334155;
+  --border-strong: #64748b;
+  --border-subtle: #1e293b;
+  --input-border: #64748b;
+
+  /* Text */
+  --text-primary: #f1f5f9;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+  --text-disabled: #64748b;
+  /* `--color-on-primary` stays white in both themes because every filled
+   * primary control — button, skip link, back-to-top, active jump pill — is
+   * filled with `--gradient-primary`, which is the same deep brand blue in
+   * either theme. An earlier pass flipped this ink to dark for the dark theme
+   * while those controls still carried the brand-blue gradient, which put
+   * `#0b1220` on `#2563eb` at 3.6:1. One fill, one ink. */
+  --text-muted-on-tint: var(--text-muted);
+
+  --link-color: #60a5fa;
+  --link-hover: #93c5fd;
+  --heading-accent: var(--color-primary);
+  --surface-tinted: var(--primary-wash-subtle);
+
+  --focus-ring: #38bdf8;
+  --selected-bg: #172554;
+  --selected-fg: #bfdbfe;
+
+  --orb-opacity: 0.12;
+  --header-backdrop: color-mix(in srgb, var(--surface-secondary) 85%, transparent);
+
+  --brand-gold-wash: color-mix(in srgb, var(--brand-gold) 8%, transparent);
+  --banner-pill-bg: var(--primary-wash-muted);
+
+  /* Neutral secondary */
+  --secondary-bg: #1e293b;
+  --secondary-hover: #28344c;
+  --secondary-border: #5f7288;
+  --secondary-fg: #f8fafc;
+
+  /* Status: lifted for legibility on dark surfaces; the subtle pair is the
+   * deep tint, matching upstream's inverted-subtle convention. */
+  --status-success-main: #34d399;
+  --status-success-subtle: #052e2b;
+  --status-success-on: #04211d;
+
+  --status-warning-main: #fbbf24;
+  --status-warning-subtle: #451a03;
+
+  --status-danger-main: #f87171;
+  --status-danger-subtle: #450a0a;
+
+  --status-info-main: #a5b4fc;
+  --status-info-subtle: #1e1b4b;
+
+  --status-caution-main: #fb923c;
+  --status-caution-subtle: #431407;
+
+  /* Gold keeps its own dark-theme presentation: the ACD seal stays gold, and
+   * the amber ink lifts so the role chip still clears AA. */
+  --brand-gold-ink: #ffd700;
+
+  /* Chart */
+  --chart-1: #60a5fa;
+  --chart-2: #22d3ee;
+  --chart-3: #34d399;
+  --chart-4: #a78bfa;
+  --chart-5: #fb923c;
+
+  /* Elevation: dark mode leans on luminance and borders, so the scale is
+   * flatter and deeper than light rather than a copy of it. */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.2);
+  --shadow-dropdown: 0 4px 6px -1px rgba(0, 0, 0, 0.35), 0 2px 4px -1px rgba(0, 0, 0, 0.25);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.3);
+  --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.4);
+  --shadow-cta: 0 4px 14px rgba(0, 0, 0, 0.35);
+  --shadow-cta-hover: 0 6px 20px rgba(0, 0, 0, 0.45);
+
+  --gradient-hero: linear-gradient(135deg, #0f172a 0%, #162032 30%, #1e293b 70%, #1a1a2e 100%);
+  --gradient-primary: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  --gradient-glass: linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(30, 41, 59, 0.7) 100%);
+}
+
+/* Print is light-only by definition: the dark palette must never leak into a
+   printed manuscript. `print.css` re-asserts the light role set explicitly so
+   it survives a dark-theme print. */
+@media print {
+  :root,
+  .dark {
+    color-scheme: light;
+    --surface-primary: #ffffff;
+    --surface-secondary: #ffffff;
+    --surface-tertiary: #ffffff;
+    --surface-muted: #ffffff;
+    --surface-hover: #ffffff;
+    --surface-overlay: #ffffff;
+    --border-default: #94a3b8;
+    --border-subtle: #cbd5e1;
+    --text-primary: #000000;
+    --text-secondary: #1f2937;
+    --text-muted: #374151;
+    --color-primary: #1d4ed8;
+    --link-color: #1d4ed8;
+    --focus-ring: #1d4ed8;
+    --brand-accent: #0569a8;
+    --brand-accent-on: #ffffff;
+    --shadow-sm: none;
+    --shadow-dropdown: none;
+    --shadow-md: none;
+    --shadow-lg: none;
+    --shadow-xl: none;
+    --shadow-cta: none;
+    --shadow-cta-hover: none;
+    --gradient-hero: none;
+    --gradient-glass: none;
+    --gradient-footer: none;
+    --gradient-primary: none;
+    /* Print ink and paper. A printed manuscript is pure black on white, the
+     * one place either is correct. Upstream has no print contract and so no
+     * equivalent role.
+     *
+     * `--print-ink-muted` and the two rule weights exist because a printed
+     * document distinguishes structure by rule weight, not by hue: body ink for
+     * text, muted ink for secondary copy, a hairline for row dividers and a
+     * heavier rule for table and figure frames. They resolve to literal greys
+     * here because a grey ramp on paper is an ink-density decision, not a
+     * theme value. */
+    --print-ink: #000000;
+    --print-paper: #ffffff;
+    --print-ink-muted: #333333;
+    --print-rule-hairline: #cccccc;
+    --print-rule: #999999;
+    --print-rule-strong: #666666;
+  }
+}

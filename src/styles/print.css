@@ -34,8 +34,8 @@
 
   html,
   body {
-    background: #fff !important;
-    color: #000 !important;
+    background: var(--print-paper) !important;
+    color: var(--print-ink) !important;
     font-size: 11pt;
     line-height: 1.5;
     /* Diagrams and status pills carry meaning in their fill; print the fills
@@ -45,12 +45,12 @@
   }
 
   /* The site ships a dark theme, and component styles such as
-     `[data-theme='dark'] .card-item h3` set near-white text. Print output is
+     `.dark .card-item h3` set near-white text. Print output is
      always on white paper, so every colour is forced to ink. Targeting the
      theme attribute rather than each component selector is what makes this
      survive a component gaining a new dark-mode rule. */
-  [data-theme='dark'] * {
-    color: #000 !important;
+  .dark * {
+    color: var(--print-ink) !important;
   }
 
   .page-wrapper {
@@ -69,7 +69,7 @@
      number, title and description — they are the heading of the chapter. */
   .chapter-banner {
     background: none !important;
-    border-bottom: 2px solid #000;
+    border-bottom: 2px solid var(--print-ink);
     padding: 0 0 10pt;
     break-after: avoid;
   }
@@ -80,12 +80,12 @@
   }
 
   .chapter-banner__title {
-    color: #000 !important;
+    color: var(--print-ink) !important;
     font-size: 18pt;
   }
 
   .chapter-banner__desc {
-    color: #333 !important;
+    color: var(--print-ink-muted) !important;
     font-size: 10.5pt;
   }
 
@@ -94,7 +94,8 @@
   }
 
   .container,
-  .section {
+  .section,
+  .page-wrapper {
     max-width: none !important;
     padding: 0 !important;
     margin: 0 !important;
@@ -111,7 +112,7 @@
   h2,
   h3,
   h4 {
-    color: #000 !important;
+    color: var(--print-ink) !important;
     break-after: avoid;
     page-break-after: avoid;
   }
@@ -127,13 +128,13 @@
 
   p,
   li {
-    color: #000 !important;
+    color: var(--print-ink) !important;
     orphans: 3;
     widows: 3;
   }
 
   a {
-    color: #000 !important;
+    color: var(--print-ink) !important;
     text-decoration: none;
   }
 
@@ -141,7 +142,7 @@
   .chapter-content a[href^='http']::after {
     content: ' (' attr(href) ')';
     font-size: 8.5pt;
-    color: #555;
+    color: var(--print-ink-muted);
     word-break: break-all;
   }
 
@@ -172,7 +173,7 @@
   .ms-table th,
   .ms-table td {
     padding: 5pt 7pt;
-    border-bottom: 1px solid #bbb;
+    border-bottom: 1px solid var(--print-rule-hairline);
     white-space: normal;
   }
 
@@ -194,7 +195,7 @@
   .ms-table__caption,
   .ms-table__note,
   .figure-caption {
-    color: #333 !important;
+    color: var(--print-ink-muted) !important;
     font-size: 9.5pt;
   }
 
@@ -210,20 +211,20 @@
   }
 
   .card-grid > .card-item {
-    border: 1px solid #ccc !important;
+    border: 1px solid var(--print-rule-hairline) !important;
     background: none !important;
     break-inside: avoid;
     margin-bottom: 8pt;
   }
 
   .callout {
-    border-left: 3pt solid #000 !important;
+    border-left: 3pt solid var(--print-ink) !important;
     background: none !important;
     break-inside: avoid;
   }
 
   .disclosure {
-    border: 1px solid #ccc !important;
+    border: 1px solid var(--print-rule-hairline) !important;
   }
 
   /* A collapsed <details> is invisible in print, which would silently drop
@@ -245,15 +246,15 @@
   }
 
   .evidence {
-    border: 1pt solid #666 !important;
+    border: 1pt solid var(--print-rule-strong) !important;
     background: none !important;
-    color: #000 !important;
+    color: var(--print-ink) !important;
   }
 
   .chip,
   .keywords__item {
-    border: 1px solid #999 !important;
+    border: 1px solid var(--print-rule) !important;
     background: none !important;
-    color: #000 !important;
+    color: var(--print-ink) !important;
   }
 }

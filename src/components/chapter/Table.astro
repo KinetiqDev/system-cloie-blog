@@ -54,7 +54,7 @@ const noteText = note === '' ? undefined : (note ?? table.note);
   .ms-table__caption {
     font-size: 15px;
     font-weight: 700;
-    color: var(--cloie-text);
+    color: var(--text-primary);
     line-height: 1.4;
     margin-bottom: 10px;
   }
@@ -71,14 +71,14 @@ const noteText = note === '' ? undefined : (note ?? table.note);
      they have reached a scrollable region. */
   .ms-table__scroll {
     overflow-x: auto;
-    border: 1px solid var(--cloie-border);
-    border-radius: var(--radius-md);
-    background: var(--cloie-bg-card);
-    box-shadow: var(--cloie-shadow-sm);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-lg);
+    background: var(--surface-primary);
+    box-shadow: var(--shadow-sm);
   }
 
   .ms-table__scroll:focus-visible {
-    outline: 2px solid var(--cloie-blue);
+    outline: 2px solid var(--color-primary);
     outline-offset: 2px;
   }
 
@@ -101,17 +101,17 @@ const noteText = note === '' ? undefined : (note ?? table.note);
     font-size: 13px;
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    color: var(--cloie-text-secondary);
-    background: var(--cloie-bg-section-alt);
+    color: var(--text-secondary);
+    background: var(--surface-tinted);
     padding: 11px 14px;
-    border-bottom: 2px solid var(--cloie-border);
+    border-bottom: 2px solid var(--border-default);
     white-space: nowrap;
   }
 
   .ms-table :global(td) {
     padding: 11px 14px;
-    border-bottom: 1px solid var(--cloie-border-light);
-    color: var(--cloie-text);
+    border-bottom: 1px solid var(--border-subtle);
+    color: var(--text-primary);
     vertical-align: top;
   }
 
@@ -120,7 +120,7 @@ const noteText = note === '' ? undefined : (note ?? table.note);
   }
 
   .ms-table :global(tbody tr:hover td) {
-    background: rgba(15, 168, 251, 0.03);
+    background: var(--primary-wash-subtle);
   }
 
   /* A numeric or identifier column should not wrap mid-token. */
@@ -133,28 +133,20 @@ const noteText = note === '' ? undefined : (note ?? table.note);
     text-transform: none;
     font-size: 14px;
     letter-spacing: 0;
-    color: var(--cloie-text);
+    color: var(--text-primary);
     background: transparent;
     white-space: normal;
     /* The header rule is 2px for the column headings; a row heading is body
        content and should get the body divider, or each pill grows a hard rule
        under it. */
-    border-bottom: 1px solid var(--cloie-border-light);
+    border-bottom: 1px solid var(--border-subtle);
   }
 
   .ms-table__note {
     font-size: 13.5px;
-    color: var(--cloie-text-muted);
+    color: var(--text-muted);
     margin: 10px 0 0;
   }
 
-  [data-theme='dark'] .ms-table__scroll {
-    border-color: var(--cloie-border);
-    background: var(--cloie-bg-elevated);
-  }
 
-  [data-theme='dark'] .ms-table :global(th) {
-    background: rgba(15, 168, 251, 0.07);
-    color: var(--cloie-text-secondary);
-  }
 </style>
