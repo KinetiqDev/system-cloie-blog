@@ -32,9 +32,9 @@ const { label, hint, open = false } = Astro.props;
 <style>
   .disclosure {
     margin: 20px 0;
-    border: 1px solid var(--cloie-border);
-    border-radius: var(--radius-md);
-    background: var(--cloie-bg-card);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-lg);
+    background: var(--surface-primary);
     overflow: hidden;
   }
 
@@ -43,7 +43,7 @@ const { label, hint, open = false } = Astro.props;
     padding: 13px 18px;
     font-size: 14.5px;
     font-weight: 650;
-    color: var(--cloie-text-secondary);
+    color: var(--text-secondary);
     display: flex;
     align-items: baseline;
     gap: 10px;
@@ -59,7 +59,7 @@ const { label, hint, open = false } = Astro.props;
 
   .disclosure__summary::before {
     content: '▸';
-    color: var(--cloie-blue);
+    color: var(--color-primary);
     font-size: 12px;
     transition: transform var(--transition-fast);
     flex: none;
@@ -70,30 +70,30 @@ const { label, hint, open = false } = Astro.props;
   }
 
   .disclosure__summary:hover {
-    background: rgba(15, 168, 251, 0.04);
+    background: var(--primary-wash-subtle);
   }
 
   .disclosure__summary:focus-visible {
-    outline: 2px solid var(--cloie-blue);
+    outline: 2px solid var(--color-primary);
     outline-offset: -2px;
   }
 
   .disclosure__hint {
     font-size: 13px;
     font-weight: 500;
-    color: var(--cloie-text-muted);
+    color: var(--text-muted);
   }
 
   .disclosure__body {
     padding: 4px 18px 18px;
-    border-top: 1px solid var(--cloie-border-light);
+    border-top: 1px solid var(--border-subtle);
   }
 
   .disclosure__body > :first-child {
     margin-top: 14px;
   }
 
-  [data-theme='dark'] .disclosure {
-    background: var(--cloie-bg-elevated);
+  .dark .disclosure {
+    background: var(--surface-overlay);
   }
 </style>

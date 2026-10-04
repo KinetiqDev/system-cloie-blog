@@ -34,17 +34,27 @@ const canonical = Astro.site ? new URL(withBase(currentPath), Astro.site) : unde
     <meta name="description" content={description} />
     {canonical && <link rel="canonical" href={canonical} />}
     <link rel="icon" type="image/svg+xml" href={withBase('/favicon.svg')} />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
-      rel="stylesheet"
-    />
+
+    {/*
+      Manrope and Inter are self-hosted variable fonts (`src/styles/fonts.css`,
+      73 KB for the full used weight range). Preloading the heading face — it
+      paints first, on the header and hero — avoids a swap-driven reflow of the
+      largest text on the page. Upstream preloads through `next/font`; this is
+      the framework-free equivalent.
+    */}
+    <link rel="preload" href={withBase('/fonts/manrope-latin-var.woff2')} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={withBase('/fonts/inter-latin-var.woff2')} as="font" type="font/woff2" crossorigin />
 
     {/*
       Applies the stored/system theme before first paint so there is no flash
       of the wrong palette. Mirrors the logic in `src/scripts/theme.ts`, which
       owns the toggle button.
+
+      Upstream's "synchronous first-paint bootstrap" contract: resolve before
+      paint, never in a hydration pass. `.dark` is the only theme selector in
+      the stylesheet — every component resolves through a semantic role instead
+      of branching on the theme — while `data-theme` stays as plain state for
+      the toggle to read and write.
     */}
     <script is:inline>
       (() => {
@@ -54,14 +64,21 @@ const canonical = Astro.site ? new URL(withBase(currentPath), Astro.site) : unde
 
         const stored = localStorage.getItem(KEY);
         const system = window.matchMedia('(prefers-color-scheme: dark)');
-        root.dataset.theme =
+        const resolve = () =>
           stored === 'dark' || stored === 'light' ? stored : system.matches ? 'dark' : 'light';
+
+        const apply = (theme) => {
+          root.dataset.theme = theme;
+          root.classList.toggle('dark', theme === 'dark');
+        };
+
+        apply(resolve());
 
         // Follow the OS only while the visitor has not made an explicit choice.
         system.addEventListener('change', (event) => {
           const current = localStorage.getItem(KEY);
           if (current !== 'dark' && current !== 'light') {
-            root.dataset.theme = event.matches ? 'dark' : 'light';
+            apply(event.matches ? 'dark' : 'light');
           }
         });
       })();

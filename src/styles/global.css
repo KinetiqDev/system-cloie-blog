@@ -1,4 +1,15 @@
-/* ===== CSS RESET & ROOT ===== */
+/* ============================================================================
+ * PROJECT CLOIE — Global stylesheet
+ * ============================================================================
+ * Colour, shadow, radius, and type VALUES live in `tokens.css`. This file
+ * composes them: base element styling, the shared primitive classes, and the
+ * type-scale utilities. Governance: `docs/design.md`.
+ * ========================================================================== */
+
+@import './tokens.css';
+@import './fonts.css';
+
+/* ===== RESET ===== */
 *,
 *::before,
 *::after {
@@ -7,92 +18,34 @@
   padding: 0;
 }
 
-:root {
-  /* Light Theme */
-  --header-height: 72px;
-  --cloie-blue: #0fa8fb;
-  --cloie-blue-dark: #0b8cd4;
-  --cloie-blue-deeper: #0980c0;
-  --cloie-gold: #ffd700;
-  --cloie-gold-dark: #e6c200;
-  --cloie-white: #ffffff;
-  --cloie-bg: #f8fafc;
-  --cloie-bg-card: #ffffff;
-  --cloie-bg-elevated: #ffffff;
-  --cloie-bg-section-alt: #f0f7ff;
-  --cloie-text: #1e293b;
-  --cloie-text-secondary: #475569;
-  --cloie-text-muted: #64748b;
-  --cloie-text-on-blue: #ffffff;
-  --cloie-border: #e2e8f0;
-  --cloie-border-light: #f1f5f9;
-  --cloie-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.06);
-  --cloie-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
-  --cloie-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.06), 0 4px 6px -4px rgba(0, 0, 0, 0.06);
-  --cloie-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.06);
-  --cloie-shadow-glow: 0 0 40px rgba(15, 168, 251, 0.15);
-  --gradient-blue: linear-gradient(135deg, #0fa8fb 0%, #0b8cd4 100%);
-  --gradient-hero: linear-gradient(135deg, #ebf8ff 0%, #f0f7ff 30%, #ffffff 70%, #fffbeb 100%);
-  --gradient-gold: linear-gradient(135deg, #ffd700 0%, #f59e0b 100%);
-  --gradient-glass: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.7) 100%);
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
-  --radius-xl: 24px;
-  --radius-full: 9999px;
-  --transition-fast: 0.15s ease;
-  --transition-base: 0.3s ease;
-  --transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-  /* Backing surface for the CLOIE logo everywhere it appears (header, hero,
-     footer). The mark is a dark vector on a transparent canvas, so it needs a
-     light disc to stay legible in dark mode and over the blue footer. Fixed
-     rather than theme-aware, because the footer gradient is the same in both
-     themes.
-
-     Logo insets are absolute px, never percentages: a percentage on a padded
-     replaced element resolves against the *containing block*, not the element
-     box, which would resolve against the nav/footer column and crush the mark. */
-  --cloie-logo-surface: #f7faff;
-  /* Matches the Framer Motion ease-out used by AnimatedSection. */
-  --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
-  color-scheme: light;
-}
-
-[data-theme='dark'] {
-  --cloie-bg: #0f172a;
-  --cloie-bg-card: #1e293b;
-  --cloie-bg-elevated: #1e293b;
-  --cloie-bg-section-alt: #162032;
-  --cloie-text: #f1f5f9;
-  --cloie-text-secondary: #cbd5e1;
-  --cloie-text-muted: #94a3b8;
-  --cloie-text-on-blue: #ffffff;
-  --cloie-border: #334155;
-  --cloie-border-light: #1e293b;
-  --cloie-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.2);
-  --cloie-shadow-md: 0 4px 6px rgba(0, 0, 0, 0.3);
-  --cloie-shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.3);
-  --cloie-shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.4);
-  --cloie-shadow-glow: 0 0 40px rgba(15, 168, 251, 0.2);
-  --gradient-hero: linear-gradient(135deg, #0f172a 0%, #162032 30%, #1e293b 70%, #1a1a2e 100%);
-  --gradient-glass: linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(30, 41, 59, 0.7) 100%);
-  color-scheme: dark;
-}
-
 /* ===== BASE STYLES ===== */
 html {
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Upstream's font-loader contract: the family variables are set on the root
+     element so `--font-heading` / `--font-body` in tokens.css resolve to the
+     loaded face rather than a name invented at each call site. */
+  --font-manrope: 'Cloie Manrope';
+  --font-inter: 'Cloie Inter';
+  /* Reserve the scrollbar gutter so the fixed header and the page gutter do
+     not shift horizontally when a route grows past the viewport height. */
+  scrollbar-gutter: stable;
 }
 
 body {
-  font-family: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif;
-  color: var(--cloie-text);
-  background-color: var(--cloie-bg);
-  line-height: 1.7;
+  font-family: var(--font-body);
+  color: var(--text-primary);
+  background-color: var(--surface-secondary);
+  line-height: var(--line-height-reading);
   overflow-x: hidden;
-  transition: background-color var(--transition-base), color var(--transition-base);
+  transition:
+    background-color var(--transition-base),
+    color var(--transition-base);
+}
+
+.dark {
+  color-scheme: dark;
 }
 
 .app {
@@ -115,26 +68,127 @@ article[id] {
   display: none !important;
 }
 
-/* ===== TYPOGRAPHY ===== */
+/* ===== TYPOGRAPHY =====
+   Headings resolve to the heading family and the primary foreground. Upstream
+   rule: headings never wear brand colour as decoration. The `.chapter-article`
+   block below is the one deliberate exception on this site — the manuscript
+   heading tint is part of its established reading rhythm, and it resolves to
+   a primary role rather than a literal. */
 h1,
 h2,
 h3,
 h4,
 h5,
 h6 {
+  font-family: var(--font-heading);
   line-height: 1.3;
   font-weight: 800;
-  color: var(--cloie-text);
+  color: var(--text-primary);
 }
 
+/* ===== TYPE SCALE UTILITIES =====
+   Eleven steps, each pairing size + line-height + weight + family, so no
+   component assembles a type style by hand. */
+.text-display-lg {
+  font-family: var(--font-heading);
+  font-size: var(--font-size-display-lg);
+  line-height: var(--line-height-display-lg);
+  font-weight: 700;
+}
+.text-display-md {
+  font-family: var(--font-heading);
+  font-size: var(--font-size-display-md);
+  line-height: var(--line-height-display-md);
+  font-weight: 700;
+}
+.text-heading-xl {
+  font-family: var(--font-heading);
+  font-size: var(--font-size-heading-xl);
+  line-height: var(--line-height-heading-xl);
+  font-weight: 700;
+}
+.text-heading-lg {
+  font-family: var(--font-heading);
+  font-size: var(--font-size-heading-lg);
+  line-height: var(--line-height-heading-lg);
+  font-weight: 700;
+}
+.text-heading-md {
+  font-family: var(--font-heading);
+  font-size: var(--font-size-heading-md);
+  line-height: var(--line-height-heading-md);
+  font-weight: 600;
+}
+.text-title-lg {
+  font-family: var(--font-heading);
+  font-size: var(--font-size-title-lg);
+  line-height: var(--line-height-title-lg);
+  font-weight: 600;
+}
+.text-title-md {
+  font-family: var(--font-heading);
+  font-size: var(--font-size-title-md);
+  line-height: var(--line-height-title-md);
+  font-weight: 600;
+}
+.text-title-sm {
+  font-family: var(--font-heading);
+  font-size: var(--font-size-title-sm);
+  line-height: var(--line-height-title-sm);
+  font-weight: 600;
+}
+.text-body-lg {
+  font-family: var(--font-body);
+  font-size: var(--font-size-body-lg);
+  line-height: var(--line-height-body-lg);
+  font-weight: 400;
+}
+.text-body-md {
+  font-family: var(--font-body);
+  font-size: var(--font-size-body-md);
+  line-height: var(--line-height-body-md);
+  font-weight: 400;
+}
+.text-body-sm {
+  font-family: var(--font-body);
+  font-size: var(--font-size-body-sm);
+  line-height: var(--line-height-body-sm);
+  font-weight: 400;
+}
+.text-label-lg {
+  font-family: var(--font-body);
+  font-size: var(--font-size-label-lg);
+  line-height: var(--line-height-label-lg);
+  font-weight: 600;
+}
+.text-label-md {
+  font-family: var(--font-body);
+  font-size: var(--font-size-label-md);
+  line-height: var(--line-height-label-md);
+  font-weight: 600;
+}
+.text-label-sm {
+  font-family: var(--font-body);
+  font-size: var(--font-size-label-sm);
+  line-height: var(--line-height-label-sm);
+  font-weight: 600;
+}
+.text-caption {
+  font-family: var(--font-body);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+  font-weight: 400;
+}
+
+/* ===== LINKS ===== */
 a {
-  color: var(--cloie-blue);
+  color: var(--link-color);
   text-decoration: none;
   transition: color var(--transition-fast);
 }
 
 a:hover {
-  color: var(--cloie-blue-dark);
+  color: var(--link-hover);
 }
 
 img {
@@ -143,11 +197,13 @@ img {
   display: block;
 }
 
-/* ===== FOCUS & SKIP LINK ===== */
+/* ===== FOCUS & SKIP LINK =====
+   Upstream's focus recipe: 2px ring at 3px offset, resolved through the
+   dedicated `--focus-ring` role so it lifts with the theme. Never removed. */
 :focus-visible {
-  outline: 3px solid var(--cloie-blue);
-  outline-offset: 2px;
-  border-radius: 4px;
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
 }
 
 .skip-link {
@@ -157,61 +213,79 @@ img {
   z-index: 2000;
   padding: 12px 20px;
   border-radius: var(--radius-full);
-  background: var(--cloie-blue);
-  color: #fff;
+  background: var(--gradient-primary);
+  color: var(--color-on-primary);
   font-weight: 700;
-  font-size: 14px;
-  box-shadow: var(--cloie-shadow-lg);
+  font-size: var(--font-size-label-lg);
+  box-shadow: var(--shadow-lg);
   transition: top var(--transition-fast);
 }
 
 .skip-link:focus {
   top: 16px;
-  color: #fff;
+  color: var(--color-on-primary);
 }
 
 /* ===== UTILITY CLASSES ===== */
 .container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 24px;
+  padding: 0 var(--space-6);
 }
 
 .section {
-  padding: 100px 0;
+  padding: var(--section-pad-y) 0;
   position: relative;
 }
 
 .section-alt {
-  background: var(--cloie-bg-section-alt);
+  background: var(--surface-tertiary);
 }
 
+/* Section title — Class B expression. The gradient is the documented
+   presentation exception; it derives from the operational primary, so it can
+   never drift from the system colour. */
 .section-title {
   text-align: center;
-  font-size: clamp(28px, 4vw, 42px);
-  background: var(--gradient-blue);
+  font-family: var(--font-heading);
+  font-size: var(--font-size-display-md);
+  line-height: var(--line-height-display-md);
+  font-weight: 700;
+  background: var(--gradient-primary);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  margin-bottom: 12px;
+  margin-bottom: var(--space-3);
   letter-spacing: -0.02em;
+}
+
+@media (min-width: 1024px) {
+  .section-title {
+    font-size: var(--font-size-display-lg);
+    line-height: var(--line-height-display-lg);
+  }
 }
 
 .section-subtitle {
   text-align: center;
-  font-size: clamp(16px, 2vw, 19px);
-  color: var(--cloie-text-muted);
+  font-size: var(--font-size-body-lg);
+  color: var(--text-muted-on-tint);
   max-width: 680px;
-  margin: 0 auto 56px;
+  margin: 0 auto var(--space-14);
   font-weight: 400;
 }
 
-/* ===== BUTTONS ===== */
+/* ===== BUTTONS =====
+   Upstream's control ladder: xs 24 / sm 32 / default 40 / lg 48. This site's
+   primary action is a presentation-scale control, so `.btn` carries the `lg`
+   floor (48px) with padding that lands it at 54px, and `.btn--sm` / `.btn--lg`
+   step down and up from there. */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: var(--space-2);
+  min-height: 48px;
   padding: 12px 28px;
   border-radius: var(--radius-full);
   font-weight: 700;
@@ -225,47 +299,73 @@ img {
   overflow: hidden;
 }
 
+.btn--sm {
+  min-height: 32px;
+  padding: 6px 20px;
+  font-size: 14px;
+}
+
+.btn--lg {
+  min-height: 56px;
+  padding: 14px 32px;
+  font-size: var(--font-size-body-md);
+}
+
 .btn-primary {
-  background: var(--gradient-blue);
-  color: var(--cloie-white);
-  box-shadow: 0 4px 14px rgba(15, 168, 251, 0.3);
+  background: var(--gradient-primary);
+  color: var(--color-on-primary);
+  box-shadow: var(--shadow-cta);
 }
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(15, 168, 251, 0.45);
-  color: var(--cloie-white);
+  box-shadow: var(--shadow-cta-hover);
+  color: var(--color-on-primary);
 }
 
 .btn-outline {
   background: transparent;
-  color: var(--cloie-blue);
-  border-color: var(--cloie-blue);
+  color: var(--color-primary);
+  border-color: var(--color-primary);
 }
 
 .btn-outline:hover {
-  background: var(--cloie-blue);
-  color: var(--cloie-white);
+  background: var(--color-primary);
+  color: var(--color-on-primary);
   transform: translateY(-2px);
-  box-shadow: 0 4px 14px rgba(15, 168, 251, 0.3);
+  box-shadow: var(--shadow-cta);
 }
 
 .btn-ghost {
-  background: rgba(15, 168, 251, 0.08);
-  color: var(--cloie-blue);
+  background: var(--primary-wash-subtle);
+  color: var(--color-primary);
   border-color: transparent;
 }
 
 .btn-ghost:hover {
-  background: rgba(15, 168, 251, 0.15);
+  background: var(--primary-wash-muted);
 }
 
-/* ===== CARDS ===== */
+/* Upstream: viewport width does not identify an input method, so touch targets
+   are raised by pointer capability rather than by a width breakpoint. */
+@media (any-pointer: coarse) {
+  .btn,
+  .btn--sm,
+  .btn--lg {
+    min-height: 44px;
+  }
+}
+
+/* ===== CARDS =====
+   Upstream card contract: neutral surface, border/ring, minimal shadow; cyan
+   is a small accent or marker, never a decorative full-card fill. The top rule
+   that scales in on hover is the site's Class B expression and is scoped to
+   `.card` on presentation surfaces. */
 .card {
-  background: var(--cloie-bg-card);
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--cloie-border);
-  padding: 32px;
+  background: var(--surface-primary);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border-default);
+  padding: var(--space-8);
   transition: all var(--transition-base);
   position: relative;
   overflow: hidden;
@@ -278,14 +378,14 @@ img {
   left: 0;
   right: 0;
   height: 3px;
-  background: var(--gradient-blue);
+  background: var(--gradient-primary);
   transform: scaleX(0);
   transition: transform var(--transition-base);
 }
 
 .card:hover {
-  border-color: rgba(15, 168, 251, 0.3);
-  box-shadow: var(--cloie-shadow-lg), var(--cloie-shadow-glow);
+  border-color: var(--primary-wash-strong);
+  box-shadow: var(--shadow-lg);
   transform: translateY(-4px);
 }
 
@@ -296,35 +396,31 @@ img {
 .card__icon-wrap {
   width: 52px;
   height: 52px;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-lg);
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(15, 168, 251, 0.08);
-  color: var(--cloie-blue);
+  background: var(--primary-wash-subtle);
+  color: var(--color-primary);
   margin-bottom: 18px;
 }
 
 .card__icon-wrap--sm {
   width: 42px;
   height: 42px;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-md);
   margin-bottom: 14px;
-}
-
-[data-theme='dark'] .card__icon-wrap {
-  background: rgba(15, 168, 251, 0.12);
 }
 
 .card h3 {
   font-size: 19px;
   font-weight: 700;
   margin-bottom: 10px;
-  color: var(--cloie-text);
+  color: var(--text-primary);
 }
 
 .card p {
-  color: var(--cloie-text-muted);
+  color: var(--text-muted);
   font-size: 15px;
 }
 
@@ -338,16 +434,18 @@ img {
 .grid-3 {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
+  gap: var(--space-6);
 }
 
 .grid-4 {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
+  gap: var(--space-5);
 }
 
-/* ===== CHIPS ===== */
+/* ===== CHIPS =====
+   Upstream: a primary-tint chip pairs its wash with LINK ink, never with the
+   raw primary, so the pairing is verified rather than inherited. */
 .chip {
   display: inline-flex;
   align-items: center;
@@ -356,21 +454,15 @@ img {
   border-radius: var(--radius-full);
   font-size: 13px;
   font-weight: 600;
-  background: rgba(15, 168, 251, 0.08);
-  color: var(--cloie-blue);
-  border: 1px solid rgba(15, 168, 251, 0.2);
+  background: var(--primary-wash-subtle);
+  color: var(--link-color);
+  border: 1px solid var(--primary-wash-border);
 }
 
 .chip-gold {
-  background: rgba(255, 215, 0, 0.1);
-  color: #92700c;
-  border-color: rgba(255, 215, 0, 0.3);
-}
-
-[data-theme='dark'] .chip-gold {
-  color: #ffd700;
-  background: rgba(255, 215, 0, 0.15);
-  border-color: rgba(255, 215, 0, 0.25);
+  background: color-mix(in srgb, var(--brand-gold) 10%, transparent);
+  color: var(--brand-gold-ink);
+  border-color: color-mix(in srgb, var(--brand-gold) 30%, transparent);
 }
 
 /* ===== BADGE ===== */
@@ -383,23 +475,19 @@ img {
   align-self: flex-start;
   padding: 4px 12px;
   border-radius: var(--radius-full);
-  font-size: 12px;
+  font-size: var(--font-size-label-sm);
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  background: rgba(15, 168, 251, 0.1);
-  color: var(--cloie-blue);
-  border: 1px solid rgba(15, 168, 251, 0.2);
+  background: var(--primary-wash-muted);
+  color: var(--link-color);
+  border: 1px solid var(--primary-wash-border);
 }
 
 .badge-gold {
-  background: rgba(255, 215, 0, 0.12);
-  color: #92700c;
-  border-color: rgba(255, 215, 0, 0.3);
-}
-
-[data-theme='dark'] .badge-gold {
-  color: #ffd700;
+  background: color-mix(in srgb, var(--brand-gold) 12%, transparent);
+  color: var(--brand-gold-ink);
+  border-color: color-mix(in srgb, var(--brand-gold) 30%, transparent);
 }
 
 /* ===== DOCUMENT SURFACES =====
@@ -407,53 +495,47 @@ img {
    the references page, so they live here rather than in chapter.css — each
    page only loads the stylesheets it actually needs. */
 .chapter-article {
-  background: var(--cloie-bg-card);
-  border: 1px solid var(--cloie-border);
-  border-radius: var(--radius-lg);
-  padding: 32px;
+  background: var(--surface-primary);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-xl);
+  padding: var(--space-8);
   transition: border-color var(--transition-base);
 }
 
 .chapter-article:hover {
-  border-color: rgba(15, 168, 251, 0.2);
+  border-color: var(--primary-wash-border);
 }
 
 .chapter-article h2 {
   font-size: clamp(22px, 3vw, 28px);
-  color: var(--cloie-blue-dark);
-  margin-bottom: 16px;
+  color: var(--heading-accent);
+  margin-bottom: var(--space-4);
   font-weight: 800;
   letter-spacing: -0.01em;
 }
 
-[data-theme='dark'] .chapter-article h2 {
-  color: var(--cloie-blue);
-}
+.dark .chapter-article h2,
 
 .chapter-article h3 {
-  font-size: 18px;
-  color: var(--cloie-blue-dark);
+  font-size: var(--font-size-heading-md);
+  color: var(--heading-accent);
   margin: 20px 0 10px;
   font-weight: 700;
 }
 
-[data-theme='dark'] .chapter-article h3 {
-  color: var(--cloie-blue);
-}
+.dark .chapter-article h3,
 
 .chapter-article h4 {
-  font-size: 16px;
-  color: var(--cloie-blue-dark);
-  margin: 16px 0 8px;
+  font-size: var(--font-size-body-md);
+  color: var(--heading-accent);
+  margin: var(--space-4) 0 var(--space-2);
   font-weight: 700;
 }
 
-[data-theme='dark'] .chapter-article h4 {
-  color: var(--cloie-blue);
-}
+.dark .chapter-article h4,
 
 .chapter-article p {
-  color: var(--cloie-text-secondary);
+  color: var(--text-secondary);
   line-height: 1.8;
   margin-bottom: 14px;
   font-size: 15px;
@@ -462,18 +544,18 @@ img {
 .chapter-article ul,
 .chapter-article ol {
   margin: 0;
-  padding-left: 24px;
+  padding-left: var(--space-6);
 }
 
 .chapter-article li {
-  color: var(--cloie-text-secondary);
+  color: var(--text-secondary);
   line-height: 1.7;
   font-size: 15px;
   margin-bottom: 6px;
 }
 
 .chapter-article strong {
-  color: var(--cloie-text);
+  color: var(--text-primary);
   font-weight: 700;
 }
 
@@ -481,7 +563,7 @@ img {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 12px;
+  gap: var(--space-3);
   flex-wrap: wrap;
 }
 
@@ -499,7 +581,7 @@ img {
 .page-wrapper {
   min-height: 100vh;
   padding-top: var(--header-height);
-  animation: page-enter 0.3s ease both;
+  animation: page-enter var(--transition-base) ease both;
 }
 
 @keyframes page-enter {
@@ -539,22 +621,22 @@ img {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--cloie-bg);
+  background: var(--surface-secondary);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--cloie-border);
-  border-radius: 4px;
+  background: var(--border-default);
+  border-radius: var(--radius-sm);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--cloie-text-muted);
+  background: var(--text-muted);
 }
 
 /* ===== SELECTION ===== */
 ::selection {
-  background: rgba(15, 168, 251, 0.2);
-  color: var(--cloie-text);
+  background: var(--selected-bg);
+  color: var(--selected-fg);
 }
 
 /* ===== RESPONSIVE ===== */
@@ -567,11 +649,11 @@ img {
 
 @media (max-width: 768px) {
   .container {
-    padding: 0 16px;
+    padding: 0 var(--space-4);
   }
 
   .section {
-    padding: 72px 0;
+    padding: var(--section-pad-y-compact) 0;
   }
 
   .chapter-article {
@@ -590,7 +672,10 @@ img {
   }
 }
 
-/* ===== ACCESSIBILITY ===== */
+/* ===== ACCESSIBILITY =====
+   Upstream's floor: reduced motion is honoured globally, and loading must stay
+   understandable without animation — so reveal content is forced visible rather
+   than left hidden. */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -622,23 +707,23 @@ img {
 
 /* ===== FIGURE ===== */
 .figure-container {
-  margin: 24px 0;
+  margin: var(--space-6) 0;
   text-align: center;
 }
 
 .figure-image {
   width: 100%;
   max-width: 700px;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--cloie-border);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-default);
   margin: 0 auto;
-  box-shadow: var(--cloie-shadow-sm);
+  box-shadow: var(--shadow-sm);
 }
 
 .figure-caption {
   text-align: center;
-  margin-top: 12px;
+  margin-top: var(--space-3);
   font-size: 13px;
-  color: var(--cloie-text-muted);
+  color: var(--text-muted);
   font-style: italic;
 }

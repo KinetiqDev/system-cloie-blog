@@ -56,7 +56,7 @@ const rows = TABLES.map((table) => ({
 <style>
   .list-intro {
     font-size: 15.5px;
-    color: var(--cloie-text-secondary);
+    color: var(--text-secondary);
     max-width: 680px;
     margin-bottom: 26px;
   }
@@ -74,12 +74,12 @@ const rows = TABLES.map((table) => ({
     gap: 18px;
     align-items: baseline;
     padding: 14px 16px;
-    border-radius: var(--radius-sm);
+    border-radius: var(--radius-md);
     transition: background var(--transition-fast);
   }
 
   .tablelist__row:hover {
-    background: rgba(15, 168, 251, 0.04);
+    background: var(--primary-wash-subtle);
   }
 
   .tablelist__num {
@@ -87,13 +87,10 @@ const rows = TABLES.map((table) => ({
     width: 88px;
     font-size: 13px;
     font-weight: 700;
-    color: var(--cloie-blue-dark);
+    color: var(--heading-accent);
     font-variant-numeric: tabular-nums;
   }
 
-  [data-theme='dark'] .tablelist__num {
-    color: var(--cloie-blue);
-  }
 
   .tablelist__body {
     flex: 1;
@@ -103,23 +100,20 @@ const rows = TABLES.map((table) => ({
   .tablelist__caption {
     font-size: 15.5px;
     font-weight: 600;
-    color: var(--cloie-text);
+    color: var(--text-primary);
     text-decoration: none;
     line-height: 1.5;
   }
 
   .tablelist__caption:hover {
-    color: var(--cloie-blue-dark);
+    color: var(--heading-accent);
     text-decoration: underline;
   }
 
-  [data-theme='dark'] .tablelist__caption:hover {
-    color: var(--cloie-blue);
-  }
 
   .tablelist__note {
     font-size: 13.5px;
-    color: var(--cloie-text-muted);
+    color: var(--text-muted);
     margin: 6px 0 0;
     line-height: 1.5;
     max-width: 62ch;
@@ -131,7 +125,7 @@ const rows = TABLES.map((table) => ({
     font-weight: 650;
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    color: var(--cloie-text-muted);
+    color: var(--text-muted);
   }
 
   @media (max-width: 640px) {

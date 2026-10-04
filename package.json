@@ -10,7 +10,8 @@
     "check": "astro check",
     "lint": "oxlint",
     "check:links": "node scripts/check-links.mjs",
-    "verify": "npm run lint && npm run check && npm run build && npm run check:links"
+    "check:tokens": "node scripts/check-tokens.mjs",
+    "verify": "npm run lint && npm run check && npm run check:tokens && npm run build && npm run check:links"
   },
   "dependencies": {
     "@astrojs/markdown-satteri": "^0.4.2",

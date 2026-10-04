@@ -8,11 +8,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--gradient-blue);
-  color: #fff;
+  background: var(--gradient-primary);
+  color: var(--color-on-primary);
   border: none;
   cursor: pointer;
-  box-shadow: 0 8px 24px rgba(15, 168, 251, 0.35);
+  box-shadow: 0 8px 24px var(--primary-wash-strong);
   z-index: 900;
   transition: box-shadow var(--transition-base), transform var(--transition-fast);
   /* Replaces the Framer Motion entry animation: runs when the button is
@@ -21,7 +21,7 @@
 }
 
 .back-to-top:hover {
-  box-shadow: 0 12px 32px rgba(15, 168, 251, 0.5);
+  box-shadow: 0 12px 32px var(--primary-wash-strong);
   transform: translateY(-2px);
 }
 
